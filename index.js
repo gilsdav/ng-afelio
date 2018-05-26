@@ -50,9 +50,11 @@ program
 program
   .command('generate <type> <name>')
   .alias('g')
+  .option('-r, --ngrx', 'NGRX / Redux')
+  .option('-l, --light', 'Only generate components, services and models folder')
   .description('Generates and/or modifies files based on a schematic')
-  .action((type, name) => {
-    generate(type, name);
+  .action((type, name, options) => {
+    generate(type, name, options.ngrx || false, options.light || false);
   });
 
 program

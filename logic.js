@@ -6,7 +6,9 @@ const colors = require('colors');
 
 const cli = require('@angular/cli');
 
-var currentPath = process.cwd();
+const fillModule = require('./scripts/generate-module');
+
+const currentPath = process.cwd();
 
 function promiseFromChildProcess(child) {
     return new Promise(function (resolve, reject) {
@@ -33,8 +35,16 @@ const serveMain = async () => {
     return await cli.default({cliArgs: ['serve']});
 }
 
-const generate = async (type, name) => {
+const generate = async (type, name, needStore, light) => {
     switch (type) {
+        case 'module':
+            if (currentPath.includes('/src/') || currentPath.endsWith('/src')) {
+                await cli.default({cliArgs: ['generate', type, name]});
+                fillModule(name, needStore, light);
+            } else {
+                console.warn(colors.red('You must be in src folder to generate a module'));
+            }
+            break;
         default:
             return await cli.default({cliArgs: ['generate', type, name]});
             break;
