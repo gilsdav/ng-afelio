@@ -21,18 +21,22 @@ const getAngularVersion = async () => {
     return await cli.default({cliArgs: ['--version']});
 }
 
-const createNewProject = async (name) => {
+const createNewProject = async (name, skipUiKit) => {
     await cli.default({cliArgs: ['new', name, '--routing', '--style=scss']});
     process.chdir(`./${name}`);
-    return await cli.default({cliArgs: ['generate', 'application', 'ui-kit', '--routing', '--style=scss', '--skip-tests']});
+    if (!skipUiKit) {
+        return await cli.default({cliArgs: ['generate', 'application', 'ui-kit', '--routing', '--style=scss', '--skip-tests']});
+    } else {
+        return;
+    }
 };
 
 const serveUIKit = async () => {
-    return await cli.default({cliArgs: ['serve', 'ui-kit', '--port=5200']});
+    return await cli.default({cliArgs: ['serve', 'ui-kit', '--port=5200', '--host=0.0.0.0']});
 }
 
 const serveMain = async () => {
-    return await cli.default({cliArgs: ['serve']});
+    return await cli.default({cliArgs: ['serve', '--host=0.0.0.0']});
 }
 
 const generate = async (type, name, needStore, light) => {
@@ -40,7 +44,7 @@ const generate = async (type, name, needStore, light) => {
         case 'module':
             if (currentPath.includes('/src/') || currentPath.endsWith('/src')) {
                 await cli.default({cliArgs: ['generate', type, name]});
-                fillModule(name, needStore, light);
+                return fillModule(name, needStore, light);
             } else {
                 console.warn(colors.red('You must be in src folder to generate a module'));
             }

@@ -17,8 +17,9 @@ program
   .command('new <name>')
   .alias('n')
   .description('Generate new Angular project')
-  .action((name) => {
-    createNewProject(name).then(() => {
+  .option('--skip-ui-kit', 'Does not create the ui-kit project')
+  .action((name, options) => {
+    createNewProject(name, options.skipUiKit || false).then(() => {
       console.info(`Please go to new directory "cd ./${name}"`);
     });
   });
@@ -50,20 +51,20 @@ program
 program
   .command('generate <type> <name>')
   .alias('g')
+  .description('Generates and/or modifies files based on a schematic')
   .option('-r, --ngrx', 'NGRX / Redux')
   .option('-l, --light', 'Only generate components, services and models folder')
-  .description('Generates and/or modifies files based on a schematic')
   .action((type, name, options) => {
     generate(type, name, options.ngrx || false, options.light || false);
   });
 
 program
   .command('build')
-  .option('-u, --ssr', 'Server Side Rendering / Universal')
-  .option('-e, --env <environment>', 'Change default environment', 'production')
-  .option('-h, --base-href <href>', 'Base url for the application being built')
   .alias('b')
   .description('Builds your app and places it into the dist folder')
+  .option('-u, --ssr', 'Server Side Rendering / Universal')
+  .option('-e, --env <environment>', 'Change default environment', 'production')
+  .option('--base-href <href>', 'Base url for the application being built')
   .action((options) => {
     build(options.env, options.ssr || false, options.baseHref);
   });
