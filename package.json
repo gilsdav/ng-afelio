@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "Extended Angular CLI",
   "main": "index.js",
-  "preferGlobal": true,
   "bin": "./index.js",
   "scripts": {
     "ng": "ng"
