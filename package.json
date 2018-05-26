@@ -12,7 +12,7 @@
     "CLI",
     "Afelio"
   ],
-  "author": "David Gilson <d.gilson@live.fr>",
+  "author": "David Gilson <davgilson@live.fr>",
   "license": "ISC",
   "dependencies": {
     "@angular/cli": "^6.0.3",
