@@ -1,0 +1,10 @@
+<nav class="sidebar">
+  <ng-container *ngFor="let category of menu">
+    <p>{{category.name}}</p>
+    <ul class="nav nav-pills flex-column">
+      <li class="nav-item" *ngFor="let item of category.items">
+        <a class="nav-link" [routerLink]="[item.route]" [routerLinkActive]="['active']">{{item.name}}</a>
+      </li>
+    </ul>
+  </ng-container>
+</nav>

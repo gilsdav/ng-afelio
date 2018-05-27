@@ -3,10 +3,13 @@ const util = require('util');
 const pexec = util.promisify(require('child_process').exec);
 const exec = require('child_process').exec;
 const colors = require('colors');
+const fs = require('fs');
 
 const cli = require('@angular/cli');
 
 const fillModule = require('./scripts/generate-module');
+const fillUiKit = require('./scripts/generate-ui-kit');
+const buildStyleFromUIKit = require('./scripts/build-style');
 
 const currentPath = process.cwd();
 
@@ -25,7 +28,8 @@ const createNewProject = async (name, skipUiKit) => {
     await cli.default({cliArgs: ['new', name, '--routing', '--style=scss']});
     process.chdir(`./${name}`);
     if (!skipUiKit) {
-        return await cli.default({cliArgs: ['generate', 'application', 'ui-kit', '--routing', '--style=scss', '--skip-tests']});
+        await cli.default({cliArgs: ['generate', 'application', 'ui-kit', '--routing', '--style=scss', '--skip-tests']});
+        return await fillUiKit();
     } else {
         return;
     }
@@ -46,7 +50,7 @@ const generate = async (type, name, needStore, light) => {
                 await cli.default({cliArgs: ['generate', type, name]});
                 return fillModule(name, needStore, light);
             } else {
-                console.warn(colors.red('You must be in src folder to generate a module'));
+                console.warn(colors.red('You must be in src folder or its childs to generate a module.'));
             }
             break;
         default:
@@ -64,6 +68,33 @@ const build = async (environment, ssr, baseHref) => {
     }
 }
 
+const buildStyle = async () => {
+
+    let contains = false;
+    fs.readdirSync('./').forEach(file => {
+        if (file === 'projects') {
+            contains = true;
+        }
+    });
+
+    if (contains) {
+        contains = false;
+        fs.readdirSync('./projects').forEach(file => {
+            if (file === 'ui-kit') {
+                contains = true;
+            }
+        });
+    }
+
+    if (contains) {
+        process.chdir(`./projects/ui-kit`);
+        return await buildStyleFromUIKit();
+    } else {
+        console.warn(colors.red('You must be in base folder of the application and have a "ui-kit" project to use this command.'));
+    }
+    
+}
+
 // Export all methods
 module.exports = {
     getAngularVersion,
@@ -71,5 +102,6 @@ module.exports = {
     serveUIKit,
     serveMain,
     generate,
-    build
+    build,
+    buildStyle
 };

@@ -10,7 +10,8 @@ const {
   serveUIKit,
   serveMain,
   generate,
-  build
+  build,
+  buildStyle
 } = require('./logic');
 
 program
@@ -67,6 +68,13 @@ program
   .option('--base-href <href>', 'Base url for the application being built')
   .action((options) => {
     build(options.env, options.ssr || false, options.baseHref);
+  });
+
+program
+  .command('style')
+  .description('Build style from UI Kit')
+  .action(() => {
+    buildStyle();
   });
 
 getAngularVersion().then(version => {
