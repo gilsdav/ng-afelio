@@ -1,6 +1,6 @@
 {
   "name": "ng-afelio",
-  "version": "0.0.1",
+  "version": "0.0.1-0",
   "description": "Extended Angular CLI",
   "main": "index.js",
   "bin": "./index.js",
@@ -13,7 +13,17 @@
     "Afelio"
   ],
   "author": "David Gilson <davgilson@live.fr>",
+  "homepage": "https://github.com/gilsdav/ng-afelio",
+  "bugs": "https://github.com/gilsdav/ng-afelio/issues",
   "license": "ISC",
+  "engines": {
+    "node": ">=8.9.1 <9.0.0",
+    "yarn": ">=1.3.2 <2.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gilsdav/ng-afelio.git"
+  },
   "dependencies": {
     "@angular/cli": "^6.0.3",
     "colors": "^1.3.0",
