@@ -77,6 +77,13 @@ program
     buildStyle();
   });
 
+program
+  .command('api <source>')
+  .description('Generates swagger api and models using json or yaml source')
+  .action((source) => {
+    generate('swagger', source);
+  });
+
 getAngularVersion().then(version => {
     program
     .version(colors.cyan(`

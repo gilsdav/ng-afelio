@@ -11,6 +11,7 @@ const fillModule = require('./scripts/generate-module');
 const fillUiKit = require('./scripts/generate-ui-kit');
 const buildStyleFromUIKit = require('./scripts/build-style');
 const addLocalCli = require('./scripts/add-local-cli');
+const generateSwagger = require('./scripts/generate-swagger');
 
 const currentPath = process.cwd();
 
@@ -52,6 +53,9 @@ const generate = async (type, name, needStore, light) => {
             } else {
                 console.warn(colors.red('You must be in src folder or its childs to generate a module.'));
             }
+            break;
+        case 'swagger':
+            generateSwagger(name);
             break;
         default:
             return await cli.default({cliArgs: ['generate', type, name]});
