@@ -78,11 +78,17 @@ program
     buildStyle();
   });
 
-  program
+program
   .command('mocks')
   .description('Generate mocks system')
   .action(() => {
     generateMocks();
+
+program
+  .command('api <source>')
+  .description('Generates swagger api and models using json or yaml source')
+  .action((source) => {
+    generate('swagger', source);
   });
 
 getAngularVersion().then(version => {
