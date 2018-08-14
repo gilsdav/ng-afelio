@@ -15,6 +15,22 @@ const {
   generateMocks
 } = require('./logic');
 
+const version = colors.cyan(`
+                            _                        __     _ _          _____ _      _____ 
+    /\\                     | |                /\\    / _|   | (_)        / ____| |    |_   _|
+   /  \\   _ __   __ _ _   _| | __ _ _ __     /  \\  | |_ ___| |_  ___   | |    | |      | |  
+  / /\\ \\ | '_ \\ / _  | | | | |/ _  | '__|   / /\\ \\ |  _/ _ \\ | |/ _ \\  | |    | |      | |  
+ / ____ \\| | | | (_| | |_| | | (_| | |     / ____ \\| ||  __/ | | (_) | | |____| |____ _| |_ 
+/_/    \\_\\_| |_|\\__, |\\__,_|_|\\__,_|_|    /_/    \\_\\_| \\___|_|_|\\___/   \\_____|______|_____|
+                 __/ |                                                                      
+                |___/                                                                       
+             
+Angular Afelio CLI: ${packageJson.version}
+
+  `);
+
+program.option('-v, --version-full', 'output the version number of ng-afelio and ng');
+
 program
   .command('new <name>')
   .alias('n')
@@ -83,6 +99,7 @@ program
   .description('Generate mocks system')
   .action(() => {
     generateMocks();
+  });
 
 program
   .command('api <source>')
@@ -91,27 +108,23 @@ program
     generate('swagger', source);
   });
 
-getAngularVersion().then(version => {
-    program
-    .version(colors.cyan(`
-                              _                        __     _ _          _____ _      _____ 
-      /\\                     | |                /\\    / _|   | (_)        / ____| |    |_   _|
-     /  \\   _ __   __ _ _   _| | __ _ _ __     /  \\  | |_ ___| |_  ___   | |    | |      | |  
-    / /\\ \\ | '_ \\ / _  | | | | |/ _  | '__|   / /\\ \\ |  _/ _ \\ | |/ _ \\  | |    | |      | |  
-   / ____ \\| | | | (_| | |_| | | (_| | |     / ____ \\| ||  __/ | | (_) | | |____| |____ _| |_ 
-  /_/    \\_\\_| |_|\\__, |\\__,_|_|\\__,_|_|    /_/    \\_\\_| \\___|_|_|\\___/   \\_____|______|_____|
-                   __/ |                                                                      
-                  |___/                                                                       
-               
-  Angular Afelio CLI: ${packageJson.version}
-
-    `))
-    .description('Angular Afelio CLI');
-    
-    program.parse(process.argv);
-
-    if (!process.argv.slice(2).length) {
-      program.outputHelp(((text) => `Here is how to use this CLI:\n${text}`));
-    }
-
+program.on('command:*', () => {
+  console.error('Invalid command: %s\nSee --help for a list of available commands.', program.args.join(' '));
+  program.outputHelp(((text) => `Here is how to use this CLI:\n${text}`));
+  process.exit(1);
 });
+
+program
+  .version(version)
+  .description(version);
+  
+program.parse(process.argv);
+
+if (program.versionFull) {
+  console.info(version);
+  getAngularVersion();
+}
+
+if (!process.argv.slice(2).length) {
+  program.outputHelp(((text) => `Here is how to use this CLI:\n${text}`));
+}
