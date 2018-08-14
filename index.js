@@ -11,7 +11,8 @@ const {
   serveMain,
   generate,
   build,
-  buildStyle
+  buildStyle,
+  generateMocks
 } = require('./logic');
 
 program
@@ -76,6 +77,12 @@ program
   .action(() => {
     buildStyle();
   });
+
+program
+  .command('mocks')
+  .description('Generate mocks system')
+  .action(() => {
+    generateMocks();
 
 program
   .command('api <source>')

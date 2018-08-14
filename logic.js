@@ -11,6 +11,7 @@ const fillModule = require('./scripts/generate-module');
 const fillUiKit = require('./scripts/generate-ui-kit');
 const buildStyleFromUIKit = require('./scripts/build-style');
 const addLocalCli = require('./scripts/add-local-cli');
+const generateMocksTask = require('./scripts/generate-mocks');
 const generateSwagger = require('./scripts/generate-swagger');
 
 const currentPath = process.cwd();
@@ -99,6 +100,14 @@ const buildStyle = async () => {
     
 }
 
+const generateMocks = async () => {
+    if (currentPath.endsWith('/src')) {
+        return await generateMocksTask();
+    } else {
+        console.warn(colors.red('You must be in src folder to generate mocks.'));
+    }
+}
+
 // Export all methods
 module.exports = {
     getAngularVersion,
@@ -107,5 +116,6 @@ module.exports = {
     serveMain,
     generate,
     build,
-    buildStyle
+    buildStyle,
+    generateMocks
 };
