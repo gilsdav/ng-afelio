@@ -12,14 +12,21 @@ $f-heading-bold: $f-heading-regular;
 $f-body-regular: 'Roboto';
 $f-body-medium: $f-body-regular;
 
-@include typeface('afelio-bootstrap', 'afelio-bootstrap', 'afelio-bootstrap-icons', 'icons', 400);
+// Icons fonts
+// @include typeface('afelio-bootstrap', 'afelio-bootstrap', 'afelio-bootstrap-icons', 'icons', 400);
 
+// Heading fonts
 @include typeface(null, null, 'Open Sans', 'heading-regular', 400);
 @include typeface(null, null, 'Open Sans', 'heading-semibold', 600);
 @include typeface(null, null, 'Open Sans', 'heading-bold', 700);
 
+// Body fonts
 @include typeface(null, null, 'Roboto', 'body-regular', 400);
 @include typeface(null, null, 'Roboto', 'body-medium', 500);
+
+// Accent fonts
+@include typeface(null, null, 'Roboto', 'accent-regular', 400);
+@include typeface(null, null, 'Roboto', 'accent-medium', 500);
 
 ////////////////////////////////////////////////////
 //
