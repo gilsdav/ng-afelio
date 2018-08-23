@@ -1,0 +1,129 @@
+//
+//  Responsive breakpoints
+//
+$responsive-breakpoints: (
+                "xxs":  $responsive-xxs,
+                "xs":   $responsive-xs,
+                "s":    $responsive-s,
+                "m":    $responsive-m,
+                "l":    $responsive-l,
+                "xl":   $responsive-xl,
+                "xxl":  $responsive-xxl
+              );
+
+
+
+//
+// Media Next
+// Name of the next breakpoint, or null for the last breakpoint
+//
+@function media-next($name, $breakpoints: $responsive-breakpoints, $breakpoint-names: map-keys($breakpoints))
+{
+  $n: index($breakpoint-names, $name);
+  @return if($n < length($breakpoint-names), nth($breakpoint-names, $n + 1), null);
+}
+
+//
+// Media Get
+// Get the breakpoint value. Null for the smallest (first) breakpoint.
+//
+@function media-get($name, $breakpoints: $responsive-breakpoints)
+{
+  $min: map-get($breakpoints, $name);
+  @return if($min != 0, $min, null);
+}
+
+//
+// Media Get -1
+// Get the breakpoint value -1. Null for the largest (last) breakpoint.
+//
+@function media-get-minus1($name, $breakpoints: $responsive-breakpoints)
+{
+  $next: media-next($name, $breakpoints);
+  @return if($next, media-get($next, $breakpoints) - 1px, null);
+}
+
+//
+// Media Up
+// Media of at least the minimum breakpoint width. No query fr the smallest breakpoint.
+//
+// @param $name Name of the breakpoint. E.g. `s`, `m`, ...
+//
+@mixin media-up($name, $breakpoints: $responsive-breakpoints)
+{
+  $min: media-get($name, $breakpoints);
+  @if $min
+  {
+    @media (min-width: $min)
+    {
+      @content;
+    }
+  }
+  @else
+  {
+    @content;
+  }
+}
+
+//
+//  Media Down
+//  Media of at most the maximum breakpoint width. No query for the largest breakpoint.
+//
+//  @param $name Name of the breakpoint. E.g. `s`, `m`, ...
+//
+@mixin media-down($name, $breakpoints: $responsive-breakpoints)
+{
+  $max: media-get($name, $breakpoints);
+  @if $max
+  {
+    @media (max-width: $max)
+    {
+      @content;
+    }
+  }
+  @else
+  {
+    @content;
+  }
+}
+
+//
+// Media only
+// Media between the breakpoint's minimum and maximum widths. No minimum for the smallest breakpoint, and no maximum for the largest one.
+//
+// @param Name Name of the breakpoint. E.g. `s`, `m`, ...
+//
+@mixin media-only($name, $breakpoints: $responsive-breakpoints)
+{
+  $next: media-next($name);
+
+  @if ($next)
+  {
+    @include media-between($name, $next, $breakpoints)
+    {
+      @content;
+    }
+  }
+  @else
+  {
+    @include media-up($name);
+  }
+}
+
+//
+// Media Between
+// Media that spans multiple breakpoint widths.
+//
+// @param Lower Name of the breakpoint. E.g. `s`, `m`, ...
+// @param Upper Name of the breakpoint. E.g. `s`, `m`, ...
+//
+@mixin media-between($lower, $upper, $breakpoints: $responsive-breakpoints)
+{
+  @include media-up($lower, $breakpoints)
+  {
+    @include media-down($upper, $breakpoints)
+    {
+      @content;
+    }
+  };
+}

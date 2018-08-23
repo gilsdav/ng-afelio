@@ -1,0 +1,60 @@
+body.-debug
+{
+  &::after
+  {
+    @extend .fixed;
+
+    @extend .p-xxs;
+
+    @extend .bs-solid;
+    @extend .bw-xs;
+    @extend .bc-grey02;
+
+    @extend .bg-grey01;
+
+    @extend .f-xs;
+
+    content: '::'attr(class);
+    bottom: 0;
+    left: 1rem;
+    max-width: 50%;
+    overflow: hidden;
+
+    @include media-up('xxl')
+    {
+      content: '>xxl ::'attr(class);
+    }
+    @include media-only('xxl')
+    {
+      content: 'xxl ::'attr(class);
+    }
+    @include media-only('xl')
+    {
+      content: 'xl ::'attr(class);
+    }
+    @include media-only('l')
+    {
+      content: 'l ::'attr(class);
+    }
+    @include media-only('m')
+    {
+      content: 'm::'attr(class);
+    }
+    @include media-only('s')
+    {
+      content: 's ::'attr(class);
+    }
+    @include media-only('xs')
+    {
+      content: 'xs ::'attr(class);
+    }
+    @include media-only('xxs')
+    {
+      content: 'xxs ::'attr(class);
+    }
+    @include media-down('xxs')
+    {
+      content: '<xxs ::'attr(class);
+    }
+  }
+}

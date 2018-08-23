@@ -1,4 +1,20 @@
-/* You can add global styles to this file, and also import other style files */
-/* @import "~bootstrap/scss/bootstrap.scss"; */
-@import "bootstrap-custom.scss";
-@import "~font-awesome/css/font-awesome.css";
+////////////////////////////////////////////////////
+//
+//              Always used
+//
+////////////////////////////////////////////////////
+
+@import "~bootstrap/scss/grid";
+
+
+////////////////////////////////////////////////////
+//
+//              Custom styles
+//
+//              Use bootstrap-custom.scss if you 
+//              don't work with an integrator.
+//
+////////////////////////////////////////////////////
+
+// @import "bootstrap-custom.scss";
+@import "afelio-styles.scss";

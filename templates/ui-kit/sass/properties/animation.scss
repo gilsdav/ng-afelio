@@ -1,0 +1,91 @@
+////////////////////////////////////////////////////
+//
+//              1. Timing
+//
+////////////////////////////////////////////////////
+
+@include transition-animation-duration('s', 80ms);
+@include transition-animation-duration('m', .3s);
+@include transition-animation-duration('l', .7s);
+@include transition-animation-duration('xl', 1.5s);
+@include transition-animation-duration('xxl', 3s);
+
+////////////////////////////////////////////////////
+//
+//              2. Easing
+//
+////////////////////////////////////////////////////
+
+@include transition-animation-easing('linear', linear);
+@include transition-animation-easing('ease', ease);
+@include transition-animation-easing('strong-out', cubic-bezier(0, .89, .44, 1));
+@include transition-animation-easing('strong-in', cubic-bezier(.165, .84, .44, 1));
+@include transition-animation-easing('quad-in-out', cubic-bezier(.455, .03, .515, .955));
+
+////////////////////////////////////////////////////
+//
+//              3. Stagger
+//
+////////////////////////////////////////////////////
+
+// @TODO Create a generic stagger with a curved animation
+
+////////////////////////////////////////////////////
+//
+//              4. Animations
+//
+////////////////////////////////////////////////////
+
+//
+//  Slide In Up
+//
+@keyframes slide-in-up
+{
+  from
+  {
+    transform: translate3d(0, 100%, 0);
+    visibility: visible;
+    opacity: 0;
+  }
+
+  to
+  {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+.slide-in-up
+{
+  animation-name: slide-in-up;
+  animation-fill-mode: forwards;
+}
+
+
+//
+// Zoom Out
+//
+@keyframes zoom-out
+{
+  from
+  {
+    opacity: 1;
+  }
+
+  50%
+  {
+    opacity: 0;
+    transform: scale3d(.3, .3, .3);
+  }
+
+  to
+  {
+    opacity: 0;
+  }
+}
+
+.zoom-out
+{
+  animation-name: zoom-out;
+  animation-fill-mode: forwards;
+}
