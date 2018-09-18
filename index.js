@@ -54,16 +54,18 @@ program
   .command('serve')
   .alias('ms')
   .description('Start dev server')
+  .option('-e, --env <environment>', 'Change default environment')
   .action(() => {
-    serveMain();
+    serveMain(options.env);
   });
 
 program
   .command('start')
   .alias('s')
   .description('Start all dev tools')
-  .action(() => {
-    Promise.all([serveMain(), serveUIKit()]);
+  .option('-e, --env <environment>', 'Change default environment')
+  .action((options) => {
+    Promise.all([serveMain(options.env), serveUIKit()]);
   });
 
 program
