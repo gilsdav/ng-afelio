@@ -36,16 +36,14 @@ function buildStyleFromUIKit() {
         const toAddToAngularConfig = { "input": "projects/ui-kit/src/assets", "glob": "**/*", "output": "./assets" };
         const angularConfigPath = '../../angular.json';
         const fileContent = fs.readFileSync(angularConfigPath, 'utf8');
-        if (!fileContent.includes(toAddToAngularConfig)) {
+        if (!fileContent.includes('"input": "projects/ui-kit/src/assets"')) {
             const jsonContent = JSON.parse(fileContent);
             const defaultProject = jsonContent.defaultProject;
             const builds = Object.keys(jsonContent.projects[defaultProject].architect);
             builds.forEach((build) => {
                 const currentBuildConfig = jsonContent.projects[defaultProject].architect[build];
                 if (currentBuildConfig.options && currentBuildConfig.options.assets) {
-                    console.log(currentBuildConfig.options.assets);
                     currentBuildConfig.options.assets.push(toAddToAngularConfig);
-                    console.log(currentBuildConfig.options.assets);
                 }
             });
             fs.writeFileSync(angularConfigPath, JSON.stringify(jsonContent, null, 2), 'utf8');
