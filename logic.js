@@ -41,8 +41,12 @@ const serveUIKit = async () => {
     return await cli.default({cliArgs: ['serve', 'ui-kit', '--port=5200', '--host=0.0.0.0']});
 }
 
-const serveMain = async () => {
-    return await cli.default({cliArgs: ['serve', '--host=0.0.0.0']});
+const serveMain = async (environment) => {
+    return await cli.default({cliArgs: [
+        'serve',
+        '--host=0.0.0.0',
+        ...( environment ? [`--configuration=${environment}`] : [])
+    ]});
 }
 
 const generate = async (type, name, needStore, light) => {
