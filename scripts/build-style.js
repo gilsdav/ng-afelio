@@ -5,6 +5,12 @@ const fs = require('fs');
 const decomment = require('decomment');
 const colors = require('colors');
 
+const sass = require('node-sass');
+// const magicImporter = require('node-sass-magic-importer');
+
+const cssNodeExtract = require('css-node-extract');
+const postcssScssSyntax = require('postcss-scss');
+
 function buildStyleFromUIKit() {
     const currentPath = process.cwd();
     // const templatePath = join(__dirname, '../templates/module');
@@ -21,8 +27,46 @@ function buildStyleFromUIKit() {
 
         const toWrite = decomment.text(result.bundledContent/*, {safe: true}*/);
 
-        fs.writeFileSync(`${outputDirectory}/main.scss`, toWrite);
-        console.info(`${colors.green('BUILD')} the file was saved in "/styles/main.scss"`);
+        // fs.writeFileSync(`${outputDirectory}/main.scss`, toWrite);
+        // console.info(`${colors.green('BUILD')} the file was saved in "/styles/main.scss"`);
+
+        // extract non css features
+        const options = {
+            css: toWrite,
+            filters: ['silent'],
+            postcssSyntax: postcssScssSyntax
+        };
+        cssNodeExtract.process(options).then((extractedCss) => {
+            fs.writeFile(`${outputDirectory}/style-utils.scss`, extractedCss, function(err){
+                if(!err){
+                    console.info(`${colors.green('BUILD style utils')} was saved in "/styles/style-utils.scss"`);
+                } else {
+                    console.info(colors.red('WRITE FILE ERROR style-utils.scss'), err);
+                }
+            });
+        }, err => {
+            console.info(colors.red('BUILD ERROR style-utils.scss'), err);
+        });
+
+        // build global style
+        sass.render({
+            // importer: magicImporter(),
+            data: toWrite, // [silent] from  
+            outFile: `${outputDirectory}/main.scss`,
+        }, (err, result) => {
+            if(!err) {
+                fs.writeFile(`${outputDirectory}/main.scss`, result.css, function(err){
+                    if(!err){
+                        console.info(`${colors.green('BUILD global style')} was saved in "/styles/main.scss"`);
+                    } else {
+                        console.info(colors.red('WRITE FILE ERROR main.scss'), err);
+                    }
+                });
+            } else {
+                console.info(colors.red('BUILD ERROR main.scss'), err);
+            }
+        });
+
 
         const toAddToStyleScss = '@import \'../styles/main\';';
         const stylePath = '../../src/styles.scss';
