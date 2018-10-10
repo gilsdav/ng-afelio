@@ -55,7 +55,7 @@ program
   .alias('ms')
   .description('Start dev server')
   .option('-e, --env <environment>', 'Change default environment')
-  .action(() => {
+  .action((options) => {
     serveMain(options.env);
   });
 
