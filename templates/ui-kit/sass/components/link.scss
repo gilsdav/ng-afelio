@@ -1,0 +1,74 @@
+.link
+{
+    ////////////////////////////////////////////////////
+    //
+    //                  Variables
+    //
+    ////////////////////////////////////////////////////
+
+    $root: '.link';
+
+
+    ////////////////////////////////////////////////////
+    //
+    //                  Global style
+    //
+    ////////////////////////////////////////////////////
+
+    // TODO: write global styles here.
+
+    #{$root}__label
+    {
+
+    }
+
+    #{$root}__icon
+    {
+        
+    }
+
+    ////////////////////////////////////////////////////
+    //
+    //                  Variations
+    //
+    ////////////////////////////////////////////////////
+
+    &.-primary
+    {
+        // TODO: write specific styles here.
+    }
+
+    &.-secondary
+    {
+        // TODO: write specific styles here.
+    }
+
+    // Icon is before the label
+    &.-pre
+    {
+        // TODO: write specific styles here.
+    }
+    
+    // Icon is after the label
+    &.-post
+    {
+        // TODO: write specific styles here.
+    }
+
+    ////////////////////////////////////////////////////
+    //
+    //                  States
+    //
+    ////////////////////////////////////////////////////
+
+    &:hover
+    {
+        // TODO: write hover effect styles here.
+    }
+
+    &:focus,
+    &.active
+    {
+        // TODO: write focus/active effect styles here.
+    }
+}

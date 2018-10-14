@@ -1,0 +1,66 @@
+$root: '.ts-';
+#{$root}mega
+{
+  @extend .f-heading-bold;
+  @extend .f-xxl;
+  line-height: 1.3;
+
+  @include media-down('xl')
+  {
+    font-size: 60px;
+  }
+  @include media-down('m')
+  {
+    font-size: 35px;
+  }
+}
+
+#{$root}jumbo
+{
+  @extend .f-xxl;
+  @extend .f-heading-semibold;
+  line-height: 1.3;
+}
+
+#{$root}display
+{
+  @extend .f-xl;
+  @extend .f-heading-semibold;
+  line-height: 1.3;
+}
+
+#{$root}headline
+{
+  @extend .f-body-regular;
+  @extend .f-l;
+  line-height: 1.3;
+
+  &.-heading
+  {
+    @extend .f-heading-regular;
+  }
+}
+
+#{$root}body
+{
+  @extend .f-m;
+  @extend .f-heading-semibold;
+}
+
+#{$root}caption
+{
+  @extend .f-s;
+  @extend .f-body-regular;
+}
+
+#{$root}small
+{
+  @extend .f-xs;
+  @extend .f-body-regular;
+}
+
+#{$root}tiny
+{
+  @extend .f-xxs;
+  @extend .f-body-regular;
+}
