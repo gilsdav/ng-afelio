@@ -15,6 +15,8 @@ const {
   generateMocks
 } = require('./logic');
 
+const uiKitTypes = require('./models/ui-kit-types.enum');
+
 const version = colors.cyan(`
                             _                        __     _ _          _____ _      _____ 
     /\\                     | |                /\\    / _|   | (_)        / ____| |    |_   _|
@@ -35,9 +37,9 @@ program
   .command('new <name>')
   .alias('n')
   .description('Generate new Angular project')
-  .option('--skip-ui-kit', 'Does not create the ui-kit project')
+  .option('--ui-kit <uiKit>', 'Ui-kit type (' + Object.values(uiKitTypes).slice(1).join(', ') + ').', uiKitTypes.DEFAULT)
   .action((name, options) => {
-    createNewProject(name, options.skipUiKit || false).then(() => {
+    createNewProject(name, options.uiKit).then(() => {
       console.info(`Please go to new directory "cd ./${name}"`);
     });
   });

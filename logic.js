@@ -14,6 +14,8 @@ const addLocalCli = require('./scripts/add-local-cli');
 const generateMocksTask = require('./scripts/generate-mocks');
 const generateSwagger = require('./scripts/generate-swagger');
 
+const uiKitTypes = require('./models/ui-kit-types.enum');
+
 const currentPath = process.cwd();
 
 function promiseFromChildProcess(child) {
@@ -27,14 +29,14 @@ const getAngularVersion = async () => {
     return await cli.default({cliArgs: ['--version']});
 }
 
-const createNewProject = async (name, skipUiKit) => {
+const createNewProject = async (name, uiKitType) => {
     await cli.default({cliArgs: ['new', name, '--routing', '--style=scss']});
     process.chdir(`./${name}`);
-    if (!skipUiKit) {
+    if (uiKitType !== uiKitTypes.NONE) {
         await cli.default({cliArgs: ['generate', 'application', 'ui-kit', '--routing', '--style=scss', '--skip-tests']});
-        await fillUiKit();
+        await fillUiKit(uiKitType);
     }
-    return await addLocalCli(!skipUiKit);
+    return await addLocalCli(uiKitType !== uiKitTypes.NONE);
 };
 
 const serveUIKit = async () => {
