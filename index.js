@@ -106,8 +106,9 @@ program
 program
   .command('api <source>')
   .description('Generates swagger api and models using json or yaml source')
-  .action((source) => {
-    generate('swagger', source);
+  .option('-n, --name <name>', 'Name of api module', 'api')
+  .action((source, options) => {
+    generate('swagger', source, options.name);
   });
 
 program.on('command:*', () => {

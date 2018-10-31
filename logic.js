@@ -60,7 +60,9 @@ const generate = async (type, name, needStore, light) => {
             }
             break;
         case 'swagger':
-            generateSwagger(name);
+            const source = name;
+            const moduleName = needStore;
+            generateSwagger(source, moduleName);
             break;
         default:
             return await cli.default({cliArgs: ['generate', type, name]});
