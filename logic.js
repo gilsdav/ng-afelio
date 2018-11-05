@@ -12,7 +12,7 @@ const fillUiKit = require('./scripts/generate-ui-kit');
 const buildStyleFromUIKit = require('./scripts/build-style');
 const addLocalCli = require('./scripts/add-local-cli');
 const generateMocksTask = require('./scripts/generate-mocks');
-const generateSwagger = require('./scripts/generate-swagger');
+const { generateSwagger, regenerateSwagger } = require('./scripts/generate-swagger');
 
 const currentPath = process.cwd();
 
@@ -62,13 +62,16 @@ const generate = async (type, name, needStore, light) => {
         case 'swagger':
             const source = name;
             const moduleName = needStore;
-            generateSwagger(source, moduleName);
-            break;
+            const apiKey = light;
+            return generateSwagger(source, moduleName, apiKey);
         default:
             return await cli.default({cliArgs: ['generate', type, name]});
-            break;
     }
 }
+
+const regenerateApi = async (source) => {
+    regenerateSwagger(source);
+};
 
 const build = async (environment, ssr, baseHref) => {
     const baseArgs = ['build', '--prod', `--configuration=${environment}`, ...( baseHref ? [`--base-href=${baseHref}`] : [])];
@@ -123,5 +126,6 @@ module.exports = {
     generate,
     build,
     buildStyle,
-    generateMocks
+    generateMocks,
+    regenerateApi
 };
