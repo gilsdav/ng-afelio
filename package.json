@@ -1,6 +1,6 @@
 {
   "name": "ng-afelio",
-  "version": "0.0.1-6",
+  "version": "0.0.1-7",
   "description": "Extended Angular CLI",
   "main": "index.js",
   "bin": "./index.js",
@@ -33,6 +33,7 @@
     "fs-extra": "^6.0.1",
     "inquirer": "^5.2.0",
     "node-sass": "^4.9.3",
+    "node-sass-magic-importer": "^5.2.0",
     "postcss-scss": "^2.0.0",
     "scss-bundle": "^2.2.0"
   }
