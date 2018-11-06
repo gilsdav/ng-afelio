@@ -1,0 +1,12 @@
+{
+    "style": {
+        "styleUtils": {
+            "enable": true,
+            "input": "styles.scss",
+            "output": "style-utils.scss"
+        },
+        "files": [
+            { "input": "styles.scss", "output": "main.scss", "global": true }
+        ]
+    }
+}
