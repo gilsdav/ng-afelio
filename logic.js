@@ -59,18 +59,22 @@ const generate = async (type, name, needStore, light) => {
                 console.warn(colors.red('You must be in src folder or its childs to generate a module.'));
             }
             break;
-        case 'swagger':
-            const source = name;
-            const moduleName = needStore;
-            const apiKey = light;
-            return generateSwagger(source, moduleName, apiKey);
+        // case 'swagger':
+        //     const source = name;
+        //     const moduleName = needStore;
+        //     const apiKey = light;
+        //     return generateSwagger(source, moduleName, apiKey);
         default:
             return await cli.default({cliArgs: ['generate', type, name]});
     }
 }
 
-const regenerateApi = async (source) => {
-    regenerateSwagger(source);
+const generateApi = (source, moduleName, apiKey, extract) => {
+    return generateSwagger(source, moduleName, apiKey, extract);
+}
+
+const regenerateApi = (source) => {
+    return regenerateSwagger(source);
 };
 
 const build = async (environment, ssr, baseHref) => {
@@ -127,5 +131,6 @@ module.exports = {
     build,
     buildStyle,
     generateMocks,
+    generateApi,
     regenerateApi
 };

@@ -109,7 +109,7 @@ function generateApiFiles(source) {
     return pexec(`npm run ng-swagger-gen -- -c ${source}`);
 }
 
-function generateSwagger(source, name, apiKey) {
+function generateSwagger(source, name, apiKey, extract) {
     if (!name) {
         name = 'api';
     }
@@ -128,6 +128,8 @@ function generateSwagger(source, name, apiKey) {
         let configGeneration;
         if (apiKey) {
             configGeneration = generateProtectedConfig(source, destination, configFileName, moduleName, apiKey);
+        } else if (extract) {
+            configGeneration = generateProtectedConfig(source, destination, configFileName, moduleName, '');
         } else {
             configGeneration = generateConfig(source, destination, configFileName, moduleName);
         }
@@ -152,8 +154,8 @@ function regenerateSwagger(source) {
     const fileName = path.basename(source);
 
     let configSearch;
-    if (jsonContent.originalSwagger && jsonContent.APIKey) {
-        configSearch = getConfigFromSecureSource(jsonContent.originalSwagger, jsonContent.APIKey, fileName).then(() => {
+    if (jsonContent.originalSwagger) {
+        configSearch = getConfigFromSecureSource(jsonContent.originalSwagger, jsonContent.APIKey || '', fileName).then(() => {
             console.info(`${colors.green('New Swagger file pulled')} from ${jsonContent.originalSwagger}`);
         });
     } else {

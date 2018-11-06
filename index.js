@@ -13,6 +13,7 @@ const {
   build,
   buildStyle,
   generateMocks,
+  generateApi,
   regenerateApi
 } = require('./logic');
 
@@ -109,12 +110,13 @@ program
   .description('Generates swagger api and models using json or yaml source')
   .option('-n, --name <name>', 'Name of api module', 'api')
   .option('-k, --api-key <apiKey>', 'Key of json or yaml source')
+  .option('-x, --extract', 'Extract swagger file to assets. Already done if you use --api-key')
   .option('-r, --regenerate', 'Add this flag to use regenerate mode')
   .action((source, options) => {
     if (options.regenerate) {
       regenerateApi(source);
     } else {
-      generate('swagger', source, options.name, options.apiKey);
+      generateApi(source, options.name, options.apiKey, options.extract);
     }
   });
 
