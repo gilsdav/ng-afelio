@@ -12,7 +12,9 @@ const {
   generate,
   build,
   buildStyle,
-  generateMocks
+  generateMocks,
+  generateApi,
+  regenerateApi
 } = require('./logic');
 
 const version = colors.cyan(`
@@ -107,8 +109,15 @@ program
   .command('api <source>')
   .description('Generates swagger api and models using json or yaml source')
   .option('-n, --name <name>', 'Name of api module', 'api')
+  .option('-k, --api-key <apiKey>', 'Key of json or yaml source')
+  .option('-x, --extract', 'Extract swagger file to assets. Already done if you use --api-key')
+  .option('-r, --regenerate', 'Add this flag to use regenerate mode')
   .action((source, options) => {
-    generate('swagger', source, options.name);
+    if (options.regenerate) {
+      regenerateApi(source);
+    } else {
+      generateApi(source, options.name, options.apiKey, options.extract);
+    }
   });
 
 program.on('command:*', () => {

@@ -2,6 +2,8 @@ const util = require('util');
 const pexec = util.promisify(require('child_process').exec);
 const fs = require('fs');
 const colors = require('colors');
+const http = require('request');
+const path = require('path')
 
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -32,14 +34,22 @@ function installSwaggerGen(scriptName, configFileName) {
     jsonContent.scripts = {
         ...jsonContent.scripts,
         'ng-swagger-gen': 'ng-swagger-gen',
-        [scriptName]: `ng-swagger-gen -c ${configFileName}`
+        [scriptName]: `ng-afelio api -r ${configFileName}`
     }
 
     fs.writeFileSync(filePath, JSON.stringify(jsonContent, null, 2), 'utf8');
     return pexec('npm install ng-swagger-gen --save-dev');
 }
 
-function generateConfig(source, destination, fileName, moduleName) {
+/**
+ * @param {string} source 
+ * @param {string} destination 
+ * @param {string} fileName 
+ * @param {string} moduleName 
+ * @param {string} originalPath original path if source is a local copy (optional)
+ * @param {string} apiKey api key to get swagger config (optional)
+ */
+function generateConfig(source, destination, fileName, moduleName, originalPath, apiKey) {
     return pexec(`npm run ng-swagger-gen -- --gen-confi -i ${source} -o ${destination} -c ${fileName}`).then(() => {
         const filePath = `./${fileName}`;
         if (fs.existsSync(filePath)) {
@@ -47,6 +57,12 @@ function generateConfig(source, destination, fileName, moduleName) {
             const jsonContent = JSON.parse(fileContent);
             jsonContent.prefix = moduleName;
             jsonContent.defaultTag = moduleName;
+            if (originalPath) {
+                jsonContent.originalSwagger = originalPath;
+            }
+            if (apiKey) {
+                jsonContent.APIKey = apiKey;
+            }
             fs.writeFileSync(filePath, JSON.stringify(jsonContent, null, 2), 'utf8');
         } else {
             console.log(`${colors.red(`${fileName} generation error`)} can not create the swagger config file`);
@@ -54,11 +70,46 @@ function generateConfig(source, destination, fileName, moduleName) {
     });
 }
 
-function generateApiFiles(scriptName) {
-    return pexec(`npm run ${scriptName}`);
+function getConfigFromSecureSource(source, apiKey, fileName) {
+    return new Promise((resolve, reject) => {
+        http.get({
+            url: source,
+            headers: {
+                'Authorization': apiKey
+            }
+        }, (err, res, body) => {
+            if (err || res.statusCode !== 200) {
+                console.log(`${colors.red(`${source} not reachable`)} can not get swagger config file`);
+                reject();
+            } else {
+                const content = body;
+                const filePath = `./src/assets/${fileName}.swag`; // ${path.extname(source)}
+                fs.writeFile(filePath, content, 'utf8', (err) => {
+                    if (!err) {
+                        resolve(filePath);
+                    } else {
+                        console.log(`${colors.red(`Swagger config storaeg error`)} not able to create ${filePath}`);
+                        reject();
+                    }
+                });
+                
+            }
+        });
+    });
+    
 }
 
-function generateSwagger(source, name) {
+function generateProtectedConfig(source, destination, fileName, moduleName, apiKey) {
+    return getConfigFromSecureSource(source, apiKey, fileName).then((path) => {
+        return generateConfig(path, destination, fileName, moduleName, source, apiKey);
+    });
+}
+
+function generateApiFiles(source) {
+    return pexec(`npm run ng-swagger-gen -- -c ${source}`);
+}
+
+function generateSwagger(source, name, apiKey, extract) {
     if (!name) {
         name = 'api';
     }
@@ -74,8 +125,16 @@ function generateSwagger(source, name) {
     }
 
     return installSwaggerGen(regenerateScriptName, configFileName).then(() => {
-        return generateConfig(source, destination, configFileName, moduleName).then(() => {
-            return generateApiFiles(regenerateScriptName).then(() => {
+        let configGeneration;
+        if (apiKey) {
+            configGeneration = generateProtectedConfig(source, destination, configFileName, moduleName, apiKey);
+        } else if (extract) {
+            configGeneration = generateProtectedConfig(source, destination, configFileName, moduleName, '');
+        } else {
+            configGeneration = generateConfig(source, destination, configFileName, moduleName);
+        }
+        configGeneration.then(() => {
+            return generateApiFiles(configFileName).then(() => {
                 console.info(`${colors.green('Swagger generated')} and new script 'npm run ${regenerateScriptName}' added.`);
                 console.info(`${colors.blue('Please')} don't forget to import '${moduleName}Module' into your 'AppModule'.`);
             });
@@ -84,4 +143,35 @@ function generateSwagger(source, name) {
 
 }
 
-module.exports = generateSwagger;
+function regenerateSwagger(source) {
+    if (!fs.existsSync(source)) {
+        console.log(`${colors.red(`Swagger config does not exist`)} can not find ${source}`);
+        return;
+    }
+
+    const fileContent = fs.readFileSync(source, 'utf8');
+    const jsonContent = JSON.parse(fileContent);
+    const fileName = path.basename(source);
+
+    let configSearch;
+    if (jsonContent.originalSwagger) {
+        configSearch = getConfigFromSecureSource(jsonContent.originalSwagger, jsonContent.APIKey || '', fileName).then(() => {
+            console.info(`${colors.green('New Swagger file pulled')} from ${jsonContent.originalSwagger}`);
+        });
+    } else {
+        configSearch = Promise.resolve(false);
+    }
+
+    configSearch.then(() => {
+        return generateApiFiles(source)
+            .then(() => {
+                console.info(`${colors.green('Swagger regenerated')} from ${source}`);
+            });
+    });
+
+}
+
+module.exports = {
+    generateSwagger,
+    regenerateSwagger
+};
