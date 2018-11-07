@@ -38,7 +38,7 @@ function installSwaggerGen(scriptName, configFileName) {
     }
 
     fs.writeFileSync(filePath, JSON.stringify(jsonContent, null, 2), 'utf8');
-    return pexec('npm install ng-swagger-gen --save-dev');
+    return pexec('npm install ng-swagger-gen@1.3.3 --save-dev');
 }
 
 /**
