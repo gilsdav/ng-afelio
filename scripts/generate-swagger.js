@@ -60,7 +60,7 @@ function generateConfig(source, destination, fileName, moduleName, originalPath,
             if (originalPath) {
                 jsonContent.originalSwagger = originalPath;
             }
-            if (originalPath) {
+            if (apiKey) {
                 jsonContent.APIKey = apiKey;
             }
             fs.writeFileSync(filePath, JSON.stringify(jsonContent, null, 2), 'utf8');
