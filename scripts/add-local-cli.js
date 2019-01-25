@@ -5,7 +5,7 @@ const colors = require('colors');
 const config = require('../config');
 
 function addLocalCli(uiKit) {
-    return pexec(config.production ? 'npm install ng-afelio --save-dev' : 'npm link ng-afelio').then(() => {
+    return pexec(config.production ? 'npm install ng-afelio --save-dev --unsafe-perm' : 'npm link ng-afelio').then(() => {
         const filePath = './package.json';
         const fileContent = fs.readFileSync(filePath, 'utf8');
         const jsonContent = JSON.parse(fileContent);
