@@ -38,7 +38,22 @@ function installSwaggerGen(scriptName, configFileName) {
     }
 
     fs.writeFileSync(filePath, JSON.stringify(jsonContent, null, 2), 'utf8');
-    return pexec('npm install ng-swagger-gen@1.4.3 --save-dev');
+    return pexec('npm install ng-swagger-gen@1.6.1 --save-dev');
+}
+
+function installOpenapiGen(scriptName, configFileName) {
+    const filePath = './package.json';
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    const jsonContent = JSON.parse(fileContent);
+
+    jsonContent.scripts = {
+        ...jsonContent.scripts,
+        'ng-swagger-gen': 'ng-openapi-gen',
+        [scriptName]: `ng-afelio api -r ${configFileName}`
+    }
+
+    fs.writeFileSync(filePath, JSON.stringify(jsonContent, null, 2), 'utf8');
+    return pexec('npm install ng-openapi-gen@0.1.8 --save-dev');
 }
 
 /**
@@ -124,7 +139,9 @@ function generateSwagger(source, name, apiKey, extract) {
         return;
     }
 
-    return installSwaggerGen(regenerateScriptName, configFileName).then(() => {
+    const generator = false ? installSwaggerGen(regenerateScriptName, configFileName) : installOpenapiGen(regenerateScriptName, configFileName);
+
+    return generator.then(() => {
         let configGeneration;
         if (apiKey) {
             configGeneration = generateProtectedConfig(source, destination, configFileName, moduleName, apiKey);
