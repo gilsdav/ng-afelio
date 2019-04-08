@@ -53,7 +53,7 @@ function installOpenapiGen(scriptName, configFileName) {
     }
 
     fs.writeFileSync(filePath, JSON.stringify(jsonContent, null, 2), 'utf8');
-    return pexec('npm install ng-openapi-gen@0.1.8 --save-dev');
+    return pexec('npm install ng-openapi-gen@0.2.3 --save-dev');
 }
 
 /**
