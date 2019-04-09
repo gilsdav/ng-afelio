@@ -108,8 +108,8 @@ function generateConfigOpenApi(source, destination, fileName, moduleName, origin
             const jsonContent = JSON.parse(fileContent);
             jsonContent.input = source;
             jsonContent.output = destination;
-            jsonContent.prefix = moduleName;
-            jsonContent.defaultTag = moduleName;
+            jsonContent.module = `${moduleName}Module`;
+            jsonContent.configuration = `${moduleName}Configuration`;
             if (originalPath) {
                 jsonContent.originalSwagger = originalPath;
             }
