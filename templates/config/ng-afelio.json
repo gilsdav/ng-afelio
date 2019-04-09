@@ -8,5 +8,6 @@
         "files": [
             { "input": "styles.scss", "output": "main.scss", "global": true }
         ]
-    }
+    },
+    "ng-swagger-gen" : "version"
 }
