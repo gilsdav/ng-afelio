@@ -69,8 +69,8 @@ const generate = async (type, name, needStore, light) => {
     }
 }
 
-const generateApi = (source, moduleName, apiKey, extract) => {
-    return generateSwagger(source, moduleName, apiKey, extract);
+const generateApi = (source, moduleName, apiKey, extract, version) => {
+    return generateSwagger(source, moduleName, apiKey, extract, version);
 }
 
 const regenerateApi = (source) => {

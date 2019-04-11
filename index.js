@@ -112,11 +112,16 @@ program
   .option('-k, --api-key <apiKey>', 'Key of json or yaml source')
   .option('-x, --extract', 'Extract swagger file to assets. Already done if you use --api-key')
   .option('-r, --regenerate', 'Add this flag to use regenerate mode')
+  .option('-s, --api-version <apiVersion>', 'Swagger version (available: 2 or 3)')
   .action((source, options) => {
     if (options.regenerate) {
       regenerateApi(source);
     } else {
-      generateApi(source, options.name, options.apiKey, options.extract);
+      if (!options.apiVersion) {
+        console.info(`${colors.blue('No api version given.')} Will use 2.`);
+        options.apiVersion = 2;
+      }
+      generateApi(source, options.name, options.apiKey, options.extract, options.apiVersion);
     }
   });
 
