@@ -48,8 +48,9 @@ program
   .command('uiServe')
   .alias('us')
   .description('Start UI Kit serve')
-  .action(() => {
-    serveUIKit();
+  .option('-p, --port <port>', 'Change default port', 5200)
+  .action((options) => {
+    serveUIKit(options.port);
   });
 
 program
@@ -57,8 +58,9 @@ program
   .alias('ms')
   .description('Start dev server')
   .option('-e, --env <environment>', 'Change default environment')
+  .option('-p, --port <port>', 'Change default port', 4200)
   .action((options) => {
-    serveMain(options.env);
+    serveMain(options.env, options.port);
   });
 
 program
@@ -66,8 +68,10 @@ program
   .alias('s')
   .description('Start all dev tools')
   .option('-e, --env <environment>', 'Change default environment')
+  .option('-p, --port <port>', 'Change default port', 4200)
+  .option('-u, --ui-port <uiPort>', 'Change default port of ui-kit', 5200)
   .action((options) => {
-    Promise.all([serveMain(options.env), serveUIKit()]);
+    Promise.all([serveMain(options.env, options.port), serveUIKit(options.uiPort)]);
   });
 
 program
