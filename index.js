@@ -71,7 +71,7 @@ program
   .option('-p, --port <port>', 'Change default port', 4200)
   .option('-u, --ui-port <uiPort>', 'Change default port of ui-kit', 5200)
   .action((options) => {
-    Promise.all([serveMain(options.env, options.port), serveUIKit(options.ui-port)]);
+    Promise.all([serveMain(options.env, options.port), serveUIKit(options.uiPort)]);
   });
 
 program
