@@ -12,7 +12,9 @@ const {
   generate,
   build,
   buildStyle,
-  generateMocks
+  generateMocks,
+  generateApi,
+  regenerateApi
 } = require('./logic');
 
 const uiKitTypes = require('./models/ui-kit-types.enum');
@@ -48,8 +50,9 @@ program
   .command('uiServe')
   .alias('us')
   .description('Start UI Kit serve')
-  .action(() => {
-    serveUIKit();
+  .option('-p, --port <port>', 'Change default port', 5200)
+  .action((options) => {
+    serveUIKit(options.port);
   });
 
 program
@@ -57,8 +60,9 @@ program
   .alias('ms')
   .description('Start dev server')
   .option('-e, --env <environment>', 'Change default environment')
+  .option('-p, --port <port>', 'Change default port', 4200)
   .action((options) => {
-    serveMain(options.env);
+    serveMain(options.env, options.port);
   });
 
 program
@@ -66,8 +70,10 @@ program
   .alias('s')
   .description('Start all dev tools')
   .option('-e, --env <environment>', 'Change default environment')
+  .option('-p, --port <port>', 'Change default port', 4200)
+  .option('-u, --ui-port <uiPort>', 'Change default port of ui-kit', 5200)
   .action((options) => {
-    Promise.all([serveMain(options.env), serveUIKit()]);
+    Promise.all([serveMain(options.env, options.port), serveUIKit(options.uiPort)]);
   });
 
 program
@@ -108,8 +114,21 @@ program
 program
   .command('api <source>')
   .description('Generates swagger api and models using json or yaml source')
-  .action((source) => {
-    generate('swagger', source);
+  .option('-n, --name <name>', 'Name of api module', 'api')
+  .option('-k, --api-key <apiKey>', 'Key of json or yaml source')
+  .option('-x, --extract', 'Extract swagger file to assets. Already done if you use --api-key')
+  .option('-r, --regenerate', 'Add this flag to use regenerate mode')
+  .option('-s, --api-version <apiVersion>', 'Swagger version (available: 2 or 3)')
+  .action((source, options) => {
+    if (options.regenerate) {
+      regenerateApi(source);
+    } else {
+      if (!options.apiVersion) {
+        console.info(`${colors.blue('No api version given.')} Will use 2.`);
+        options.apiVersion = 2;
+      }
+      generateApi(source, options.name, options.apiKey, options.extract, options.apiVersion);
+    }
   });
 
 program.on('command:*', () => {

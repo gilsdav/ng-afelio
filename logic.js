@@ -12,7 +12,7 @@ const fillUiKit = require('./scripts/generate-ui-kit');
 const buildStyleFromUIKit = require('./scripts/build-style');
 const addLocalCli = require('./scripts/add-local-cli');
 const generateMocksTask = require('./scripts/generate-mocks');
-const generateSwagger = require('./scripts/generate-swagger');
+const { generateSwagger, regenerateSwagger } = require('./scripts/generate-swagger');
 
 const uiKitTypes = require('./models/ui-kit-types.enum');
 
@@ -39,13 +39,19 @@ const createNewProject = async (name, uiKitType) => {
     return await addLocalCli(uiKitType !== uiKitTypes.NONE);
 };
 
-const serveUIKit = async () => {
-    return await cli.default({cliArgs: ['serve', 'ui-kit', '--port=5200', '--host=0.0.0.0']});
-}
-
-const serveMain = async (environment) => {
+const serveUIKit = async (port) => {
     return await cli.default({cliArgs: [
         'serve',
+        'ui-kit',
+        `--port=${port||'5200'}`,
+        '--host=0.0.0.0'
+    ]});
+}
+
+const serveMain = async (environment, port) => {
+    return await cli.default({cliArgs: [
+        'serve',
+        `--port=${port||'4200'}`,
         '--host=0.0.0.0',
         ...( environment ? [`--configuration=${environment}`] : [])
     ]});
@@ -61,14 +67,23 @@ const generate = async (type, name, needStore, light) => {
                 console.warn(colors.red('You must be in src folder or its childs to generate a module.'));
             }
             break;
-        case 'swagger':
-            generateSwagger(name);
-            break;
+        // case 'swagger':
+        //     const source = name;
+        //     const moduleName = needStore;
+        //     const apiKey = light;
+        //     return generateSwagger(source, moduleName, apiKey);
         default:
             return await cli.default({cliArgs: ['generate', type, name]});
-            break;
     }
 }
+
+const generateApi = (source, moduleName, apiKey, extract, version) => {
+    return generateSwagger(source, moduleName, apiKey, extract, version);
+}
+
+const regenerateApi = (source) => {
+    return regenerateSwagger(source);
+};
 
 const build = async (environment, ssr, baseHref) => {
     const baseArgs = ['build', '--prod', `--configuration=${environment}`, ...( baseHref ? [`--base-href=${baseHref}`] : [])];
@@ -123,5 +138,7 @@ module.exports = {
     generate,
     build,
     buildStyle,
-    generateMocks
+    generateMocks,
+    generateApi,
+    regenerateApi
 };
