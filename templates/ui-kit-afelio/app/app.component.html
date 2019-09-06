@@ -1,10 +1,14 @@
-<!-- <app-header></app-header> -->
-<div class="container-fluid">
-  <div class="row">
-    <app-menu class="col-sm-3 col-md-2 hidden-xs-down" style="display: block"></app-menu>
-    <main class="col-sm-9 col-md-10">
-        <router-outlet></router-outlet>
-    </main>
-  </div>
+<div class="uikit">
+  <div class="uikit-main">
+    <div class="uikit-primary">
+      <app-menu></app-menu>
+    </div>
+    <div class="uikit-body">
+        <div class="uikit-inner">
+          <main>
+            <router-outlet></router-outlet>
+        </main>
+      </div>
+    </div>
 </div>
-<!-- <app-footer></app-footer> -->
+</div>
