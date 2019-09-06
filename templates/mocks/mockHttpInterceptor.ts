@@ -14,15 +14,25 @@ export class MockHttpInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const url: string = request.url;
         const method: string = request.method;
+        let matches: string[];
 
         const foundMock: Mock = mocks.find(
-            mock => url.includes(mock.url) &&
-            method === mock.methods &&
-            (environment.mock.services[mock.name] || environment.mock.all)
+            mock => {
+                let isIncluded: boolean;
+                if (typeof mock.url === 'string') {
+                    isIncluded = url.includes(mock.url as string);
+                } else {
+                    matches = url.match(mock.url as RegExp);
+                    isIncluded = !!matches;
+                }
+                return isIncluded &&
+                method === mock.methods &&
+                (environment.mock.services[mock.name] || environment.mock.all);
+            }
         );
 
         if (foundMock) {
-            let mockExecution = this.executeMock(request, foundMock.response);
+            let mockExecution = this.executeMock(request, foundMock.response, matches);
             if (foundMock.delay) {
                 mockExecution = mockExecution.pipe(delay(foundMock.delay));
             }
@@ -33,11 +43,10 @@ export class MockHttpInterceptor implements HttpInterceptor {
 
     }
 
-    private executeMock(request, response): Observable<HttpEvent<any>> {
-        const result = response(request);
+    private executeMock(request: HttpRequest<any>, response: Function, matches: string[]): Observable<HttpEvent<any>> {
+        const result = response(request, matches);
         return result instanceof Observable ? result : of(result);
     }
-
 }
 
 export const mockInterceptorProvider = {
@@ -47,9 +56,9 @@ export const mockInterceptorProvider = {
 };
 
 export interface Mock {
-    url: string;
+    url: string | RegExp;
     methods: string;
     name: string;
-    response: (request: any) => Observable<HttpResponse<any>> | HttpResponse<any>;
+    response: (request: HttpRequest<any>, matches?: string[]) => Observable<HttpResponse<any>> | HttpResponse<any>;
     delay?: number;
 }
