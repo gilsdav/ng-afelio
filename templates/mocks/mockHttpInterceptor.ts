@@ -30,7 +30,7 @@ export class MockHttpInterceptor implements HttpInterceptor {
 
     private executeMock(request, response): Observable<HttpEvent<any>> {
         const result = response(request);
-        return of(result);
+        return result instanceof Observable ? result : of(result);
     }
 
 }
