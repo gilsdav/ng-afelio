@@ -1,6 +1,7 @@
-import { HTTP_INTERCEPTORS, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 import { mocks } from './mocks';
 import { environment } from '../environments/environment';
@@ -14,14 +15,18 @@ export class MockHttpInterceptor implements HttpInterceptor {
         const url: string = request.url;
         const method: string = request.method;
 
-        const foundMock = mocks.find(
+        const foundMock: Mock = mocks.find(
             mock => url.includes(mock.url) &&
             method === mock.methods &&
-            environment.mock.services[mock.name] || environment.mock.all
+            (environment.mock.services[mock.name] || environment.mock.all)
         );
 
         if (foundMock) {
-            return this.executeMock(request, foundMock.response);
+            let mockExecution = this.executeMock(request, foundMock.response);
+            if (foundMock.delay) {
+                mockExecution = mockExecution.pipe(delay(foundMock.delay));
+            }
+            return mockExecution;
         } else {
             return next.handle(request);
         }
@@ -40,3 +45,11 @@ export const mockInterceptorProvider = {
     useClass: MockHttpInterceptor,
     multi: true
 };
+
+export interface Mock {
+    url: string;
+    methods: string;
+    name: string;
+    response: (request: any) => Observable<HttpResponse<any>> | HttpResponse<any>;
+    delay?: number;
+}
