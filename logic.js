@@ -8,7 +8,7 @@ const fs = require('fs');
 const cli = require('@angular/cli');
 
 const fillModule = require('./scripts/generate-module');
-const fillUiKit = require('./scripts/generate-ui-kit');
+const { fillUiKit, runUiKit } = require('./scripts/generate-ui-kit');
 const buildStyleFromUIKit = require('./scripts/build-style');
 const addLocalCli = require('./scripts/add-local-cli');
 const generateMocksTask = require('./scripts/generate-mocks');
@@ -33,6 +33,7 @@ const createNewProject = async (name, skipUiKit) => {
     if (!skipUiKit) {
         await cli.default({cliArgs: ['generate', 'application', 'ui-kit', '--routing', '--style=scss', '--skip-tests']});
         await fillUiKit();
+        await runUiKit();
     }
     return await addLocalCli(!skipUiKit);
 };
