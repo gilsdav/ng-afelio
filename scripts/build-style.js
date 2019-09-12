@@ -137,6 +137,19 @@ function checkAssetsConfiguration() {
     }
 }
 
+function checkStyleShortcut() {
+    const angularConfigPath = '../../angular.json';
+    const fileContent = fs.readFileSync(angularConfigPath, 'utf8');
+    if (!fileContent.includes('"stylePreprocessorOptions"')) {
+        const jsonContent = JSON.parse(fileContent);
+        const defaultProject = jsonContent.defaultProject;
+        const buildOptions = jsonContent.projects[defaultProject].architect.build.options;
+        buildOptions.stylePreprocessorOptions = { includePaths: ['styles'] };
+        fs.writeFileSync(angularConfigPath, JSON.stringify(jsonContent, null, 2), 'utf8');
+        console.info(`${colors.green('ADD CSS SHORTCUT')} "styles" chortchut added to ${defaultProject} project`);
+    }
+}
+
 function buildStyleFromUIKit() {
     const currentPath = process.cwd();
 
@@ -151,6 +164,7 @@ function buildStyleFromUIKit() {
         ...buildStyleFiles(config, bundler)
     ]).then(() => {
         checkAssetsConfiguration();
+        checkStyleShortcut();
     });
   }
   
