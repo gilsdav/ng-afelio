@@ -49,8 +49,9 @@ program
   .alias('us')
   .description('Start UI Kit serve')
   .option('-p, --port <port>', 'Change default port', 5200)
+  .option('-o, --open', 'Automatically open browser')
   .action((options) => {
-    serveUIKit(options.port);
+    serveUIKit(options.port, options.open || false);
   });
 
 program
@@ -59,8 +60,9 @@ program
   .description('Start dev server')
   .option('-e, --env <environment>', 'Change default environment')
   .option('-p, --port <port>', 'Change default port', 4200)
+  .option('-o, --open', 'Automatically open browser')
   .action((options) => {
-    serveMain(options.env, options.port);
+    serveMain(options.env, options.port, options.open || false);
   });
 
 program
@@ -70,8 +72,10 @@ program
   .option('-e, --env <environment>', 'Change default environment')
   .option('-p, --port <port>', 'Change default port', 4200)
   .option('-u, --ui-port <uiPort>', 'Change default port of ui-kit', 5200)
+  .option('-o, --open', 'Automatically open browser')
   .action((options) => {
-    Promise.all([serveMain(options.env, options.port), serveUIKit(options.uiPort)]);
+    const open = options.open || false;
+    Promise.all([serveMain(options.env, options.port, open), serveUIKit(options.uiPort, open)]);
   });
 
 program

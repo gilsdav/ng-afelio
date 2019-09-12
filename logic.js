@@ -37,21 +37,23 @@ const createNewProject = async (name, skipUiKit) => {
     return await addLocalCli(!skipUiKit);
 };
 
-const serveUIKit = async (port) => {
+const serveUIKit = async (port, autoOpen) => {
     return await cli.default({cliArgs: [
         'serve',
         'ui-kit',
         `--port=${port||'5200'}`,
-        '--host=0.0.0.0'
+        '--host=0.0.0.0',
+        ...( autoOpen ? ['--open'] : [] )
     ]});
 }
 
-const serveMain = async (environment, port) => {
+const serveMain = async (environment, port, autoOpen) => {
     return await cli.default({cliArgs: [
         'serve',
         `--port=${port||'4200'}`,
         '--host=0.0.0.0',
-        ...( environment ? [`--configuration=${environment}`] : [])
+        ...( environment ? [`--configuration=${environment}`] : []),
+        ...( autoOpen ? ['--open'] : [] )
     ]});
 }
 
