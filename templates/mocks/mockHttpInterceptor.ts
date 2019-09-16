@@ -1,6 +1,7 @@
-import { HTTP_INTERCEPTORS, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 import { mocks } from './mocks';
 import { environment } from '../environments/environment';
@@ -13,26 +14,39 @@ export class MockHttpInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const url: string = request.url;
         const method: string = request.method;
+        let matches: string[];
 
-        const foundMock = mocks.find(
-            mock => url.includes(mock.url) &&
-            method === mock.methods &&
-            environment.mock.services[mock.name] || environment.mock.all
+        const foundMock: Mock = mocks.find(
+            mock => {
+                let isIncluded: boolean;
+                if (typeof mock.url === 'string') {
+                    isIncluded = url.includes(mock.url as string);
+                } else {
+                    matches = url.match(mock.url as RegExp);
+                    isIncluded = !!matches;
+                }
+                return isIncluded &&
+                method === mock.methods &&
+                (environment.mock.services[mock.name] || environment.mock.all);
+            }
         );
 
         if (foundMock) {
-            return this.executeMock(request, foundMock.response);
+            let mockExecution = this.executeMock(request, foundMock.response, matches);
+            if (foundMock.delay) {
+                mockExecution = mockExecution.pipe(delay(foundMock.delay));
+            }
+            return mockExecution;
         } else {
             return next.handle(request);
         }
 
     }
 
-    private executeMock(request, response): Observable<HttpEvent<any>> {
-        const result = response(request);
-        return of(result);
+    private executeMock(request: HttpRequest<any>, response: Function, matches: string[]): Observable<HttpEvent<any>> {
+        const result = response(request, matches);
+        return result instanceof Observable ? result : of(result);
     }
-
 }
 
 export const mockInterceptorProvider = {
@@ -40,3 +54,11 @@ export const mockInterceptorProvider = {
     useClass: MockHttpInterceptor,
     multi: true
 };
+
+export interface Mock {
+    url: string | RegExp;
+    methods: string;
+    name: string;
+    response: (request: HttpRequest<any>, matches?: string[]) => Observable<HttpResponse<any>> | HttpResponse<any>;
+    delay?: number;
+}

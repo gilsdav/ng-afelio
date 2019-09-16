@@ -8,7 +8,7 @@ const fs = require('fs');
 const cli = require('@angular/cli');
 
 const fillModule = require('./scripts/generate-module');
-const fillUiKit = require('./scripts/generate-ui-kit');
+const { fillUiKit, runUiKit } = require('./scripts/generate-ui-kit');
 const buildStyleFromUIKit = require('./scripts/build-style');
 const addLocalCli = require('./scripts/add-local-cli');
 const generateMocksTask = require('./scripts/generate-mocks');
@@ -29,39 +29,42 @@ const getAngularVersion = async () => {
     return await cli.default({cliArgs: ['--version']});
 }
 
-const createNewProject = async (name, uiKitType) => {
-    await cli.default({cliArgs: ['new', name, '--routing', '--style=scss']});
+const createNewProject = async (name, skipUiKit, ngOptionsString) => {
+    await cli.default({cliArgs: ['new', name, '--routing', '--style=scss', ...produceNgOptions(ngOptionsString)]});
     process.chdir(`./${name}`);
     if (uiKitType !== uiKitTypes.NONE) {
         await cli.default({cliArgs: ['generate', 'application', 'ui-kit', '--routing', '--style=scss', '--skip-tests']});
-        await fillUiKit(uiKitType);
+        await fillUiKit();
+        await runUiKit();
     }
     return await addLocalCli(uiKitType !== uiKitTypes.NONE);
 };
 
-const serveUIKit = async (port) => {
+const serveUIKit = async (port, ngOptionsString) => {
     return await cli.default({cliArgs: [
         'serve',
         'ui-kit',
         `--port=${port||'5200'}`,
-        '--host=0.0.0.0'
+        '--host=0.0.0.0',
+        ...produceNgOptions(ngOptionsString)
     ]});
 }
 
-const serveMain = async (environment, port) => {
+const serveMain = async (environment, port, ngOptionsString) => {
     return await cli.default({cliArgs: [
         'serve',
         `--port=${port||'4200'}`,
         '--host=0.0.0.0',
-        ...( environment ? [`--configuration=${environment}`] : [])
+        ...( environment ? [`--configuration=${environment}`] : []),
+        ...produceNgOptions(ngOptionsString)
     ]});
 }
 
-const generate = async (type, name, needStore, light) => {
+const generate = async (type, name, needStore, light, ngOptionsString) => {
     switch (type) {
         case 'module':
             if (currentPath.includes('/src/') || currentPath.endsWith('/src')) {
-                await cli.default({cliArgs: ['generate', type, name]});
+                await cli.default({cliArgs: ['generate', type, name, ...produceNgOptions(ngOptionsString)]});
                 return fillModule(name, needStore, light);
             } else {
                 console.warn(colors.red('You must be in src folder or its childs to generate a module.'));
@@ -73,7 +76,7 @@ const generate = async (type, name, needStore, light) => {
         //     const apiKey = light;
         //     return generateSwagger(source, moduleName, apiKey);
         default:
-            return await cli.default({cliArgs: ['generate', type, name]});
+            return await cli.default({cliArgs: ['generate', type, name, ...produceNgOptions(ngOptionsString)]});
     }
 }
 
@@ -85,8 +88,14 @@ const regenerateApi = (source) => {
     return regenerateSwagger(source);
 };
 
-const build = async (environment, ssr, baseHref) => {
-    const baseArgs = ['build', '--prod', `--configuration=${environment}`, ...( baseHref ? [`--base-href=${baseHref}`] : [])];
+const build = async (environment, ssr, baseHref, ngOptionsString) => {
+    const baseArgs = [
+        'build',
+        '--prod',
+        `--configuration=${environment}`,
+        ...( baseHref ? [`--base-href=${baseHref}`] : []),
+        ...produceNgOptions(ngOptionsString)
+    ];
     if (ssr) {
         console.warn(colors.underline(colors.yellow('Not implemented yet.')));
     } else {
@@ -127,6 +136,14 @@ const generateMocks = async () => {
     } else {
         console.warn(colors.red('You must be in src folder to generate mocks.'));
     }
+}
+
+function produceNgOptions(ngOptionsString) {
+    let ngOptions = [];
+    if (ngOptionsString) {
+        ngOptions = ngOptionsString.split(' ');
+    }
+    return ngOptions;
 }
 
 // Export all methods
