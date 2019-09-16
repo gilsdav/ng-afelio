@@ -38,8 +38,9 @@ program
   .alias('n')
   .description('Generate new Angular project')
   .option('--skip-ui-kit', 'Does not create the ui-kit project')
+  .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--commit=false --directory=."')
   .action((name, options) => {
-    createNewProject(name, options.skipUiKit || false).then(() => {
+    createNewProject(name, options.skipUiKit || false, options.ng).then(() => {
       console.info(`Please go to new directory "cd ./${name}"`);
     });
   });
@@ -49,8 +50,9 @@ program
   .alias('us')
   .description('Start UI Kit serve')
   .option('-p, --port <port>', 'Change default port', 5200)
+  .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
   .action((options) => {
-    serveUIKit(options.port);
+    serveUIKit(options.port, options.ng);
   });
 
 program
@@ -59,8 +61,9 @@ program
   .description('Start dev server')
   .option('-e, --env <environment>', 'Change default environment')
   .option('-p, --port <port>', 'Change default port', 4200)
+  .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
   .action((options) => {
-    serveMain(options.env, options.port);
+    serveMain(options.env, options.port, options.ng);
   });
 
 program
@@ -70,8 +73,9 @@ program
   .option('-e, --env <environment>', 'Change default environment')
   .option('-p, --port <port>', 'Change default port', 4200)
   .option('-u, --ui-port <uiPort>', 'Change default port of ui-kit', 5200)
+  .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
   .action((options) => {
-    Promise.all([serveMain(options.env, options.port), serveUIKit(options.uiPort)]);
+    Promise.all([serveMain(options.env, options.port, options.ng), serveUIKit(options.uiPort, options.ng)]);
   });
 
 program
@@ -80,8 +84,9 @@ program
   .description('Generates and/or modifies files based on a schematic')
   .option('-r, --ngrx', 'NGRX / Redux')
   .option('-l, --light', 'Only generate components, services and models folder')
+  .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--dryRun=true"')
   .action((type, name, options) => {
-    generate(type, name, options.ngrx || false, options.light || false);
+    generate(type, name, options.ngrx || false, options.light || false, options.ng);
   });
 
 program
@@ -91,8 +96,9 @@ program
   .option('-u, --ssr', 'Server Side Rendering / Universal')
   .option('-e, --env <environment>', 'Change default environment', 'production')
   .option('--base-href <href>', 'Base url for the application being built')
+  .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--namedChunks=false --extractLicenses=true"')
   .action((options) => {
-    build(options.env, options.ssr || false, options.baseHref);
+    build(options.env, options.ssr || false, options.baseHref, options.ng);
   });
 
 program
