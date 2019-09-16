@@ -95,7 +95,7 @@ program
   .command('build')
   .alias('b')
   .description('Builds your app and places it into the dist folder')
-  .option('-u, --ssr', 'Server Side Rendering / Universal')
+  // .option('-u, --ssr', 'Server Side Rendering / Universal')
   .option('-e, --env <environment>', 'Change default environment', 'production')
   .option('--base-href <href>', 'Base url for the application being built')
   .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--namedChunks=false --extractLicenses=true"')
