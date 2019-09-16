@@ -29,12 +29,12 @@ const getAngularVersion = async () => {
     return await cli.default({cliArgs: ['--version']});
 }
 
-const createNewProject = async (name, skipUiKit, ngOptionsString) => {
+const createNewProject = async (name, uiKitType, ngOptionsString) => {
     await cli.default({cliArgs: ['new', name, '--routing', '--style=scss', ...produceNgOptions(ngOptionsString)]});
     process.chdir(`./${name}`);
     if (uiKitType !== uiKitTypes.NONE) {
         await cli.default({cliArgs: ['generate', 'application', 'ui-kit', '--routing', '--style=scss', '--skip-tests']});
-        await fillUiKit();
+        await fillUiKit(uiKitType);
         await runUiKit();
     }
     return await addLocalCli(uiKitType !== uiKitTypes.NONE);

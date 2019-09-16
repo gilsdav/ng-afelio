@@ -39,10 +39,10 @@ program
   .command('new <name>')
   .alias('n')
   .description('Generate new Angular project')
-  .option('--skip-ui-kit', 'Does not create the ui-kit project')
+  .option('--ui-kit <uiKit>', 'Ui-kit type (' + Object.values(uiKitTypes).slice(1).join(', ') + ').', uiKitTypes.DEFAULT)
   .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--commit=false --directory=."')
   .action((name, options) => {
-    createNewProject(name, options.skipUiKit || false, options.ng).then(() => {
+    createNewProject(name, options.uiKit || false, options.ng).then(() => {
       console.info(`Please go to new directory "cd ./${name}"`);
     });
   });
