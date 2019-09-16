@@ -17,4 +17,11 @@ function uiKitTask() {
 
 }
 
-module.exports = uiKitTask;
+function runUiKit() {
+  return pexec('npx ng-afelio style');
+}
+
+module.exports = {
+  fillUiKit: uiKitTask,
+  runUiKit: runUiKit
+};
