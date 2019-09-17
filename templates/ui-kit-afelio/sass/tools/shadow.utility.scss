@@ -1,0 +1,29 @@
+//
+// Shadow
+// Create a utility class for the shadow
+// .bs-[$name]
+//
+// @param $name String  The name of the size
+// @param $qty Int      The quantity of the margin
+//
+@mixin box-shadow ($name, $qty)
+{
+  .bs-#{$name}
+  {
+    box-shadow: 0 0 $qty $box-shadow-color;
+  }
+}
+
+//
+// Grid Utility
+// Generate the utility classes
+//
+// @param $name String  The name of the size
+// @param $ratio Number      The ratio to apply
+//
+@mixin shadow-utility($name, $ratio)
+{
+  $px: compute-border($ratio * $box-shadow-multiplier);
+
+  @include box-shadow($name, $px);
+}

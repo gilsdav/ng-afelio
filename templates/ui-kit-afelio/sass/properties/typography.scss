@@ -1,0 +1,136 @@
+@charset 'utf-8';
+
+////////////////////////////////////////////////////
+//
+//              1. Typefaces
+//
+////////////////////////////////////////////////////
+$f-heading-regular: 'Open Sans';
+$f-heading-semibold: $f-heading-regular;
+$f-heading-bold: $f-heading-regular;
+
+$f-body-regular: 'Roboto';
+$f-body-medium: $f-body-regular;
+
+// Icons fonts
+// @include typeface('afelio-bootstrap', 'afelio-bootstrap', 'afelio-bootstrap-icons', 'icons', 400);
+
+// Heading fonts
+@include typeface(null, null, 'Open Sans', 'heading-regular', 400);
+@include typeface(null, null, 'Open Sans', 'heading-semibold', 600);
+@include typeface(null, null, 'Open Sans', 'heading-bold', 700);
+
+// Body fonts
+@include typeface(null, null, 'Roboto', 'body-regular', 400);
+@include typeface(null, null, 'Roboto', 'body-medium', 500);
+
+// Accent fonts
+@include typeface(null, null, 'Roboto', 'accent-regular', 400);
+@include typeface(null, null, 'Roboto', 'accent-medium', 500);
+
+////////////////////////////////////////////////////
+//
+//              2. Sizes
+//
+////////////////////////////////////////////////////
+@include font-utility('xxs',  $font-xxs);
+@include font-utility('xs',   $font-xs);
+@include font-utility('s',    $font-s);
+@include font-utility('m',    $font-m);
+@include font-utility('l',    $font-l);
+@include font-utility('xl',   $font-xl);
+@include font-utility('xxl',  $font-xxl);
+
+////////////////////////////////////////////////////
+//
+//              3. Alignement
+//
+////////////////////////////////////////////////////
+
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-justify { text-align: justify; }
+
+////////////////////////////////////////////////////
+//
+//              4. Case
+//
+////////////////////////////////////////////////////
+
+.uppercase{ text-transform: uppercase; }
+.lowercase{ text-transform: lowercase; }
+
+////////////////////////////////////////////////////
+//
+//              5. Styles
+//
+////////////////////////////////////////////////////
+
+.italic{ font-style: italic; }
+.oblique{ font-style: oblique; }
+
+////////////////////////////////////////////////////
+//
+//              5. Wrap
+//
+////////////////////////////////////////////////////
+
+.break-all{ word-break: break-all; }
+.break-word{ word-wrap: break-word; }
+
+////////////////////////////////////////////////////
+//
+//              5. Decoration
+//
+////////////////////////////////////////////////////
+
+.no-decoration{ text-decoration: none; }
+.underline{ text-decoration: underline; }
+.overline{ text-decoration: overline; }
+.strikethrough{ text-decoration: line-through; }
+
+////////////////////////////////////////////////////
+//
+//              6. Icons
+//
+////////////////////////////////////////////////////
+[class^="icon-"],
+[class*=" icon-"],
+.icon {
+  // use !important to prevent issues with browser extensions that change fonts
+  font-family: 'nrb-wam-icons' !important;
+  speak: none;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  // Better Font Rendering
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+$icon-arrow-down: "\e900";
+$icon-check: "\e901";
+$icon-lock: "\e902";
+$icon-plus: "\e903";
+$icon-question: "\e904";
+$icon-stroke-arrow-left: "\e905";
+$icon-unlock: "\e906";
+
+$icons: ("arrow-down", $icon-arrow-down),
+        ("check", $icon-check),
+        ("lock", $icon-lock),
+        ("plus", $icon-plus),
+        ("question", $icon-question),
+        ("stroke-arrow-left", $icon-stroke-arrow-left),
+        ("unlock", $icon-unlock)
+      ;
+
+@each $name, $ascii in $icons
+{
+  #{".icon-"+$name}::before
+  {
+    content: unicode($ascii);
+  }
+}

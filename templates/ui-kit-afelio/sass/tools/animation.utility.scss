@@ -1,0 +1,42 @@
+//
+//  Transition & Animation Duration
+//  Generate a utility class to define the transition & animation duration
+//  .td-[$name]
+//  .ad-[$name]
+//
+//  @param $name String       Name of the utility
+//  @param $duration Number   Duration of the transition
+//
+@mixin transition-animation-duration($name, $duration)
+{
+  .td-#{$name}
+  {
+    transition-duration: $duration;
+  }
+  .ad-#{$name}
+  {
+    animation-duration: $duration;
+  }
+}
+
+//
+//  Transition & Animation Easing
+//  Generate a utility class to define the transition and animation easing
+//  .ttf-[$name]
+//  .atf-[$name]
+//
+//  @param $name String       Name of the utility
+//  @param $function *        The function to use
+//
+@mixin transition-animation-easing($name, $function)
+{
+  .ttf-#{$name}
+  {
+    transition-timing-function: $function;
+  }
+
+  .atf-#{$name}
+  {
+    animation-timing-function: $function;
+  }
+}

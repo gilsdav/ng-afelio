@@ -1,0 +1,36 @@
+.checkbox
+{
+
+    #{$root}__label
+    {
+        @extend .block;
+        @extend .relative;
+    }
+
+    #{$root}__input
+    {
+        @extend .absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    #{$root}__check
+    {
+    }
+
+    &:hover #{$root}__input ~ #{$root}__check
+    {
+    }
+
+    #{$root}__check:after
+    {
+      content: '';
+      @extend .absolute;
+      display: none;
+    }
+
+    #{$root}__input:checked ~ #{$root}__check
+    {
+    }
+
+}

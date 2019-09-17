@@ -1,0 +1,107 @@
+//
+//  Border Radius
+//  Generate a utility class to define the border radius
+//  .br-[$name]
+//
+//  @param $name String   Name of the utility
+//  @param $ratio Number   Ratio to apply
+//
+@mixin border-radius($name, $ratio)
+{
+  .br-#{$name}
+  {
+    border-radius: compute-border($ratio * $border-radius-multiplier);
+  }
+}
+
+//
+//  Border Radius Top Left
+//  Generate a utility class to define the top left border radius
+//  brtl-[$name]
+//
+//  @param $name String   Name of the utility
+//  @param $ratio Number   Ratio to apply
+//
+@mixin border-radius-top-left($name, $ratio)
+{
+  .brtl-#{$name}
+  {
+    border-top-left-radius: compute-border($ratio * $border-radius-multiplier);
+  }
+}
+
+//
+//  Border Radius Top Right
+//  Generate a utility class to define the top right border radius
+//  .brtr-[$name]
+//
+//  @param $name String   Name of the utility
+//  @param $ratio Number   Ratio to apply
+//
+@mixin border-radius-top-right($name, $ratio)
+{
+  .brtr-#{$name}
+  {
+    border-top-right-radius: compute-border($ratio * $border-radius-multiplier);
+  }
+}
+
+//
+//  Border Radius Bottom Right
+//  Generate a utility class to define the bottom right border radius
+//  .brbr-[$name]
+//
+//  @param $name String   Name of the utility
+//  @param $ratio Number   Ratio to apply
+//
+@mixin border-radius-bottom-right($name, $ratio)
+{
+  .brbr-#{$name}
+  {
+    border-bottom-right-radius: compute-border($ratio * $border-radius-multiplier);
+  }
+}
+
+//
+//  Border Radius Bottom Left
+//  Generate a utility class to define the top right border radius
+//  .brbl-[$name]
+//
+//  @param $name String   Name of the utility
+//  @param $ratio Number   Ratio to apply
+//
+@mixin border-radius-bottom-left($name, $ratio)
+{
+  .brbl-#{$name}
+  {
+    border-bottom-left-radius: compute-border($ratio * $border-radius-multiplier);
+  }
+}
+
+//
+//  Border Width
+//  Generate a utility class to define the border width
+//  .bw-[$name]
+//
+//  @param $name String   Name of the utility
+//  @param $ratio Number   Ratio to apply
+//
+@mixin border-width($name, $ratio)
+{
+  .bw-#{$name}
+  {
+    border-width: compute-border($ratio);
+  }
+}
+
+//
+//  Compute String
+//  Compute the px value of a border ratio
+//
+//  @param $ratio Number   The ratio to compute
+//  @return Number         The computed px value
+//
+@function compute-border($ratio)
+{
+  @return $ratio * $border-base * 1px;
+}

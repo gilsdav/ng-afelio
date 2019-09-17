@@ -1,0 +1,115 @@
+//
+//  Border Color
+//  Generate a utility class to define the border color
+//  .bc-[$name]
+//
+//  @param $name String   Name of the color
+//  @param $color Color   Color to fill the border
+//
+@mixin border-color($name, $color)
+{
+  .bc-#{$name}
+  {
+    border-color: $color;
+  }
+}
+
+//
+//  Hover Border Color
+//  Generate a utility class to define the hover border color
+//  .hover-bc-[$name]
+//
+//  @param $name String   Name of the color
+//  @param $color Color   Color to fill the border
+//
+@mixin hover-border-color($name, $color)
+{
+  .hover-bc-#{$name}
+  {
+    &:hover
+    {
+      border-color: $color;
+    }
+  }
+}
+
+//
+//  Background Color
+//  Generate a utility class to define the background color
+//  .bg-[$name]
+//
+//  @param $name String   Name of the color
+//  @param $color Color   Color to fill the border
+//
+@mixin background-color($name, $color)
+{
+  .bg-#{$name}
+  {
+    background-color: $color;
+  }
+}
+
+//
+//  Hover Background Color
+//  Generate a utility class to define the hover background color
+//  .hover-bg-[$name]
+//
+//  @param $name String   Name of the color
+//  @param $color Color   Color to fill the border
+//
+@mixin hover-background-color($name, $color)
+{
+  .hover-bg-#{$name}
+  {
+    background-color: $color;
+  }
+}
+
+//
+//  Text Color
+//  Generate a utility class to define the text color
+//  .c-[$name]
+//
+//  @param $name String   Name of the color
+//  @param $color Color   Color to fill the border
+//
+@mixin color-color ($name, $color)
+{
+  .c-#{$name}
+  {
+    color: $color;
+  }
+}
+
+//
+//  Hover Text Color
+//  Generate a utility class to define the hover text color
+//  .c-[$name]
+//
+//  @param $name String   Name of the color
+//  @param $color Color   Color to fill the border
+//
+@mixin hover-color-color ($name, $color)
+{
+  .hover-c-#{$name}
+  {
+    color: $color;
+  }
+}
+
+//
+//  Color utility
+//  Wrap all the color utility classes
+//
+//  @param $name String   Name of the color
+//  @param $color Color   Color to fill the border
+//
+@mixin color-utility ($name, $color)
+{
+  @include border-color($name, $color);
+  @include hover-border-color($name, $color);
+  @include background-color($name, $color);
+  @include hover-background-color($name, $color);
+  @include color-color($name, $color);
+  @include hover-color-color($name, $color);
+}

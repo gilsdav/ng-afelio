@@ -1,0 +1,21 @@
+<nav class="uikit-primary">
+  <a class="uikit-primary__header" href="/">
+    <div class="uikit-primary__home -light logo" width="58px">
+
+    </div>
+    <div class="uikit-primary__title">Afelio</div>
+    <div class="uikit-primary__subtitle">UI-Kit</div>
+  </a>
+  <ng-container *ngFor="let category of menu">
+    <div class="uikit-primary__body">
+      <div class="uikit-primary__level1">
+        <div class="uikit-primary__itemlevel1">{{category.name}}</div>
+      </div>
+      <ul class="uikit-primary__list">
+        <li class="uikit-primary__level2" *ngFor="let item of category.items" [routerLinkActive]="['-active']">
+          <a [routerLink]="[item.route]">{{item.name}}</a>
+        </li>
+      </ul>
+    </div>
+  </ng-container>
+</nav>
