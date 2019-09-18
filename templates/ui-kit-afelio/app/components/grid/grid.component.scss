@@ -1,0 +1,19 @@
+.container
+{
+  width: auto;
+  border: 1px solid #FFDA00;
+
+  .row
+  {
+    background-color: #4C4C4C;
+
+    div
+    {
+      display: flex;
+      align-items: center;
+      border: 1px solid #fff;
+      background-color: #909296;
+      color: #fff;
+    }
+  }
+}

@@ -1,0 +1,136 @@
+<div class="uikit-inner">
+    <div class="app-express">
+      <section class="uikit-section">
+        <h1 class="uikit-h1">
+          Grid
+        </h1>
+        <p class="uikit-subheading">
+            The Grid System is used for layout, specifically Responsive Layouts.
+            The Grid is made up of groupings of Rows & Columns inside 1 or more Containers.
+            <br>
+            Basicly a container contain one or more rows and a row contain between 1 and 12 column.
+            <br>
+            Let's see how it works.
+            <br>
+            For more clarity, let's assume that the container is a box with a yellow border, a row is a box fill with dark grey and a column is fill with light grey with a white border.
+        </p>
+      </section>
+      <section class="uikit-section -separator">
+        <h2 class="uikit-h2">
+          One big column
+        </h2>
+        <div class="uikit-swatch">
+          <div class="uikit-swatch__body">
+            <div class="container">
+              <div class="row">
+                <div class="col">Just a column without parameters</div>
+              </div>
+            </div>
+          </div>
+          <div class="uikit-swatch__footer">
+            <span class="uikit-swatch__label">
+              One column
+            </span>
+            <span class="uikit-swatch__code">
+              <!-- encoder: http://www.htmlescape.net/htmlescape_tool.html -->
+              &lt;div class=&quot;container&quot;&gt;<br/>    &lt;div class=&quot;row&quot;&gt;<br/>        &lt;div class=&quot;col&quot;&gt;Just a column without parameters&lt;/div&gt;<br/>    &lt;/div&gt;<br/>&lt;/div&gt;
+            </span>
+            <span class="uikit-swatch__legend">
+              .container>.row>.col
+            </span>
+          </div>
+        </div>
+      </section>
+      <section class="uikit-section -separator">
+        <h2 class="uikit-h2">
+          Columns distribution
+        </h2>
+        <div class="uikit-swatch">
+          <div class="uikit-swatch__body">
+              <div class="container">
+                <div class="row">
+                  <div class="col">A first column</div>
+                  <div class="col">Another column</div>
+                  <div class="col">And again another column</div>
+                </div>
+              </div>
+            </div>
+            <div class="uikit-swatch__footer">
+              <span class="uikit-swatch__label">
+                If you set the "col" class to all children of "row" eleemnt they will be distributed egaly
+              </span>
+              <span class="uikit-swatch__code">
+                <!-- encoder: http://www.htmlescape.net/htmlescape_tool.html -->
+                &lt;div class=&quot;container&quot;&gt;<br/>    &lt;div class=&quot;row&quot;&gt;<br/>        &lt;div class=&quot;col&quot;&gt;A first column&lt;/div&gt;<br/>        &lt;div class=&quot;col&quot;&gt;Another column&lt;/div&gt;<br/>    &lt;/div&gt;<br/>&lt;/div&gt;      <br/>        &lt;div class=&quot;col&quot;&gt;And again another column&lt;/div&gt;<br/>    &lt;/div&gt;<br/>&lt;/div&gt;
+              </span>
+              <span class="uikit-swatch__legend">
+                .container>.row>.col *3
+              </span>
+            </div>
+        </div>
+      </section>
+      <section class="uikit-section -separator">
+        <h2 class="uikit-h2">
+          Numerate Columns
+        </h2>
+        <div class="uikit-swatch">
+          <div class="uikit-swatch__body">
+              <div class="container">
+                <div class="row">
+                  <div class="col-6">A first column who take 6 column places of 12 maximum</div>
+                  <div class="col-6">Another column of 6 places</div>
+                </div>
+                <div class="row">
+                  <div class="col-3">A first column of 3</div>
+                  <div class="col-4">Another column of 4</div>
+                  <div class="col-2">Another column of 2</div>
+                  <div class="col-3">Another column of 3</div>
+                </div>
+              </div>
+            </div>
+            <div class="uikit-swatch__footer">
+              <span class="uikit-swatch__label">
+                  A row can contain until 12 column, if you set a number after "col" the column will use that number of columns in the row.
+              </span>
+              <span class="uikit-swatch__code">
+                <!-- encoder: http://www.htmlescape.net/htmlescape_tool.html -->
+                &lt;div class=&quot;container&quot;&gt;<br/>                &lt;div class=&quot;row&quot;&gt;<br/>                  &lt;div class=&quot;col-6&quot;&gt;A first column who take 6 column places of 12 maximum&lt;/div&gt;<br/>                  &lt;div class=&quot;col-6&quot;&gt;Another column of 6 places&lt;/div&gt;<br/>                &lt;/div&gt;<br/>                &lt;div class=&quot;row&quot;&gt;<br/>                  &lt;div class=&quot;col-3&quot;&gt;A first column of 3&lt;/div&gt;<br/>                  &lt;div class=&quot;col-4&quot;&gt;Another column of 4&lt;/div&gt;<br/>                  &lt;div class=&quot;col-2&quot;&gt;Another column of 2&lt;/div&gt;<br/>                  &lt;div class=&quot;col-3&quot;&gt;Another column of 3&lt;/div&gt;<br/>                &lt;/div&gt;<br/>              &lt;/div&gt;
+              </span>
+              <span class="uikit-swatch__legend">
+                .container>.row>.col-6 *2 + .row>.col-3 + .col-4 + .col-2 + .col-3
+              </span>
+            </div>
+        </div>
+      </section>
+      <section class="uikit-section -separator">
+        <h2 class="uikit-h2">
+          Offset Columns
+        </h2>
+        <div class="uikit-swatch">
+          <div class="uikit-swatch__body">
+              <div class="container">
+                <div class="row">
+                  <div class="col-6 offset-6">A column of 6 places with an offset of 6</div>
+                </div>
+                <div class="row">
+                  <div class="col-3 offset-2">A column of 3 with an offset of 2</div>
+                  <div class="col-4 offset-3">Another column of 4 with an offset of 3</div>
+                </div>
+              </div>
+            </div>
+            <div class="uikit-swatch__footer">
+              <span class="uikit-swatch__label">
+                  You can set offset to your column if you want space before it.
+              </span>
+              <span class="uikit-swatch__code">
+                <!-- encoder: http://www.htmlescape.net/htmlescape_tool.html -->
+                &lt;div class=&quot;container&quot;&gt;<br/>                &lt;div class=&quot;row&quot;&gt;<br/>                  &lt;div class=&quot;col-6 offset-6&quot;&gt;A column of 6 places with an offset of 6&lt;/div&gt;<br/>                &lt;/div&gt;<br/>                &lt;div class=&quot;row&quot;&gt;<br/>                  &lt;div class=&quot;col-3 offset-2&quot;&gt;A column of 3 with an offset of 2&lt;/div&gt;<br/>                  &lt;div class=&quot;col-4 offset-3&quot;&gt;Another column of 4 with an offset of 3&lt;/div&gt;<br/>                &lt;/div&gt;<br/>              &lt;/div&gt;
+              </span>
+              <span class="uikit-swatch__legend">
+                .container>.row>.col-6 & .offset-6 + .row>.col-3 & .offset-2 + .col-4 & .offset-3
+              </span>
+            </div>
+        </div>
+      </section>
+    </div>
+  </div>
