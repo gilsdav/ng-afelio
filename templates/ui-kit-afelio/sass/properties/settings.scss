@@ -78,14 +78,13 @@ $columns: 12;
 //
 // External gutters size
 // Defines if gutters are visible outside the grid, if yes, specify a value in px.
-// Default is false.
+// Default is 0.
 //
 // Values can be :
-// - false (equals 0px)
 // - {n}px to have a costum size.
 //
 
-$external-gutters: false;
+$external-gutters: 0;
 
 //
 // Internal gutters size
@@ -93,11 +92,10 @@ $external-gutters: false;
 // Default is 20px.
 //
 // Values can be :
-// - false (equals 0px)
 // - {n}px to have a costum size.
 //
 
-$internal-gutters: 20px;
+$internal-gutters: 0;
 
 //
 //  Grid ratio
