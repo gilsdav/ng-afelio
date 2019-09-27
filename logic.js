@@ -104,27 +104,10 @@ const build = async (environment, ssr, baseHref, ngOptionsString) => {
 }
 
 const buildStyle = async () => {
-
-    let contains = false;
-    fs.readdirSync('./').forEach(file => {
-        if (file === 'projects') {
-            contains = true;
-        }
-    });
-
-    if (contains) {
-        contains = false;
-        fs.readdirSync('./projects').forEach(file => {
-            if (file === 'ui-kit') {
-                contains = true;
-            }
-        });
-    }
-
-    if (contains) {
-        process.chdir(`./projects/ui-kit`);
+    try {
         return await buildStyleFromUIKit();
-    } else {
+    } catch(e) {
+        console.error(e);
         console.warn(colors.red('You must be in base folder of the application and have a "ui-kit" project to use this command.'));
     }
     
