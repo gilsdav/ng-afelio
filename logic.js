@@ -80,8 +80,8 @@ const generate = async (type, name, needStore, light, ngOptionsString) => {
     }
 }
 
-const generateApi = (source, moduleName, apiKey, extract, version) => {
-    return generateSwagger(source, moduleName, apiKey, extract, version);
+const generateApi = (source, moduleName, apiKey, extract, version, proxy) => {
+    return generateSwagger(source, moduleName, apiKey, extract, version, proxy);
 }
 
 const regenerateApi = (source) => {
