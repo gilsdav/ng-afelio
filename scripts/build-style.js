@@ -14,9 +14,11 @@ const postcssScssSyntax = require('postcss-scss');
 const path = require('path');
 
 const baseConfig = require('../templates/config/ng-afelio.json');
-const configPath = '../../ng-afelio.json';
+const configPath = 'ng-afelio.json';
 
 let outputDirectory = '../../styles';
+let inputDirectory = './projects/ui-kit';
+let angularConfigPath = '../../angular.json';
 
 function readConfig() {
     if(!fs.existsSync(configPath)) {
@@ -31,10 +33,17 @@ function writeConfig(jsonContent) {
 }
 
 function initFolder(config) {
-    outputDirectory = /*config.outputDirectory || */'../../styles';
+    outputDirectory = config.style.baseOutputDirectory || outputDirectory;
     if (!fs.existsSync(outputDirectory)){
         fs.mkdirSync(outputDirectory);
     }
+    inputDirectory = config.style.baseInputDirectory || inputDirectory;
+    process.chdir(inputDirectory);
+    // Angular config
+    const countSlashes = inputDirectory.replace('./', '').split('/').reduce((result) => {
+        return result += '../';
+    }, '');
+    angularConfigPath = `${countSlashes}angular.json`;
 }
 
 function buildUtils(config, bundler) {
@@ -119,10 +128,10 @@ function buildStyleFiles(config, bundler) {
 }
 
 function checkAssetsConfiguration() {
-    const toAddToAngularConfig = { "input": "projects/ui-kit/src/assets", "glob": "**/*", "output": "./assets" };
-    const angularConfigPath = '../../angular.json';
+    const assetsPath = `${inputDirectory.replace('./', '')}/src/assets`;
+    const toAddToAngularConfig = { "input": assetsPath, "glob": "**/*", "output": "./assets" };
     const fileContent = fs.readFileSync(angularConfigPath, 'utf8');
-    if (!fileContent.includes('"input": "projects/ui-kit/src/assets"')) {
+    if (!fileContent.includes(`"input": "${assetsPath}"`)) {
         const jsonContent = JSON.parse(fileContent);
         const defaultProject = jsonContent.defaultProject;
         const builds = Object.keys(jsonContent.projects[defaultProject].architect);
@@ -138,26 +147,26 @@ function checkAssetsConfiguration() {
 }
 
 function checkStyleShortcut() {
-    const angularConfigPath = '../../angular.json';
+    const stylePath = path.join(inputDirectory, outputDirectory);
     const fileContent = fs.readFileSync(angularConfigPath, 'utf8');
     if (!fileContent.includes('"stylePreprocessorOptions"')) {
         const jsonContent = JSON.parse(fileContent);
         const defaultProject = jsonContent.defaultProject;
         const buildOptions = jsonContent.projects[defaultProject].architect.build.options;
-        buildOptions.stylePreprocessorOptions = { includePaths: ['styles'] };
+        buildOptions.stylePreprocessorOptions = { includePaths: [stylePath] };
         fs.writeFileSync(angularConfigPath, JSON.stringify(jsonContent, null, 2), 'utf8');
         console.info(`${colors.green('ADD CSS SHORTCUT')} "styles" chortchut added to ${defaultProject} project`);
     }
 }
 
 function buildStyleFromUIKit() {
-    const currentPath = process.cwd();
-
-    const bundler = new Bundler(undefined, currentPath);
-
     const config = readConfig();
 
     initFolder(config);
+
+    const currentPath = process.cwd();
+
+    const bundler = new Bundler(undefined, currentPath);
 
     Promise.all([
         buildUtils(config, bundler),

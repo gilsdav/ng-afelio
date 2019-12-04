@@ -1,5 +1,7 @@
 import { HttpResponse } from '@angular/common/http';
 
+import { Mock } from './mockHttpInterceptor';
+
 const petsMock = (request) => new HttpResponse({
     status: 200,
     body: {
@@ -7,6 +9,6 @@ const petsMock = (request) => new HttpResponse({
     }
 });
 
-export const listeners = [
+export const listeners: Mock[] = [
     { url: '/store/inventory', methods: 'GET', name: 'getPets', response: petsMock }
 ];
