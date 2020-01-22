@@ -66,7 +66,7 @@ function installOpenapiGen(scriptName, configFileName) {
  * @param {string} originalPath original path if source is a local copy (optional)
  * @param {string} apiKey api key to get swagger config (optional)
  */
-function generateConfigSwagger(source, destination, fileName, moduleName, originalPath, apiKey) {
+function generateConfigSwagger(source, destination, fileName, moduleName, originalPath, apiKey, proxy) {
     return pexec(`npm run ng-swagger-gen -- --gen-confi -i ${source} -o ${destination} -c ${fileName}`).then(() => {
         const filePath = `./${fileName}`;
         if (fs.existsSync(filePath)) {
@@ -79,6 +79,9 @@ function generateConfigSwagger(source, destination, fileName, moduleName, origin
             }
             if (apiKey) {
                 jsonContent.APIKey = apiKey;
+            }
+            if (proxy) {
+                jsonContent.proxy = proxy;
             }
             fs.writeFileSync(filePath, JSON.stringify(jsonContent, null, 2), 'utf8');
         } else {
@@ -95,7 +98,7 @@ function generateConfigSwagger(source, destination, fileName, moduleName, origin
  * @param {string} originalPath original path if source is a local copy (optional)
  * @param {string} apiKey api key to get swagger config (optional)
  */
-function generateConfigOpenApi(source, destination, fileName, moduleName, originalPath, apiKey) {
+function generateConfigOpenApi(source, destination, fileName, moduleName, originalPath, apiKey, proxy) {
     const currentPath = process.cwd();
     const templatePath = join(__dirname, '../templates/open-api/ng-openapi-gen.json');
     const configFileName = join(currentPath, fileName);
@@ -116,6 +119,9 @@ function generateConfigOpenApi(source, destination, fileName, moduleName, origin
             if (apiKey) {
                 jsonContent.APIKey = apiKey;
             }
+            if (proxy) {
+                jsonContent.proxy = proxy;
+            }
             fs.writeFileSync(filePath, JSON.stringify(jsonContent, null, 2), 'utf8');
         } else {
             console.log(`${colors.red(`${fileName} generation error`)} can not create the swagger config file`);
@@ -123,13 +129,14 @@ function generateConfigOpenApi(source, destination, fileName, moduleName, origin
     });
 }
 
-function getConfigFromSecureSource(source, apiKey, fileName) {
+function getConfigFromSecureSource(source, apiKey, fileName, proxy) {
     return new Promise((resolve, reject) => {
         http.get({
             url: source,
             headers: {
                 'Authorization': apiKey
-            }
+            },
+            proxy: proxy
         }, (err, res, body) => {
             if (err || res.statusCode !== 200) {
                 console.log(`${colors.red(`${source} not reachable`)} can not get swagger config file`);
@@ -152,15 +159,15 @@ function getConfigFromSecureSource(source, apiKey, fileName) {
 
 }
 
-function generateProtectedConfigSwagger(source, destination, fileName, moduleName, apiKey) {
-    return getConfigFromSecureSource(source, apiKey, fileName).then((path) => {
-        return generateConfigSwagger(path, destination, fileName, moduleName, source, apiKey);
+function generateProtectedConfigSwagger(source, destination, fileName, moduleName, apiKey, proxy) {
+    return getConfigFromSecureSource(source, apiKey, fileName, proxy).then((path) => {
+        return generateConfigSwagger(path, destination, fileName, moduleName, source, apiKey, proxy);
     });
 }
 
 function generateProtectedConfigOpenApi(source, destination, fileName, moduleName, apiKey) {
-    return getConfigFromSecureSource(source, apiKey, fileName).then((path) => {
-        return generateConfigOpenApi(path, destination, fileName, moduleName, source, apiKey);
+    return getConfigFromSecureSource(source, apiKey, fileName, proxy).then((path) => {
+        return generateConfigOpenApi(path, destination, fileName, moduleName, source, apiKey, proxy);
     });
 }
 
@@ -184,7 +191,7 @@ const generateConfigs = {
     }
 };
 
-function generateSwagger(source, name, apiKey, extract, version) {
+function generateSwagger(source, name, apiKey, extract, version, proxy) {
     if (!name) {
         name = 'api';
     }
@@ -207,9 +214,9 @@ function generateSwagger(source, name, apiKey, extract, version) {
             const generateConfig = generateConfigs[version];
             let configGeneration;
             if (apiKey) {
-                configGeneration = generateConfig.secure(source, destination, configFileName, moduleName, apiKey);
-            } else if (extract) {
-                configGeneration = generateConfig.secure(source, destination, configFileName, moduleName, '');
+                configGeneration = generateConfig.secure(source, destination, configFileName, moduleName, apiKey, proxy);
+            } else if (extract || proxy) {
+                configGeneration = generateConfig.secure(source, destination, configFileName, moduleName, '', proxy);
             } else {
                 configGeneration = generateConfig.simple(source, destination, configFileName, moduleName);
             }
@@ -237,7 +244,7 @@ function regenerateSwagger(source) {
 
     let configSearch;
     if (jsonContent.originalSwagger) {
-        configSearch = getConfigFromSecureSource(jsonContent.originalSwagger, jsonContent.APIKey || '', fileName).then(() => {
+        configSearch = getConfigFromSecureSource(jsonContent.originalSwagger, jsonContent.APIKey || '', fileName, jsonContent.proxy || undefined).then(() => {
             console.info(`${colors.green('New Swagger file pulled')} from ${jsonContent.originalSwagger}`);
         });
     } else {

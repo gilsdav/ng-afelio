@@ -125,6 +125,7 @@ program
   .option('-x, --extract', 'Extract swagger file to assets. Already done if you use --api-key')
   .option('-r, --regenerate', 'Add this flag to use regenerate mode')
   .option('-s, --api-version <apiVersion>', 'Swagger version (available: 2 or 3)')
+  .option('-p, --proxy <proxy>', 'Proxy url to get swagger file')
   .action((source, options) => {
     if (options.regenerate) {
       regenerateApi(source);
@@ -133,7 +134,7 @@ program
         console.info(`${colors.blue('No api version given.')} Will use 2.`);
         options.apiVersion = 2;
       }
-      generateApi(source, options.name, options.apiKey, options.extract, options.apiVersion);
+      generateApi(source, options.name, options.apiKey, options.extract, options.apiVersion, options.proxy);
     }
   });
 
