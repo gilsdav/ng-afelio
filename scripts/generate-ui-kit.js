@@ -24,7 +24,7 @@ function uiKitTask(type) {
   
   console.log('templatePath', templatePath);
   if (templatePath) {
-    return pexec('npm install bootstrap@4.1.3 font-awesome@4.7.0 --save').then(() => {
+    return pexec('npm install bootstrap@4.1.3 font-awesome@4.7.0 ngx-highlight-js@2.1.1 @ng-select/ng-select@3.7.3 --save').then(() => {
       return fse.copy(templatePath, `${currentPath}/projects/ui-kit/src`).then(() => {
         console.info(`${colors.green('APPLY TEMPLATE')} template of ui-kit '${type}' applied`);
       });

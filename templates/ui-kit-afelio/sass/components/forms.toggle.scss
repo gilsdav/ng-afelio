@@ -1,0 +1,198 @@
+.toggle
+{
+    ////////////////////////////////////////////////////
+    //
+    //                  Variables
+    //
+    ////////////////////////////////////////////////////
+
+    $root: '.toggle';
+
+
+    ////////////////////////////////////////////////////
+    //
+    //                  Global style
+    //
+    ////////////////////////////////////////////////////
+
+    @extend .textfield;
+    border: 0;
+    cursor: pointer;
+
+    background: transparent;
+
+    #{$root}__item
+    {
+        @extend .relative;
+
+        cursor: pointer;
+
+        @extend .w-50;
+        height: 42px;
+
+        @extend .px-m;
+        @extend .bc-grey03;
+        @extend .bw-xxs;
+        @extend .bs-solid;
+        border-right-color: transparent;
+
+        @extend .bg-grey00;
+
+        &.-disabled
+        {
+            cursor: default;
+
+            @extend .bg-grey01;
+
+            input[type="radio"], #{$root}__item-label
+            {
+                cursor: default;
+                pointer-events: none;
+            }
+
+            #{$root}__item-label
+            {
+                cursor: default;
+            }
+        }
+
+        #{$root}__item-label
+        {
+            cursor: pointer;
+            @extend .c-grey06;
+            line-height: 24px;
+            @extend .w-100;
+            @extend .text-center;
+            @extend .f-regular;
+            @extend .absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            @extend .py-none;
+
+            &.-line-height-initial
+            {
+                line-height: initial;
+            }
+        }
+
+        &:first-child
+        {
+            border-top-left-radius: 2px;
+            border-bottom-left-radius: 2px;
+        }
+
+        &:last-child
+        {
+            border-top-right-radius: 2px;
+            border-bottom-right-radius: 2px;
+            border-right-color: $grey03;
+
+            &.-selected
+            {
+                border-right-color: $primary03;
+            }
+        }
+
+        &.-selected
+        {
+            border: 1px solid $primary03;
+            background-color: rgba(209, 234, 237, 0.6);
+
+            #{$root}__item-label
+            {
+                @extend .c-primary03;
+            }
+
+            & + #{$root}__item
+            {
+                border-left-color: transparent;
+            }
+        }
+
+        input[type="radio"]
+        {
+            opacity: 0;
+
+            @extend .absolute;
+            top: 0;
+            left: 0;
+
+            @extend .w-100;
+            @extend .h-100;
+            @extend .m-none;
+        }
+    }
+
+    ////////////////////////////////////////////////////
+    //
+    //                  Variations
+    //
+    ////////////////////////////////////////////////////
+
+    &.-s
+    {
+        #{$root}__item
+        {
+            height: 32px;
+            min-width: 72px;
+        }
+    }
+
+    &.-auto
+    {
+        #{$root}__item
+        {
+            @extend .py-xs;
+            width: auto;
+            height: auto;
+
+            #{$root}__item-label {
+                @extend .static;
+                @extend .d-block;
+                transform: none;
+            }
+
+            input[type="radio"]
+            {
+                cursor: pointer;
+            }
+        }
+
+        &.-s
+        {
+            #{$root}__item
+            {
+                @extend .py-xxs;
+                @extend .px-s;
+                @extend .f-s;
+                height: auto;
+                min-width: 0;
+            }
+        }
+    }
+
+    &.-disabled
+    {
+        background: transparent;
+
+        #{$root}__item
+        {
+            cursor: default;
+
+            @extend .bg-grey01;
+
+            input[type="radio"], #{$root}__item-label
+            {
+                cursor: default;
+                pointer-events: none;
+            }
+
+            #{$root}__item-label
+            {
+                cursor: default;
+            }
+        }
+    }
+
+}
