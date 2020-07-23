@@ -33,12 +33,14 @@ function writeConfig(jsonContent) {
 }
 
 function initFolder(config) {
+    inputDirectory = config.style.baseInputDirectory || inputDirectory;
+    process.chdir(inputDirectory);
+
     outputDirectory = config.style.baseOutputDirectory || outputDirectory;
     if (!fs.existsSync(outputDirectory)){
         fs.mkdirSync(outputDirectory);
     }
-    inputDirectory = config.style.baseInputDirectory || inputDirectory;
-    process.chdir(inputDirectory);
+
     // Angular config
     const countSlashes = inputDirectory.replace('./', '').split('/').reduce((result) => {
         return result += '../';

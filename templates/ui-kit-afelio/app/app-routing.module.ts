@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home/home.component';
-import { TypographyComponent, IconsComponent, BordersComponent, LinkComponent, ButtonComponent, FormsComponent, MarginComponent, PaddingComponent, GridComponent } from './components';
-import { ColorsComponent } from './components/colors/colors.component';
+import { TypographyComponent, IconsComponent, BordersComponent, LinkComponent,
+    ButtonComponent, FormsComponent, MarginComponent, PaddingComponent, GridComponent,
+    ColorsComponent
+} from './components';
 
 const routes: Routes = [
     { path: 'home', component: HomeComponent, pathMatch: 'full', data: { category: 'Home', name: 'Home' } },
