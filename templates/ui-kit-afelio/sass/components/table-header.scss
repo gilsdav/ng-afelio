@@ -1,0 +1,17 @@
+.table-header
+{
+    @extend .mt-m;
+
+    @extend .bg-grey01;
+
+    $border: 1px solid $grey03;
+    border-top: $border;
+    border-left: $border;
+    border-right: $border;
+
+
+    &.-border-bottom
+    {
+        border-bottom: $border;
+    }
+}

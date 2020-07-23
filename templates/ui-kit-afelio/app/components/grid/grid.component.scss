@@ -1,19 +1,30 @@
-.container
-{
-  width: auto;
-  border: 1px solid #FFDA00;
+.container {
+    width: auto;
+    padding: 30px;
 
-  .row
-  {
-    background-color: #4C4C4C;
+    &.-bd-example {
 
-    div
-    {
-      display: flex;
-      align-items: center;
-      border: 1px solid #fff;
-      background-color: #909296;
-      color: #fff;
+        .row {
+            min-height: 8rem;
+            background-color: rgba(255, 0, 0, .1);
+            margin-bottom: 1em;
+        }
     }
-  }
+
+    &.-bd-example-row {
+
+        .row:not(:first-child) {
+            margin-top: 1em;
+        }
+    }
+
+    .row {
+
+        [class*="col"] {
+            padding: 0.7em 1em;
+            color: #6f6f6f;
+            background-color: rgba(38, 127, 145, 0.2);
+            border: 1px solid rgba(38, 127, 145, 0.4);
+        }
+    }
 }

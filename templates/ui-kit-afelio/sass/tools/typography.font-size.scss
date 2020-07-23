@@ -20,7 +20,7 @@
     {
       line-height: $line-height;
     }
-    @elseif ($line-height != none and $line-height != false)
+    @else if ($line-height != none and $line-height != false)
     {
       @warn "D'oh! '#{$line-height}' is not a valid value for `line-height`";
     }

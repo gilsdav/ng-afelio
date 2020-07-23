@@ -1,46 +1,113 @@
-.radio
+/*****************************************************************************
+    HTML Structure
+
+    <label class="radio" for="input-id">
+        <input class="radio__input" type="radio" id="input-id" value="Value"/>
+        <span class="radio__checker"></span>
+        <span class="radio__label">Label</span>
+    </label>
+*****************************************************************************/
+
+$root: '.radio';
+
+#{$root}
 {
-    ////////////////////////////////////////////////////
-    //
-    //                  Variables
-    //
-    ////////////////////////////////////////////////////
-
-    $root: '.radio';
-
-
     ////////////////////////////////////////////////////
     //
     //                  Global style
     //
     ////////////////////////////////////////////////////
 
-    // TODO: write global styles here.
+    @extend .relative;
+    @extend .block;
+    @extend .pl-xl;
+    cursor: pointer;
+    @extend .py-xxs;
 
+    &__input {
+        @extend .absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
 
-    ////////////////////////////////////////////////////
-    //
-    //                  Variations
-    //
-    ////////////////////////////////////////////////////
+    &__checker {
+        @extend .absolute;
+        top: 50%;
+        left: compute-grid($grid-xxs);
+        transform: translateY(-50%);
 
-    // TODO: write variations here.
-  
+        $size: 16px;
+        height: $size;
+        width: $size;
 
-    ////////////////////////////////////////////////////
-    //
-    //                  States
-    //
-    ////////////////////////////////////////////////////
+        @extend .bg-grey00;
+        @extend .br-circle;
+        border: 1px solid $grey02;
+
+        &:after {
+            content: '';
+
+            $size: 8px;
+            height: $size;
+            width: $size;
+
+            @extend .absolute;
+            top: 50%;
+            left: 50%;
+            transform:  translateY(-50%)
+                        translateX(-50%);
+
+            @extend .bg-primary03;
+            @extend .br-circle;
+
+            opacity: 0;
+
+            transition-property: opacity;
+            transition-duration: .25s;
+            transition-timing-function: ease-in-out;
+        }
+    }
+
+    &__label {
+        @extend .f-s;
+        @extend .c-grey08;
+
+    }
 
     &:hover
     {
-        // TODO: write hover effect styles here.
+        background-color: $grey01;
     }
 
-    &:focus,
-    &.active
-    {
-        // TODO: write focus/active effect styles here.
+    /* On mouse-over, add a grey background color */
+    &:hover #{$root}__input ~ #{$root}__checker::after {
+        opacity: .5;
     }
+
+    /* When the radio button is checked, add a blue background */
+    #{$root}__input:checked ~ #{$root}__checker:after {
+        opacity: 1;
+    }
+
+    /* Create the indicator (the dot/circle - hidden when not checked) */
+    // #{$root}__checker:after {
+    //     content: "";
+    //     position: absolute;
+    //     display: none;
+    // }
+
+    /* Show the indicator (dot/circle) when checked */
+    // #{$root}__input:checked~#{$root}__checker:after {
+    //     display: block;
+    // }
+
+    // /* Style the indicator (dot/circle) */
+    // #{$root}__checker:after {
+    //     top: 9px;
+    //     left: 9px;
+    //     width: 8px;
+    //     height: 8px;
+    //     border-radius: 50%;
+    //     background: white;
+    // }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -15,7 +15,6 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.router.config);
     this.router.config.forEach(route => {
       if (route.data && route.data.category && route.data.name) {
         const currentCategory = this.menu.find(category => category.name === route.data.category);

@@ -1,7 +1,7 @@
 $root: '.ts-';
 #{$root}mega
 {
-  @extend .f-heading-bold;
+  @extend .f-bold;
   @extend .f-xxl;
   line-height: 1.3;
 
@@ -18,49 +18,49 @@ $root: '.ts-';
 #{$root}jumbo
 {
   @extend .f-xxl;
-  @extend .f-heading-semibold;
+  @extend .f-medium;
   line-height: 1.3;
 }
 
 #{$root}display
 {
   @extend .f-xl;
-  @extend .f-heading-semibold;
+  @extend .f-medium;
   line-height: 1.3;
 }
 
 #{$root}headline
 {
-  @extend .f-body-regular;
+  @extend .f-regular;
   @extend .f-l;
   line-height: 1.3;
 
   &.-heading
   {
-    @extend .f-heading-regular;
+    @extend .f-regular;
   }
 }
 
 #{$root}body
 {
   @extend .f-m;
-  @extend .f-heading-semibold;
+  @extend .f-medium;
 }
 
 #{$root}caption
 {
   @extend .f-s;
-  @extend .f-body-regular;
+  @extend .f-regular;
 }
 
 #{$root}small
 {
   @extend .f-xs;
-  @extend .f-body-regular;
+  @extend .f-regular;
 }
 
 #{$root}tiny
 {
   @extend .f-xxs;
-  @extend .f-body-regular;
+  @extend .f-regular;
 }

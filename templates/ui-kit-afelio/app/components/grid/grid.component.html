@@ -1,136 +1,1005 @@
 <div class="uikit-inner">
     <div class="app-express">
-      <section class="uikit-section">
-        <h1 class="uikit-h1">
-          Grid
-        </h1>
-        <p class="uikit-subheading">
-            The Grid System is used for layout, specifically Responsive Layouts.
-            The Grid is made up of groupings of Rows & Columns inside 1 or more Containers.
-            <br>
-            Basicly a container contain one or more rows and a row contain between 1 and 12 column.
-            <br>
-            Let's see how it works.
-            <br>
-            For more clarity, let's assume that the container is a box with a yellow border, a row is a box fill with dark grey and a column is fill with light grey with a white border.
-        </p>
-      </section>
-      <section class="uikit-section -separator">
-        <h2 class="uikit-h2">
-          One big column
-        </h2>
-        <div class="uikit-swatch">
-          <div class="uikit-swatch__body">
-            <div class="container">
-              <div class="row">
-                <div class="col">Just a column without parameters</div>
-              </div>
-            </div>
-          </div>
-          <div class="uikit-swatch__footer">
-            <span class="uikit-swatch__label">
-              One column
-            </span>
-            <span class="uikit-swatch__code">
-              <!-- encoder: http://www.htmlescape.net/htmlescape_tool.html -->
-              &lt;div class=&quot;container&quot;&gt;<br/>    &lt;div class=&quot;row&quot;&gt;<br/>        &lt;div class=&quot;col&quot;&gt;Just a column without parameters&lt;/div&gt;<br/>    &lt;/div&gt;<br/>&lt;/div&gt;
-            </span>
-            <span class="uikit-swatch__legend">
-              .container>.row>.col
-            </span>
-          </div>
+        <section class="uikit-section">
+            <h1 class="uikit-h1">
+                Grid
+            </h1>
+            <p class="uikit-subheading">
+                Our grid system is based on the Bootstrap grid. <a target="_blank"
+                    href="https://getbootstrap.com/docs/4.4/layout/grid/">See Bootstrap documentation<span
+                        class="link__icon icon-tab f-s ml-xxs"></span></a>
+                <br><br>
+                Bootstrap’s grid system uses a series of containers, rows, and columns to layout and align content. It’s
+                built with flexbox and is responsive.
+                <br><br>
+                For more information about Flexbox, please read this <a
+                    href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/#flexbox-background"
+                    target="_blank">guide to Flexbox<span class="link__icon icon-tab f-s ml-xxs"></span></a>.
+            </p>
+        </section>
+
+        <!--  SECTION : Basic usage -->
+        <section class="uikit-section -separator">
+            <h2 class="uikit-h2">
+                Basic usage
+            </h2>
+            <div class="uikit-swatch">
+                <div class="uikit-swatch__body container">
+                    <div class="row">
+                        <div class="col-sm">
+                            One of three columns
+                        </div>
+                        <div class="col-sm">
+                            One of three columns
+                        </div>
+                        <div class="col-sm">
+                            One of three columns
+                        </div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <span class="uikit-swatch__label">
+                        Three equal-width columns on small, medium, large, and extra large devices.<br>
+                        Those columns are centered in the page with the parent <span class="code">.container</span>.
+                    </span>
+                    <textarea highlight-js [lang]="'html'">
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            One of three columns
         </div>
-      </section>
-      <section class="uikit-section -separator">
-        <h2 class="uikit-h2">
-          Columns distribution
-        </h2>
-        <div class="uikit-swatch">
-          <div class="uikit-swatch__body">
-              <div class="container">
-                <div class="row">
-                  <div class="col">A first column</div>
-                  <div class="col">Another column</div>
-                  <div class="col">And again another column</div>
-                </div>
-              </div>
-            </div>
-            <div class="uikit-swatch__footer">
-              <span class="uikit-swatch__label">
-                If you set the "col" class to all children of "row" eleemnt they will be distributed egaly
-              </span>
-              <span class="uikit-swatch__code">
-                <!-- encoder: http://www.htmlescape.net/htmlescape_tool.html -->
-                &lt;div class=&quot;container&quot;&gt;<br/>    &lt;div class=&quot;row&quot;&gt;<br/>        &lt;div class=&quot;col&quot;&gt;A first column&lt;/div&gt;<br/>        &lt;div class=&quot;col&quot;&gt;Another column&lt;/div&gt;<br/>    &lt;/div&gt;<br/>&lt;/div&gt;      <br/>        &lt;div class=&quot;col&quot;&gt;And again another column&lt;/div&gt;<br/>    &lt;/div&gt;<br/>&lt;/div&gt;
-              </span>
-              <span class="uikit-swatch__legend">
-                .container>.row>.col *3
-              </span>
-            </div>
+        <div class="col-sm">
+            One of three columns
         </div>
-      </section>
-      <section class="uikit-section -separator">
-        <h2 class="uikit-h2">
-          Numerate Columns
-        </h2>
-        <div class="uikit-swatch">
-          <div class="uikit-swatch__body">
-              <div class="container">
-                <div class="row">
-                  <div class="col-6">A first column who take 6 column places of 12 maximum</div>
-                  <div class="col-6">Another column of 6 places</div>
-                </div>
-                <div class="row">
-                  <div class="col-3">A first column of 3</div>
-                  <div class="col-4">Another column of 4</div>
-                  <div class="col-2">Another column of 2</div>
-                  <div class="col-3">Another column of 3</div>
-                </div>
-              </div>
-            </div>
-            <div class="uikit-swatch__footer">
-              <span class="uikit-swatch__label">
-                  A row can contain until 12 column, if you set a number after "col" the column will use that number of columns in the row.
-              </span>
-              <span class="uikit-swatch__code">
-                <!-- encoder: http://www.htmlescape.net/htmlescape_tool.html -->
-                &lt;div class=&quot;container&quot;&gt;<br/>                &lt;div class=&quot;row&quot;&gt;<br/>                  &lt;div class=&quot;col-6&quot;&gt;A first column who take 6 column places of 12 maximum&lt;/div&gt;<br/>                  &lt;div class=&quot;col-6&quot;&gt;Another column of 6 places&lt;/div&gt;<br/>                &lt;/div&gt;<br/>                &lt;div class=&quot;row&quot;&gt;<br/>                  &lt;div class=&quot;col-3&quot;&gt;A first column of 3&lt;/div&gt;<br/>                  &lt;div class=&quot;col-4&quot;&gt;Another column of 4&lt;/div&gt;<br/>                  &lt;div class=&quot;col-2&quot;&gt;Another column of 2&lt;/div&gt;<br/>                  &lt;div class=&quot;col-3&quot;&gt;Another column of 3&lt;/div&gt;<br/>                &lt;/div&gt;<br/>              &lt;/div&gt;
-              </span>
-              <span class="uikit-swatch__legend">
-                .container>.row>.col-6 *2 + .row>.col-3 + .col-4 + .col-2 + .col-3
-              </span>
-            </div>
+        <div class="col-sm">
+            One of three columns
         </div>
-      </section>
-      <section class="uikit-section -separator">
-        <h2 class="uikit-h2">
-          Offset Columns
-        </h2>
-        <div class="uikit-swatch">
-          <div class="uikit-swatch__body">
-              <div class="container">
-                <div class="row">
-                  <div class="col-6 offset-6">A column of 6 places with an offset of 6</div>
-                </div>
-                <div class="row">
-                  <div class="col-3 offset-2">A column of 3 with an offset of 2</div>
-                  <div class="col-4 offset-3">Another column of 4 with an offset of 3</div>
-                </div>
-              </div>
-            </div>
-            <div class="uikit-swatch__footer">
-              <span class="uikit-swatch__label">
-                  You can set offset to your column if you want space before it.
-              </span>
-              <span class="uikit-swatch__code">
-                <!-- encoder: http://www.htmlescape.net/htmlescape_tool.html -->
-                &lt;div class=&quot;container&quot;&gt;<br/>                &lt;div class=&quot;row&quot;&gt;<br/>                  &lt;div class=&quot;col-6 offset-6&quot;&gt;A column of 6 places with an offset of 6&lt;/div&gt;<br/>                &lt;/div&gt;<br/>                &lt;div class=&quot;row&quot;&gt;<br/>                  &lt;div class=&quot;col-3 offset-2&quot;&gt;A column of 3 with an offset of 2&lt;/div&gt;<br/>                  &lt;div class=&quot;col-4 offset-3&quot;&gt;Another column of 4 with an offset of 3&lt;/div&gt;<br/>                &lt;/div&gt;<br/>              &lt;/div&gt;
-              </span>
-              <span class="uikit-swatch__legend">
-                .container>.row>.col-6 & .offset-6 + .row>.col-3 & .offset-2 + .col-4 & .offset-3
-              </span>
-            </div>
-        </div>
-      </section>
     </div>
-  </div>
+</div>
+                    </textarea>
+                </div>
+            </div>
+            <div class="uikit-subheading">
+                <ul>
+                    <li>Use <span class="code">.container</span> for a responsive pixel width or <span
+                            class="code">.container-fluid</span> for <span class="code">width: 100%</span> across all
+                        viewport and device sizes.</li>
+                    <li>In a grid layout, content must be placed within columns and only columns may be immediate
+                        children of rows.</li>
+                    <li>Grid columns without a specified <span class="code">width</span> will automatically layout as
+                        equal width columns. For example, four instances of <span class="code">.col-sm</span> will each
+                        automatically be 25% wide from the small breakpoint and up.</li>
+                    <li>Column classes indicate the number of columns you’d like to use out of the possible 12 per row.
+                        So, if you want three equal-width columns across, you can use <span class="code">.col-4</span>.
+                    </li>
+                    <li>Columns have horizontal <span class="code">padding</span> to create the gutters between
+                        individual columns, however, you can remove the <span class="code">margin</span> from rows and
+                        <span class="code">padding</span> from columns with <span class="code">.no-gutters</span> on the
+                        <span class="code">.row</span>.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!--  SECTION : Grid options -->
+        <section class="uikit-section -separator" id="grid-options">
+            <h2 class="uikit-h2">
+                Grid options
+            </h2>
+            <p class="uikit-subheading">The application of classes is done in a mobile-first logic.</p>
+            <table class="table -color w-100">
+                <thead>
+                    <tr>
+                        <th class="p-s"></th>
+                        <th class="text-center p-s">
+                            Extra small<br>
+                            <small>&lt;576px</small>
+                        </th>
+                        <th class="text-center p-s">
+                            Small<br>
+                            <small>≥576px</small>
+                        </th>
+                        <th class="text-center p-s">
+                            Medium<br>
+                            <small>≥768px</small>
+                        </th>
+                        <th class="text-center p-s">
+                            Large<br>
+                            <small>≥992px</small>
+                        </th>
+                        <th class="text-center p-s">
+                            Extra large<br>
+                            <small>≥1200px</small>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="text-left p-s" scope="row">Max container width</th>
+                        <td class="p-s">None (auto)</td>
+                        <td class="p-s">540px</td>
+                        <td class="p-s">720px</td>
+                        <td class="p-s">960px</td>
+                        <td class="p-s">1140px</td>
+                    </tr>
+                    <tr>
+                        <th class="text-left p-s" scope="row">Breakpoint name</th>
+                        <td class="p-s">/</td>
+                        <td class="p-s"><span class="code">sm</span></td>
+                        <td class="p-s"><span class="code">md</span></td>
+                        <td class="p-s"><span class="code">lg</span></td>
+                        <td class="p-s"><span class="code">xl</span></td>
+                    </tr>
+                    <tr>
+                        <th class="text-left p-s" scope="row">Class prefix</th>
+                        <td class="p-s"><span class="code">.col-</span></td>
+                        <td class="p-s"><span class="code">.col-sm-</span></td>
+                        <td class="p-s"><span class="code">.col-md-</span></td>
+                        <td class="p-s"><span class="code">.col-lg-</span></td>
+                        <td class="p-s"><span class="code">.col-xl-</span></td>
+                    </tr>
+                    <tr>
+                        <th class="text-left p-s" scope="row"># of columns</th>
+                        <td class="p-s" colspan="5">12</td>
+                    </tr>
+                    <tr>
+                        <th class="text-left p-s" scope="row">Gutter width</th>
+                        <td class="p-s" colspan="5">30px (15px on each side of a column)</td>
+                    </tr>
+                    <tr>
+                        <th class="text-left p-s" scope="row">Nestable</th>
+                        <td class="p-s" colspan="5">Yes</td>
+                    </tr>
+                    <tr>
+                        <th class="text-left p-s" scope="row">Column ordering</th>
+                        <td class="p-s" colspan="5">Yes</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- SECTION : Auto-layout -->
+        <section class="uikit-section -separator">
+            <h2 class="uikit-h2">
+                Auto-layout columns
+            </h2>
+            <p class="uikit-subheading">
+                Utilize breakpoint-specific column classes for column sizing without an explicit numbered class like
+                <span class="code">.col-sm-6</span>.
+            </p>
+
+            <!-- Equal-width -->
+            <h3 class="uikit-h3 mt-l">
+                Equal-width
+            </h3>
+            <p class="uikit-subheading">
+                For example, here are two grid layouts that apply to every device and viewport, from xs to xl. Add any
+                number of unit-less classes for each breakpoint you need and every column will be the same width.
+            </p>
+            <div class="uikit-swatch">
+                <div class="uikit-swatch__body container">
+                    <div class="row">
+                        <div class="col">
+                            1 of 2
+                        </div>
+                        <div class="col">
+                            2 of 2
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            1 of 3
+                        </div>
+                        <div class="col">
+                            2 of 3
+                        </div>
+                        <div class="col">
+                            3 of 3
+                        </div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <span class="uikit-swatch__label">
+                        Two grid layouts that apply to every device and viewport, from xs to xl. Add any number of
+                        unit-less classes for each breakpoint you need and every column will be the same width.
+                    </span>
+                    <textarea highlight-js [lang]="'html'">
+<div class="container">
+    <div class="row">
+        <div class="col">
+            1 of 2
+        </div>
+        <div class="col">
+            2 of 2
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            1 of 3
+        </div>
+        <div class="col">
+            2 of 3
+        </div>
+        <div class="col">
+            3 of 3
+        </div>
+    </div>
+</div>
+                    </textarea>
+                </div>
+            </div>
+
+            <!-- Force column width -->
+            <h3 class="uikit-h3 mt-l">
+                Force column width
+            </h3>
+            <div class="uikit-swatch">
+                <div class="uikit-swatch__body container">
+                    <div class="row">
+                        <div class="col">
+                            1 of 3
+                        </div>
+                        <div class="col-6">
+                            2 of 3 (wider)
+                        </div>
+                        <div class="col">
+                            3 of 3
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            1 of 3
+                        </div>
+                        <div class="col-5">
+                            2 of 3 (wider)
+                        </div>
+                        <div class="col">
+                            3 of 3
+                        </div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <span class="uikit-swatch__label">
+                        You can specify the size of one or more columns (of 12) in the class <span
+                            class="code">.col-*</span>, where <span class="code">*</span> corresponds to the number of
+                        columns. The other columns will adapt.
+                    </span>
+                    <textarea highlight-js [lang]="'html'">
+<div class="container">
+    <div class="row">
+        <div class="col">
+            1 of 3
+        </div>
+        <div class="col-6">
+            2 of 3 (wider)
+        </div>
+        <div class="col">
+            3 of 3
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            1 of 3
+        </div>
+        <div class="col-5">
+            2 of 3 (wider)
+        </div>
+        <div class="col">
+            3 of 3
+        </div>
+    </div>
+</div>
+                    </textarea>
+                </div>
+            </div>
+
+            <!-- Variable width content -->
+            <h3 class="uikit-h3 mt-l">
+                Variable width content
+            </h3>
+            <div class="uikit-swatch">
+                <div class="uikit-swatch__body container">
+                    <div class="row justify-content-md-center">
+                        <div class="col col-lg-2">
+                            1 of 3
+                        </div>
+                        <div class="col-md-auto">
+                            Variable width content
+                        </div>
+                        <div class="col col-lg-2">
+                            3 of 3
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            1 of 3
+                        </div>
+                        <div class="col-md-auto">
+                            Variable width content
+                        </div>
+                        <div class="col col-lg-2">
+                            3 of 3
+                        </div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <span class="uikit-swatch__label">
+                        Use <span class="code">col-breakpoint-auto</span> classes to size columns based on the natural
+                        width of their content, where <span class="code">breakpoint</span> is the name detailled in the
+                        <a href="grid#grid-options">grid options section</a>.
+                    </span>
+                    <textarea highlight-js [lang]="'html'">
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col col-lg-2">
+            1 of 3
+        </div>
+        <div class="col-md-auto">
+            Variable width content
+        </div>
+        <div class="col col-lg-2">
+            3 of 3
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            1 of 3
+        </div>
+        <div class="col-md-auto">
+            Variable width content
+        </div>
+        <div class="col col-lg-2">
+            3 of 3
+        </div>
+    </div>
+</div>
+                    </textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- Auto-layout -->
+        <section class="uikit-section -separator">
+            <h2 class="uikit-h2">
+                Responsive classes
+            </h2>
+
+            <!-- All breakpoints -->
+            <h3 class="uikit-h3 mt-l">
+                All breakpoints
+            </h3>
+            <p class="uikit-subheading">For grids that are the same from the smallest of devices to the largest, use the
+                <span class="code">.col</span> and <span class="code">.col-*</span> classes. Specify a numbered
+                class when you need a particularly sized column; otherwise, feel free to stick to <span
+                    class="code">.col</span>.</p>
+            <div class="uikit-swatch mt-m">
+                <div class="uikit-swatch__body container">
+                    <div class="row">
+                        <div class="col">col</div>
+                        <div class="col">col</div>
+                        <div class="col">col</div>
+                        <div class="col">col</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">col-8</div>
+                        <div class="col-4">col-4</div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <textarea highlight-js [lang]="'html'">
+<div class="container">
+    <div class="row">
+        <div class="col">col</div>
+        <div class="col">col</div>
+        <div class="col">col</div>
+        <div class="col">col</div>
+    </div>
+    <div class="row">
+        <div class="col-8">col-8</div>
+        <div class="col-4">col-4</div>
+    </div>
+</div>
+                    </textarea>
+                </div>
+            </div>
+
+            <!-- Stacked to horizontal -->
+            <h3 class="uikit-h3 mt-l">
+                Stacked to horizontal
+            </h3>
+            <div class="uikit-swatch">
+                <div class="uikit-swatch__body container">
+                    <div class="row">
+                        <div class="col">col</div>
+                        <div class="col">col</div>
+                        <div class="col">col</div>
+                        <div class="col">col</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">col-8</div>
+                        <div class="col-4">col-4</div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <span class="uikit-swatch__label">
+                        Using a single set of <span class="code">.col-sm-*</span> classes, you can create a basic grid
+                        system that starts out stacked and becomes horizontal at the small breakpoint (sm).
+                    </span>
+                    <textarea highlight-js [lang]="'html'">
+<div class="container">
+    <div class="row">
+        <div class="col">col</div>
+        <div class="col">col</div>
+        <div class="col">col</div>
+        <div class="col">col</div>
+    </div>
+    <div class="row">
+        <div class="col-8">col-8</div>
+        <div class="col-4">col-4</div>
+    </div>
+</div>
+                    </textarea>
+                </div>
+            </div>
+
+            <!-- Mix and match -->
+            <h3 class="uikit-h3 mt-l">
+                Mix and match for responsive grid!
+            </h3>
+            <div class="uikit-swatch">
+                <div class="uikit-swatch__body container">
+                    <div class="row">
+                        <div class="col-md-8">.col-md-8</div>
+                        <div class="col-6 col-md-4">.col-6 .col-md-4</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 col-md-4">.col-6 .col-md-4</div>
+                        <div class="col-6 col-md-4">.col-6 .col-md-4</div>
+                        <div class="col-6 col-md-4">.col-6 .col-md-4</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">.col-6</div>
+                        <div class="col-6">.col-6</div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <span class="uikit-swatch__label">
+                        Use a combination of different classes for each tier as needed.
+                    </span>
+                    <textarea highlight-js [lang]="'html'">
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">.col-md-8</div>
+        <div class="col-6 col-md-4">.col-6 .col-md-4</div>
+    </div>
+    <div class="row">
+        <div class="col-6 col-md-4">.col-6 .col-md-4</div>
+        <div class="col-6 col-md-4">.col-6 .col-md-4</div>
+        <div class="col-6 col-md-4">.col-6 .col-md-4</div>
+    </div>
+    <div class="row">
+        <div class="col-6">.col-6</div>
+        <div class="col-6">.col-6</div>
+    </div>
+</div>
+                    </textarea>
+                </div>
+            </div>
+
+            <!-- Gutters -->
+            <h3 class="uikit-h3 mt-l">
+                Gutters
+            </h3>
+            <p class="uikit-subheading">
+                Gutters can be responsively adjusted by breakpoint-specific padding and negative margin utility classes.
+                To change the gutters in a given row, pair a negative margin utility on the <span
+                    class="code">.row</span> and matching padding utilities on the <span class="code">.col</span>s. The
+                <span class="code">.container</span> or <span class="code">.container-fluid</span> parent may need to be
+                adjusted too to avoid unwanted overflow, using again matching padding utility.
+            </p>
+            <div class="uikit-swatch mt-m">
+                <div class="uikit-swatch__body container px-lg-5">
+                    <div class="row mx-lg-n5">
+                        <div class="col py-3 px-lg-5 border bg-light">Custom column padding</div>
+                        <div class="col py-3 px-lg-5 border bg-light">Custom column padding</div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <textarea highlight-js [lang]="'html'">
+<div class="container px-lg-5">
+    <div class="row mx-lg-n5">
+        <div class="col py-3 px-lg-5">Custom column padding</div>
+        <div class="col py-3 px-lg-5">Custom column padding</div>
+    </div>
+</div>
+                    </textarea>
+                </div>
+            </div>
+
+            <!-- No gutters -->
+            <h3 class="uikit-h3 mt-l">
+                No gutters
+            </h3>
+            <div class="uikit-swatch">
+                <div class="uikit-swatch__body container">
+                    <div class="row no-gutters">
+                        <div class="col-sm-6 col-md-8">.col-sm-6 .col-md-8</div>
+                        <div class="col-6 col-md-4">.col-6 .col-md-4</div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <textarea highlight-js [lang]="'html'">
+<div class="container">
+    <div class="row no-gutters">
+        <div class="col-sm-6 col-md-8">.col-sm-6 .col-md-8</div>
+        <div class="col-6 col-md-4">.col-6 .col-md-4</div>
+    </div>
+</div>
+                    </textarea>
+                </div>
+            </div>
+
+            <!-- Row colums -->
+            <h3 class="uikit-h3 mt-m">
+                Row columns
+            </h3>
+            <p class="uikit-subheading">
+                Use the responsive <span class="code">.row-cols-*</span> classes to quickly set the number of columns
+                that best render your content and layout. Whereas normal <span class="code">.col-*</span> classes apply
+                to the individual columns (e.g., <span class="code">.col-md-4</span>), the row columns classes are set
+                on the parent <span class="code">.row</span> as a shortcut.
+            </p>
+            <div class="uikit-swatch mt-m">
+                <div class="uikit-swatch__body container">
+                    <div class="row row-cols-2">
+                        <div class="col">Column</div>
+                        <div class="col">Column</div>
+                        <div class="col">Column</div>
+                        <div class="col">Column</div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <textarea highlight-js [lang]="'html'">
+<div class="container">
+    <div class="row row-cols-2">
+        <div class="col">Column</div>
+        <div class="col">Column</div>
+        <div class="col">Column</div>
+        <div class="col">Column</div>
+    </div>
+</div>
+                </textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION : Alignment -->
+        <section class="uikit-section -separator">
+            <h2 class="uikit-h2 mt-m">
+                Alignment
+            </h2>
+
+            <!-- Vertical alignment -->
+            <h3 class="uikit-h3 mt-m">
+                Vertical alignment
+            </h3>
+            <div class="uikit-swatch">
+                <div class="uikit-swatch__body container -bd-example">
+                    <div class="row align-items-start">
+                        <div class="col">
+                            One of three columns
+                        </div>
+                        <div class="col">
+                            One of three columns
+                        </div>
+                        <div class="col">
+                            One of three columns
+                        </div>
+                    </div>
+                    <div class="row align-items-center">
+                        <div class="col">
+                            One of three columns
+                        </div>
+                        <div class="col">
+                            One of three columns
+                        </div>
+                        <div class="col">
+                            One of three columns
+                        </div>
+                    </div>
+                    <div class="row align-items-end">
+                        <div class="col">
+                            One of three columns
+                        </div>
+                        <div class="col">
+                            One of three columns
+                        </div>
+                        <div class="col">
+                            One of three columns
+                        </div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <textarea highlight-js [lang]="'html'">
+<div class="container">
+    <div class="row align-items-start">
+        <div class="col">
+        One of three columns
+        </div>
+        <div class="col">
+        One of three columns
+        </div>
+        <div class="col">
+        One of three columns
+        </div>
+    </div>
+    <div class="row align-items-center">
+        <div class="col">
+        One of three columns
+        </div>
+        <div class="col">
+        One of three columns
+        </div>
+        <div class="col">
+        One of three columns
+        </div>
+    </div>
+    <div class="row align-items-end">
+        <div class="col">
+        One of three columns
+        </div>
+        <div class="col">
+        One of three columns
+        </div>
+        <div class="col">
+        One of three columns
+        </div>
+    </div>
+</div>
+                    </textarea>
+                </div>
+            </div>
+            <div class="uikit-swatch mt-m">
+                <div class="uikit-swatch__body container -bd-example">
+                    <div class="row">
+                        <div class="col align-self-start">
+                            One of three columns
+                        </div>
+                        <div class="col align-self-center">
+                            One of three columns
+                        </div>
+                        <div class="col align-self-end">
+                            One of three columns
+                        </div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <textarea highlight-js [lang]="'html'">
+<div class="container">
+    <div class="row">
+        <div class="col align-self-start">
+          One of three columns
+        </div>
+        <div class="col align-self-center">
+          One of three columns
+        </div>
+        <div class="col align-self-end">
+          One of three columns
+        </div>
+    </div>
+</div>
+            </textarea>
+                </div>
+            </div>
+
+            <!-- Horizontal alignment -->
+            <h3 class="uikit-h3 mt-m">
+                Horizontal alignment
+            </h3>
+            <div class="uikit-swatch">
+                <div class="uikit-swatch__body container -bd-example-row">
+                    <div class="row justify-content-start">
+                        <div class="col-4">
+                            One of two columns
+                        </div>
+                        <div class="col-4">
+                            One of two columns
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-4">
+                            One of two columns
+                        </div>
+                        <div class="col-4">
+                            One of two columns
+                        </div>
+                    </div>
+                    <div class="row justify-content-end">
+                        <div class="col-4">
+                            One of two columns
+                        </div>
+                        <div class="col-4">
+                            One of two columns
+                        </div>
+                    </div>
+                    <div class="row justify-content-around">
+                        <div class="col-4">
+                            One of two columns
+                        </div>
+                        <div class="col-4">
+                            One of two columns
+                        </div>
+                    </div>
+                    <div class="row justify-content-between">
+                        <div class="col-4">
+                            One of two columns
+                        </div>
+                        <div class="col-4">
+                            One of two columns
+                        </div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <textarea highlight-js [lang]="'html'">
+<div class="container">
+    <div class="row justify-content-start">
+        <div class="col-4">
+        One of two columns
+        </div>
+        <div class="col-4">
+        One of two columns
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-4">
+        One of two columns
+        </div>
+        <div class="col-4">
+        One of two columns
+        </div>
+    </div>
+    <div class="row justify-content-end">
+        <div class="col-4">
+        One of two columns
+        </div>
+        <div class="col-4">
+        One of two columns
+        </div>
+    </div>
+    <div class="row justify-content-around">
+        <div class="col-4">
+        One of two columns
+        </div>
+        <div class="col-4">
+        One of two columns
+        </div>
+    </div>
+    <div class="row justify-content-between">
+        <div class="col-4">
+        One of two columns
+        </div>
+        <div class="col-4">
+        One of two columns
+        </div>
+    </div>
+</div>
+            </textarea>
+                </div>
+            </div>
+
+            <!-- Column breaks -->
+            <h3 class="uikit-h3 mt-l">
+                Column breaks
+            </h3>
+            <div class="uikit-swatch">
+                <div class="uikit-swatch__body container">
+                    <div class="row">
+                        <div class="col">col</div>
+                        <div class="col">col</div>
+                        <!-- Force next columns to break to new line -->
+                        <div class="w-100"></div>
+                        <div class="col">col</div>
+                        <div class="col">col</div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <span class="uikit-swatch__label">
+                        Normally this is accomplished with multiple <span class="code">.row</span>s, but not every
+                        implementation method can account for this. Use an element with <span class="code">width:
+                            100%</span> wherever you want to wrap your columns to a new line.
+                    </span>
+                    <textarea highlight-js [lang]="'html'">
+<div class="container">
+    <div class="row">
+        <div class="col">col</div>
+        <div class="col">col</div>
+        <!-- Force next columns to break to new line -->
+        <div class="w-100"></div>
+        <div class="col">col</div>
+        <div class="col">col</div>
+    </div>
+</div>
+                </textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION : Reordering -->
+        <section class="uikit-section -separator">
+            <h2 class="uikit-h2 mt-m">
+                Reordering
+            </h2>
+
+            <!-- Vertical alignment -->
+            <h3 class="uikit-h3 mt-m">
+                Order classes
+            </h3>
+            <p class="uikit-subheading">Use <span class="code">.order-</span> classes for controlling the
+                <strong>visual
+                    order</strong> of your content. These classes are responsive, so you can set the <span
+                    class="code">order</span> by breakpoint (e.g., <span class="code">.order-1.order-md-2</span>).
+                Includes support for <span class="code">1</span> through <span class="code">12</span> across all
+                five
+                grid tiers.</p>
+            <div class="uikit-swatch mt-m">
+                <div class="uikit-swatch__body container">
+                    <div class="row">
+                        <div class="col">
+                            First in DOM, no order applied
+                        </div>
+                        <div class="col order-12">
+                            Second in DOM, with a larger order
+                        </div>
+                        <div class="col order-1">
+                            Third in DOM, with an order of 1
+                        </div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <textarea highlight-js [lang]="'html'">
+<div class="container">
+    <div class="row">
+        <div class="col">
+          First in DOM, no order applied
+        </div>
+        <div class="col order-12">
+          Second in DOM, with a larger order
+        </div>
+        <div class="col order-1">
+          Third in DOM, with an order of 1
+        </div>
+    </div>
+</div>
+            </textarea>
+                </div>
+            </div>
+            <div class="uikit-swatch mt-m">
+                <div class="uikit-swatch__body container">
+                    <div class="row">
+                        <div class="col order-last">
+                            First in DOM, ordered last
+                        </div>
+                        <div class="col">
+                            Second in DOM, unordered
+                        </div>
+                        <div class="col order-first">
+                            Third in DOM, ordered first
+                        </div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <span class="uikit-swatch__label">There are also responsive <span class="code">.order-first</span>
+                        and <span class="code">.order-last</span> classes, that can also be
+                        intermixed with the numbered <span class="code">.order-*</span> classes as needed.</span>
+                    <textarea highlight-js [lang]="'html'">
+<div class="container">
+    <div class="row">
+        <div class="col order-last">
+          First in DOM, ordered last
+        </div>
+        <div class="col">
+          Second in DOM, unordered
+        </div>
+        <div class="col order-first">
+          Third in DOM, ordered first
+        </div>
+    </div>
+</div>
+                    </textarea>
+                </div>
+            </div>
+
+            <!-- Vertical alignment -->
+            <h3 class="uikit-h3 mt-m">
+                Offsetting columns
+            </h3>
+            <div class="uikit-swatch">
+                <div class="uikit-swatch__body container">
+                    <div class="row">
+                        <div class="col-md-4">.col-md-4</div>
+                        <div class="col-md-4 offset-md-4">.col-md-4 .offset-md-4</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 offset-md-3">.col-md-3 .offset-md-3</div>
+                        <div class="col-md-3 offset-md-3">.col-md-3 .offset-md-3</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 offset-md-3">.col-md-6 .offset-md-3</div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <span class="uikit-swatch__label">
+                        Move columns to the right using <span class="code">.offset-md-*</span> classes. These classes
+                        increase the left margin of a column by <span class="code">*</span> columns. For example, <span
+                            class="code">.offset-md-4</span> moves <span class="code">.col-md-4</span> over four
+                        columns.
+                    </span>
+                    <textarea highlight-js [lang]="'html'">
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">.col-md-4</div>
+        <div class="col-md-4 offset-md-4">.col-md-4 .offset-md-4</div>
+    </div>
+    <div class="row">
+        <div class="col-md-3 offset-md-3">.col-md-3 .offset-md-3</div>
+        <div class="col-md-3 offset-md-3">.col-md-3 .offset-md-3</div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 offset-md-3">.col-md-6 .offset-md-3</div>
+    </div>
+</div>
+                    </textarea>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION : Nesting -->
+        <section class="uikit-section -separator">
+            <h2 class="uikit-h2 mt-m">
+                Nesting
+            </h2>
+
+            <!-- Vertical alignment -->
+            <p class="uikit-subheading">To nest your content with the default grid, add a new <span
+                    class="code">.row</span> and set of <span class="code">.col-sm-*</span> columns within an existing
+                <span class="code">.col-sm-*</span> column. Nested rows should include a set of columns that add up to
+                12 or fewer (it is not required that you use all 12 available columns).</p>
+            <div class="uikit-swatch mt-m">
+                <div class="uikit-swatch__body container">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            Level 1: .col-sm-9
+                            <div class="row mt-m">
+                                <div class="col-8 col-sm-6">
+                                    Level 2: .col-8 .col-sm-6
+                                </div>
+                                <div class="col-4 col-sm-6">
+                                    Level 2: .col-4 .col-sm-6
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <textarea highlight-js [lang]="'html'">
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+          Level 1: .col-sm-9
+          <div class="row">
+            <div class="col-8 col-sm-6">
+              Level 2: .col-8 .col-sm-6
+            </div>
+            <div class="col-4 col-sm-6">
+              Level 2: .col-4 .col-sm-6
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+            </textarea>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</div>
