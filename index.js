@@ -12,7 +12,7 @@ const {
   generate,
   build,
   buildStyle,
-  generateMocks,
+  // generateMocks,
   generateApi,
   regenerateApi
 } = require('./logic');
@@ -114,7 +114,7 @@ program
   .command('mocks')
   .description('Generate mocks system')
   .action(() => {
-    generateMocks();
+    generate('mocks');
   });
 
 program

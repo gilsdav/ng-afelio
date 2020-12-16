@@ -1,4 +1,4 @@
-import { Path, join, normalize, strings } from '@angular-devkit/core';
+import { Path, join, strings } from '@angular-devkit/core';
 import { Rule, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, template, url } from '@angular-devkit/schematics';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import * as ts from 'typescript';
@@ -79,7 +79,7 @@ export default function(options: MocksOptions): Rule {
             throw new SchematicsException(`Project "${options.project}" not found.`);
         }
 
-        const parsedPath = normalize('/' + options.path);
+        const parsedPath = join(projectAppPath as Path, '../mocks');
         const templateSource = apply(url('./files'), [
             template({
                 ...strings,

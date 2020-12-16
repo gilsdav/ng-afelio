@@ -114,13 +114,13 @@ const buildStyle = async () => {
     
 }
 
-const generateMocks = async () => {
-    if (currentPath.endsWith('/src')) {
-        return await generateMocksTask();
-    } else {
-        console.warn(colors.red('You must be in src folder to generate mocks.'));
-    }
-}
+// const generateMocks = async () => {
+//     if (currentPath.endsWith('/src')) {
+//         return await generateMocksTask();
+//     } else {
+//         console.warn(colors.red('You must be in src folder to generate mocks.'));
+//     }
+// }
 
 function produceNgOptions(ngOptionsString) {
     let ngOptions = [];
@@ -139,7 +139,7 @@ module.exports = {
     generate,
     build,
     buildStyle,
-    generateMocks,
+    // generateMocks,
     generateApi,
     regenerateApi
 };

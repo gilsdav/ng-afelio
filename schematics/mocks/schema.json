@@ -4,13 +4,6 @@
     "title": "ng-afelio Generate mocks system",
     "type": "object",
     "properties": {
-        "path": {
-            "type": "string",
-            "format": "path",
-            "description": "The path to create the mocks folder",
-            "visible": false,
-            "default": "src/mocks"
-        },
         "project": {
             "type": "string",
             "description": "The name of the project",
