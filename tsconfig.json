@@ -1,0 +1,37 @@
+{
+    "compilerOptions": {
+        "allowUnreachableCode": false,
+        "declaration": true,
+        "importHelpers": true,
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "noFallthroughCasesInSwitch": true,
+        "noUnusedLocals": true,
+        "pretty": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "target": "es2018",
+        "lib": [
+            "es2018"
+        ],
+        "plugins": [
+            {
+                "name": "typescript-tslint-plugin"
+            }
+        ],
+        "typeRoots": [
+            "./node_modules/@types"
+        ]
+    },
+    "include": [
+        "**/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/__tests__/*.ts",
+        "schematics/*/files",
+        "models/**",
+        "scripts/**",
+        "templates/**",
+    ]
+}
