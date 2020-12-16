@@ -61,9 +61,10 @@ const serveMain = async (environment, port, ngOptionsString) => {
 }
 
 const generate = async (type, name, needStore, light, ngOptionsString) => {
+    type = `ng-afelio:${type}`
     switch (type) {
-        case 'module':
-            if (currentPath.includes('/src/') || currentPath.endsWith('/src')) {
+        case 'ng-afelio:module':
+            if (currentPath.includes('/src/') || currentPath.endsWith('/src')) {
                 await cli.default({cliArgs: ['generate', type, name, ...produceNgOptions(ngOptionsString)]});
                 return fillModule(name, needStore, light);
             } else {
@@ -76,7 +77,7 @@ const generate = async (type, name, needStore, light, ngOptionsString) => {
         //     const apiKey = light;
         //     return generateSwagger(source, moduleName, apiKey);
         default:
-            return await cli.default({cliArgs: ['generate', type, name, ...produceNgOptions(ngOptionsString)]});
+            return await cli.default({cliArgs: ['generate', type, ...(name ? [name] : []), ...produceNgOptions(ngOptionsString)]});
     }
 }
 

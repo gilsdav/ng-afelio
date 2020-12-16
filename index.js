@@ -81,14 +81,14 @@ program
   });
 
 program
-  .command('generate <type> <name>')
+  .command('generate <type> [name]')
   .alias('g')
   .description('Generates and/or modifies files based on a schematic')
   .option('-r, --ngrx', 'NGRX / Redux')
   .option('-l, --light', 'Only generate components, services and models folder')
   .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--dryRun=true"')
   .action((type, name, options) => {
-    generate(type, name, options.ngrx || false, options.light || false, options.ng);
+    generate(type, name, options.ngrx || false, options.light || false, options.ng);
   });
 
 program
