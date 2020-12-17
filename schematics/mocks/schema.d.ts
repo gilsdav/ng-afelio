@@ -1,4 +1,5 @@
 export interface Schema {
     path?: string;
-    project?= string;
+    project: string;
+    appModule?: string;
 }
