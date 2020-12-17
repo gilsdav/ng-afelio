@@ -97,7 +97,7 @@
         },
         "ng-new": {
             "aliases": [
-                "n"
+                "new"
             ],
             "extends": "@schematics/angular:ng-new"
         }
