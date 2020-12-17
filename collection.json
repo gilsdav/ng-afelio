@@ -94,6 +94,12 @@
                 "web-worker"
             ],
             "extends": "@schematics/angular:webWorker"
+        },
+        "ng-new": {
+            "aliases": [
+                "n"
+            ],
+            "extends": "@schematics/angular:ng-new"
         }
     }
 }
