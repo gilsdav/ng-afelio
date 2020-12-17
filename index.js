@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const program = require('commander');
+const getRemainingArgs = require('commander-remaining-args');
 const colors = require('colors');
 const packageJson = require('./package.json');
 
@@ -18,6 +19,7 @@ const {
 } = require('./logic');
 
 const uiKitTypes = require('./models/ui-kit-types.enum');
+const { default: cli } = require('@angular/cli');
 
 const version = colors.cyan(`
                             _                        __     _ _          _____ _      _____ 
@@ -83,12 +85,11 @@ program
 program
   .command('generate <type> [name]')
   .alias('g')
-  .description('Generates and/or modifies files based on a schematic')
-  .option('-r, --ngrx', 'NGRX / Redux')
-  .option('-l, --light', 'Only generate components, services and models folder')
-  .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--dryRun=true"')
-  .action((type, name, options) => {
-    generate(type, name, options.ngrx || false, options.light || false, options.ng);
+  .description('Generates and/or modifies files based on angular schematics')
+  .allowUnknownOption()
+  .parse(process.argv)
+  .action((type, name) => {
+    generate(type, name, getRemainingArgs(program));
   });
 
 program

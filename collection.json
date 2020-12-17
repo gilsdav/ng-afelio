@@ -8,6 +8,14 @@
             "description": "Generate mocks system.",
             "schema": "./schematics/mocks/schema.json"
         },
+        "module": {
+            "aliases": [
+                "m"
+            ],
+            "factory": "./schematics/module",
+            "description": "Creates a new generic NgModule definition in the given or default project.",
+            "schema": "./schematics/module/schema.json"
+        },
         "component": {
             "aliases": [
                 "c"
@@ -43,12 +51,6 @@
                 "i"
             ],
             "extends": "@schematics/angular:interface"
-        },
-        "module": {
-            "aliases": [
-                "m"
-            ],
-            "extends": "@schematics/angular:module"
         },
         "pipe": {
             "aliases": [

@@ -1,29 +1,26 @@
 
-const util = require('util');
-const pexec = util.promisify(require('child_process').exec);
-const exec = require('child_process').exec;
+// const util = require('util');
+// const exec = require('child_process').exec;
 const colors = require('colors');
-const fs = require('fs');
+// const fs = require('fs');
 
 const cli = require('@angular/cli');
 
-const fillModule = require('./scripts/generate-module');
 const { fillUiKit, runUiKit } = require('./scripts/generate-ui-kit');
 const buildStyleFromUIKit = require('./scripts/build-style');
 const addLocalCli = require('./scripts/add-local-cli');
-const generateMocksTask = require('./scripts/generate-mocks');
 const { generateSwagger, regenerateSwagger } = require('./scripts/generate-swagger');
 
 const uiKitTypes = require('./models/ui-kit-types.enum');
 
-const currentPath = process.cwd();
+// const currentPath = process.cwd();
 
-function promiseFromChildProcess(child) {
-    return new Promise(function (resolve, reject) {
-        child.addListener("error", reject);
-        child.addListener("exit", resolve);
-    });
-}
+// function promiseFromChildProcess(child) {
+//     return new Promise(function (resolve, reject) {
+//         child.addListener("error", reject);
+//         child.addListener("exit", resolve);
+//     });
+// }
 
 const getAngularVersion = async () => {
     return await cli.default({cliArgs: ['--version']});
@@ -60,25 +57,9 @@ const serveMain = async (environment, port, ngOptionsString) => {
     ]});
 }
 
-const generate = async (type, name, needStore, light, ngOptionsString) => {
+const generate = async (type, name, ngOptions) => {
     type = `ng-afelio:${type}`
-    switch (type) {
-        case 'ng-afelio:module':
-            if (currentPath.includes('/src/') || currentPath.endsWith('/src')) {
-                await cli.default({cliArgs: ['generate', type, name, ...produceNgOptions(ngOptionsString)]});
-                return fillModule(name, needStore, light);
-            } else {
-                console.warn(colors.red('You must be in src folder or its childs to generate a module.'));
-            }
-            break;
-        // case 'swagger':
-        //     const source = name;
-        //     const moduleName = needStore;
-        //     const apiKey = light;
-        //     return generateSwagger(source, moduleName, apiKey);
-        default:
-            return await cli.default({cliArgs: ['generate', type, ...(name ? [name] : []), ...produceNgOptions(ngOptionsString)]});
-    }
+    return await cli.default({cliArgs: ['generate', type, ...(name ? [name] : []), ...ngOptions]});
 }
 
 const generateApi = (source, moduleName, apiKey, extract, version, proxy) => {

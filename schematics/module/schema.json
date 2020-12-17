@@ -1,0 +1,53 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "id": "SchematicsNgAfelioModule",
+    "title": "ng-afelio Generate module files",
+    "type": "object",
+    "properties": {
+      "path": {
+        "type": "string",
+        "format": "path",
+        "description": "The path to create the module",
+        "visible": false
+      },
+      "project": {
+        "type": "string",
+        "description": "The name of the project",
+        "$default": {
+          "$source": "projectName"
+        }
+      },
+      "name": {
+        "type": "string",
+        "description": "The name of the Module",
+        "$default": {
+          "$source": "argv",
+          "index": 0
+        },
+        "x-prompt":"Enter the name of the Module:"
+      },
+      "flat": {
+        "type": "boolean",
+        "description": "Flag to indicate if a dir is created",
+        "default": false
+      },
+      "guards": {
+        "type": "boolean",
+        "description": "Add guards folder",
+        "default": false
+      },
+      "pipes": {
+        "type": "boolean",
+        "description": "Add pipes folder",
+        "default": false
+      },
+      "stores": {
+        "type": "boolean",
+        "description": "Add stores folder",
+        "default": false
+      }
+    },
+    "required": [
+        "name"
+    ]
+}

@@ -170,7 +170,7 @@ function buildStyleFromUIKit() {
 
     const bundler = new Bundler(undefined, currentPath);
 
-    Promise.all([
+    return Promise.all([
         buildUtils(config, bundler),
         ...buildStyleFiles(config, bundler)
     ]).then(() => {
