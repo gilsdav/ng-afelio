@@ -1,0 +1,43 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "id": "SchematicsNgAfelioStore",
+    "title": "ng-afelio Generate store files",
+    "type": "object",
+    "properties": {
+      "path": {
+        "type": "string",
+        "format": "path",
+        "description": "The path to create the module",
+        "visible": false
+      },
+      "project": {
+        "type": "string",
+        "description": "The name of the project",
+        "$default": {
+          "$source": "projectName"
+        }
+      },
+      "name": {
+        "type": "string",
+        "description": "The name of the Store",
+        "$default": {
+          "$source": "argv",
+          "index": 0
+        },
+        "x-prompt":"Enter the name of the Store:"
+      },
+      "example": {
+        "type": "boolean",
+        "description": "Flag to indicate if files must contains examples",
+        "default": false
+      },
+      "barrel": {
+        "type": "boolean",
+        "description": "Flag to indicate if must be added into barrel",
+        "default": true
+      }
+    },
+    "required": [
+        "name"
+    ]
+}

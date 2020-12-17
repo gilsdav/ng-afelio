@@ -1,3 +1,5 @@
+import { Tree } from '@angular-devkit/schematics';
+
 /**
  * @license
  * Copyright Google Inc. All Rights Reserved.
@@ -120,4 +122,14 @@ export class ReplaceChange implements Change {
             return host.write(this.path, `${prefix}${this.newText}${suffix}`);
         });
     }
+}
+
+export function applyChangesToHost(host: Tree, path: string, changes: Change[]) {
+    const recorder = host.beginUpdate(path);
+    for (const change of changes) {
+        if (change instanceof InsertChange) {
+            recorder.insertLeft(change.pos, change.toAdd);
+        }
+    }
+    host.commitUpdate(recorder);
 }

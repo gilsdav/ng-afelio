@@ -5,7 +5,7 @@ import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/work
 import * as ts from 'typescript';
 
 import { addProviderToModule, findNodes, insertImport } from '../util/ast-util';
-import { Change, InsertChange } from '../util/change';
+import { applyChangesToHost, Change, InsertChange } from '../util/change';
 
 import { Schema as MocksOptions } from './schema';
 
@@ -56,16 +56,6 @@ function getEnvironmentNode(source: ts.SourceFile): ts.Node | undefined {
             }
         }
     }
-}
-
-function applyChangesToHost(host: Tree, path: string, changes: Change[]) {
-    const recorder = host.beginUpdate(path);
-    for (const change of changes) {
-        if (change instanceof InsertChange) {
-            recorder.insertLeft(change.pos, change.toAdd);
-        }
-    }
-    host.commitUpdate(recorder);
 }
 
 function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule {
