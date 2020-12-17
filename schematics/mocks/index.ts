@@ -127,7 +127,7 @@ export default function(options: MocksOptions): Rule {
                 chain([
                     applyIntoEnvironment(projectAppPath, options.project),
                     mergeWith(templateSource),
-                    applyModuleImports(projectAppPath, parsedPath, options)
+                    applyModuleImports(projectAppPath, parsedPath, options),
                 ])
             ),
         ]);
