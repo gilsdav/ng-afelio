@@ -1,5 +1,5 @@
 import { Path, join, strings } from '@angular-devkit/core';
-import { Rule, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, template, url } from '@angular-devkit/schematics';
+import { Rule, SchematicsException, Tree, apply, branchAndMerge, chain, filter, mergeWith, move, noop, template, url } from '@angular-devkit/schematics';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
 import { parseName } from '@schematics/angular/utility/parse-name';
 import { validateName } from '@schematics/angular/utility/validation';
@@ -86,6 +86,7 @@ export default function(options: ModuleOptions): Rule {
         validateName(options.name);
 
         const templateSource = apply(url('./files'), [
+            options.spec ? noop() : filter(p => !p.endsWith('.spec.ts')),
             template({
               ...strings,
               ...options,

@@ -4,4 +4,5 @@ export interface Schema {
     name: string;
     example?: boolean;
     barrel?: boolean;
+    spec: boolean;
 }
