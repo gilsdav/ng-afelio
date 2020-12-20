@@ -6,12 +6,7 @@ const colors = require('colors');
 
 const cli = require('@angular/cli');
 
-const { fillUiKit, runUiKit } = require('./scripts/generate-ui-kit');
-const buildStyleFromUIKit = require('./scripts/build-style');
 const addLocalCli = require('./scripts/add-local-cli');
-const { generateSwagger, regenerateSwagger } = require('./scripts/generate-swagger');
-const checkEnvFiles = require('./scripts/check-files/check-env-files');
-const checkI18nFiles = require('./scripts/check-files/check-i18n-files');
 
 const uiKitTypes = require('./models/ui-kit-types.enum');
 
@@ -32,6 +27,7 @@ const createNewProject = async (name, uiKitType, ngOptionsString) => {
     await cli.default({cliArgs: ['new', name, '--routing', '--style=scss', ...produceNgOptions(ngOptionsString)]});
     process.chdir(`./${name}`);
     if (uiKitType !== uiKitTypes.NONE) {
+        const { fillUiKit, runUiKit } = require('./scripts/generate-ui-kit');
         await cli.default({cliArgs: ['generate', 'application', 'ui-kit', '--routing', '--style=scss', '--skip-tests']});
         await fillUiKit(uiKitType);
         await runUiKit();
@@ -65,10 +61,12 @@ const generate = async (type, name, ngOptions) => {
 }
 
 const generateApi = (source, moduleName, apiKey, extract, version, proxy) => {
+    const { generateSwagger } = require('./scripts/generate-swagger');
     return generateSwagger(source, moduleName, apiKey, extract, version, proxy);
 }
 
 const regenerateApi = (source) => {
+const { regenerateSwagger } = require('./scripts/generate-swagger');
     return regenerateSwagger(source);
 };
 
@@ -89,6 +87,7 @@ const build = async (environment, ssr, baseHref, ngOptionsString) => {
 
 const buildStyle = async () => {
     try {
+        const buildStyleFromUIKit = require('./scripts/build-style');
         return await buildStyleFromUIKit();
     } catch(e) {
         console.error(e);
@@ -107,8 +106,10 @@ const buildStyle = async () => {
 const checkFiles = async (type, mainFile) => {
     try {
         if (type === 'environment') {
+            const checkEnvFiles = require('./scripts/check-files/check-env-files');
             return await checkEnvFiles(mainFile || 'environment.ts');
         } else {
+            const checkI18nFiles = require('./scripts/check-files/check-i18n-files');
             return await checkI18nFiles(mainFile);
         }
     } catch(e) {
