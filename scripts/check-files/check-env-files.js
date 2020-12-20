@@ -46,8 +46,10 @@ function diff(keys1, keys2) {
 
 function checkDiff(mainFileContent, otherFileContent) {
     const reg = /export const environment = (\{[\s\S]*\});/;
-    const obj1Str = mainFileContent.match(reg)[1].replace(/[,|{][\s]*([\w]*)[\s]*[,|}]/g, (data, match) => { return data.replace(match, `${match}: 'temp'`) });
-    const obj2Str = otherFileContent.match(reg)[1].replace(/[,|{][\s]*([\w]*)[\s]*[,|}]/g, (data, match) => { return data.replace(match, `${match}: 'temp'`) });
+    const fixNoValueReg = /[,|{][\s]*([\w]*)[\s]*[,|}]/g;
+    const fixNoValue = (text) => text.match(reg)[1].replace(fixNoValueReg, (data, match) => { return data.replace(match, `${match}: 'temp'`) });
+    const obj1Str = fixNoValue(mainFileContent);
+    const obj2Str = fixNoValue(otherFileContent);
     
     const obj1 = eval(`(${obj1Str})`);
     const obj2 = eval(`(${obj2Str})`);
@@ -78,13 +80,13 @@ function toConsoleText(diffs) {
     return text;
 }
 
-function checkFiles(mainFileForFixing) {
+function checkFiles(mainFile) {
     const currentPath = process.cwd();
     return new Promise((resolve, reject) => {
         const diffs = {};
         if (checkIfFilesExists(currentPath)) {
-            const filesToCheck = getListOfEnvFiles(currentPath).filter(name => name !== mainFileForFixing);
-            const mainFileConent = fs.readFileSync(mainFileForFixing).toString();
+            const filesToCheck = getListOfEnvFiles(currentPath).filter(name => name !== mainFile);
+            const mainFileConent = fs.readFileSync(mainFile).toString();
             filesToCheck.forEach(fileName => {
                 diffs[fileName] = checkDiff(mainFileConent, fs.readFileSync(fileName).toString());
             });
