@@ -10,6 +10,8 @@ const { fillUiKit, runUiKit } = require('./scripts/generate-ui-kit');
 const buildStyleFromUIKit = require('./scripts/build-style');
 const addLocalCli = require('./scripts/add-local-cli');
 const { generateSwagger, regenerateSwagger } = require('./scripts/generate-swagger');
+const checkEnvFiles = require('./scripts/check-files/check-env-files');
+const checkI18nFiles = require('./scripts/check-files/check-i18n-files');
 
 const uiKitTypes = require('./models/ui-kit-types.enum');
 
@@ -92,7 +94,6 @@ const buildStyle = async () => {
         console.error(e);
         console.warn(colors.red('You must be in base folder of the application and have a "ui-kit" project to use this command.'));
     }
-    
 }
 
 // const generateMocks = async () => {
@@ -102,6 +103,17 @@ const buildStyle = async () => {
 //         console.warn(colors.red('You must be in src folder to generate mocks.'));
 //     }
 // }
+
+const checkFiles = async (type, mainFile) => {
+    try {
+        if (type === 'environment') {
+            return await checkEnvFiles(mainFile || 'environment.ts');
+        } else {
+            return await checkI18nFiles(mainFile);
+        }
+    } catch(e) {
+    }
+}
 
 function produceNgOptions(ngOptionsString) {
     let ngOptions = [];
@@ -122,5 +134,6 @@ module.exports = {
     buildStyle,
     // generateMocks,
     generateApi,
-    regenerateApi
+    regenerateApi,
+    checkFiles
 };

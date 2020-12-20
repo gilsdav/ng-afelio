@@ -179,4 +179,4 @@ function buildStyleFromUIKit() {
     });
   }
   
-  module.exports = buildStyleFromUIKit;
+module.exports = buildStyleFromUIKit;

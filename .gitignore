@@ -77,6 +77,7 @@ package-lock.json
 node_modules
 **/*.js
 **/*.d.ts
+!scripts/**/*
 !builders/**/schema.d.ts
 !schematics/**/schema.d.ts
 !schematics/*/files/**/*

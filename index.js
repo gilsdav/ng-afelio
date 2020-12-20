@@ -15,7 +15,8 @@ const {
   buildStyle,
   // generateMocks,
   generateApi,
-  regenerateApi
+  regenerateApi,
+  checkFiles
 } = require('./logic');
 
 const uiKitTypes = require('./models/ui-kit-types.enum');
@@ -136,6 +137,18 @@ program
         options.apiVersion = 2;
       }
       generateApi(source, options.name, options.apiKey, options.extract, options.apiVersion, options.proxy);
+    }
+  });
+
+program
+  .command('check <type>')
+  .description('Check alignement between files (type: environment or i18n)')
+  .option('-m, --mainFile <mainFile>', 'Automaticaly align all files with the main.')
+  .action((type, options) => {
+    if (type === 'environment' || type === 'i18n') {
+      checkFiles(type, options.mainFile);
+    } else {
+      console.error(`${colors.red(`Type "${type}" does not exist.`)}`);
     }
   });
 
