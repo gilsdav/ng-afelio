@@ -120,8 +120,11 @@ export function getSourceNodes(sourceFile: ts.SourceFile): ts.Node[] {
 }
 
 export function findNode(node: ts.Node, kind: ts.SyntaxKind, text: string): ts.Node | null {
+    
     if (node.kind === kind && node.getText() === text) {
         // throw new Error(node.getText());
+        return node;
+    } else if (node.kind === kind && kind === ts.SyntaxKind.Decorator && node.getText().startsWith(text)) {
         return node;
     }
 

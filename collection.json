@@ -24,6 +24,14 @@
             "description": "Creates a new generic Store definition in the given or default project.",
             "schema": "./schematics/store/schema.json"
         },
+        "translate": {
+            "aliases": [
+                "i18n"
+            ],
+            "factory": "./schematics/translate",
+            "description": "Generate translate system.",
+            "schema": "./schematics/translate/schema.json"
+        },
         "component": {
             "aliases": [
                 "c"

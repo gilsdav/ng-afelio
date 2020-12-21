@@ -5,7 +5,7 @@ import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/work
 import * as ts from 'typescript';
 
 import { addProviderToModule, findNodes, insertImport } from '../util/ast-util';
-import { applyChangesToHost, Change, InsertChange } from '../util/change';
+import { Change, InsertChange, applyChangesToHost } from '../util/change';
 
 import { Schema as MocksOptions } from './schema';
 
