@@ -5,6 +5,8 @@ const getRemainingArgs = require('commander-remaining-args');
 const colors = require('colors');
 const packageJson = require('./package.json');
 
+const { schematics } = require('./collection.json');
+
 const { 
   createNewProject,
   getAngularVersion,
@@ -85,11 +87,21 @@ program
 program
   .command('generate <type> [name]')
   .alias('g')
-  .description('Generates and/or modifies files based on angular schematics')
+  .description(`Generates and/or modifies files based on angular schematics \n\n${colors.cyan(Object.keys(schematics).filter(name => !name.startsWith('install-') && !name.startsWith('ng-')).join('\n'))}`)
   .allowUnknownOption()
   .parse(process.argv)
   .action((type, name) => {
     generate(type, name, getRemainingArgs(program));
+  });
+
+program
+  .command('install <type> [name]')
+  .alias('i')
+  .description(`Add libs from ng-afelio schematics \n\n${colors.cyan(Object.keys(schematics).filter(name => name.startsWith('install-')).map(name => name.replace('install-', '')).join('\n'))}`)
+  .allowUnknownOption()
+  .parse(process.argv)
+  .action((type, name) => {
+    generate(`install-${type}`, name, getRemainingArgs(program));
   });
 
 program
@@ -115,7 +127,7 @@ program
   .command('mocks')
   .description('Generate mocks system')
   .action(() => {
-    generate('mocks');
+    generate('install-mocks');
   });
 
 program

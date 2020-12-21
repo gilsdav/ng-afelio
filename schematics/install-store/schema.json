@@ -15,7 +15,7 @@
         "type": "string",
         "description": "The path of the AppModule (relativePath from project folder)",
         "default": "app.module.ts"
-    }
+      }
     },
     "required": []
 }

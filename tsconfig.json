@@ -30,6 +30,7 @@
         "node_modules",
         "**/__tests__/*.ts",
         "schematics/*/files",
+        "schematics/wip-*",
         "models/**",
         "scripts/**",
         "templates/**",
