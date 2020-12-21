@@ -110,7 +110,7 @@ const checkFiles = async (type, mainFile) => {
             return await checkEnvFiles(mainFile || 'environment.ts');
         } else {
             const checkI18nFiles = require('./scripts/check-files/check-i18n-files');
-            return await checkI18nFiles(mainFile);
+            return await checkI18nFiles(mainFile || 'fr.json');
         }
     } catch(e) {
     }

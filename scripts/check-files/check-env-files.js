@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const colors = require('colors');
+const { flatten, diff } = require('./util');
 
 function checkIfFilesExists(currentPath) {
     return fs.existsSync(path.join(currentPath, 'environment.ts'));
@@ -12,37 +13,6 @@ function getListOfEnvFiles(currentPath) {
         return reg.test(path);
     });
 }
-
-function traverseAndFlatten(currentNode, target, flattenedKey) {
-    for (var key in currentNode) {
-        if (currentNode.hasOwnProperty(key)) {
-            var newKey;
-            if (flattenedKey === undefined) {
-                newKey = key;
-            } else {
-                newKey = flattenedKey + '.' + key;
-            }
-
-            var value = currentNode[key];
-            if (typeof value === "object") {
-                traverseAndFlatten(value, target, newKey);
-            } else {
-                target[newKey] = value;
-            }
-        }
-    }
-}
-
-function flatten(obj) {
-    var flattenedObject = {};
-    traverseAndFlatten(obj, flattenedObject);
-    return flattenedObject;
-}
-
-function diff(keys1, keys2) {
-    return keys1.filter(function(i) {return keys2.indexOf(i) < 0;});
-}
-
 
 function checkDiff(mainFileContent, otherFileContent) {
     const reg = /export const environment = (\{[\s\S]*\});/;

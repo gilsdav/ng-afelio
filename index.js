@@ -20,7 +20,6 @@ const {
 } = require('./logic');
 
 const uiKitTypes = require('./models/ui-kit-types.enum');
-const { default: cli } = require('@angular/cli');
 
 const version = colors.cyan(`
                             _                        __     _ _          _____ _      _____ 
