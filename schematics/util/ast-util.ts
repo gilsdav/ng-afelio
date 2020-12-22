@@ -119,14 +119,22 @@ export function getSourceNodes(sourceFile: ts.SourceFile): ts.Node[] {
     return result;
 }
 
-export function findNode(node: ts.Node, kind: ts.SyntaxKind, text: string): ts.Node | null {
+export function findNode(node: ts.Node, kind: ts.SyntaxKind, text: string | RegExp): ts.Node | null {
     
-    if (node.kind === kind && node.getText() === text) {
-        // throw new Error(node.getText());
-        return node;
-    } else if (node.kind === kind && kind === ts.SyntaxKind.Decorator && node.getText().startsWith(text)) {
-        return node;
+    if (typeof text === 'string') {
+        if (node.kind === kind && node.getText() === text) {
+            // throw new Error(node.getText());
+            return node;
+        } else if (node.kind === kind && kind === ts.SyntaxKind.Decorator && node.getText().startsWith(text)) {
+            return node;
+        }
+    } else {
+        if (node.kind === kind && text.test(node.getText())) {
+            // throw new Error(node.getText());
+            return node;
+        }
     }
+    
 
     let foundNode: ts.Node | null = null;
     ts.forEachChild(node, childNode => {

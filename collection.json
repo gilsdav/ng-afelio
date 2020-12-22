@@ -1,5 +1,10 @@
 {
     "schematics": {
+        "ng-add": {
+            "factory": "./schematics/add",
+            "description": "Adds ng-afelio",
+            "schema": "./schematics/add/schema.json"
+        },
         "install-mocks": {
             "aliases": [
                 "i-mocks"

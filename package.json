@@ -43,14 +43,24 @@
     "scss-bundle": "2.4.0"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "^0.1100.4",
     "@angular-devkit/core": "^11.0.4",
     "@angular-devkit/schematics": "^11.0.4",
     "@schematics/angular": "^11.0.4",
+    "@types/webpack": "^4.41.25",
     "tslint": "^5.12.0",
     "tslint-ionic-rules": "0.0.21",
-    "typescript": "^4.1.3",
+    "typescript": "4.1.3",
     "typescript-tslint-plugin": "^1.0.1"
   },
+  "peerDependencies": {
+    "@angular-devkit/build-angular": "^0.1100.4",
+    "typescript": "~4.0.0 || ~4.1.0",
+    "webpack": "^4.0.0"
+  },
   "builders": "./builders.json",
-  "schematics": "./collection.json"
+  "schematics": "./collection.json",
+  "ng-add": {
+    "save": "devDependencies"
+  }
 }

@@ -1,0 +1,83 @@
+
+import { TargetDefinition, WorkspaceDefinition } from '@angular-devkit/core/src/workspace';
+import { Rule, SchematicContext, SchematicsException, Tree, branchAndMerge, chain } from '@angular-devkit/schematics';
+import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
+import { getWorkspace , updateWorkspace } from '@schematics/angular/utility/workspace';
+
+import { Schema as AddOptions } from './schema';
+
+function installNgxBuildPlus(options: AddOptions): Rule {
+    return (host: Tree, context: SchematicContext) => {
+        const builder: NodeDependency = {
+            type: NodeDependencyType.Dev,
+            name: 'ngx-build-plus',
+            version: '^10.1.1',
+            overwrite: true,
+        };
+        const untilDestroy: NodeDependency = {
+            type: NodeDependencyType.Default,
+            name: '@ngneat/until-destroy',
+            version: '^8.0.3',
+            overwrite: true,
+        };
+        addPackageJsonDependency(host, builder);
+        addPackageJsonDependency(host, untilDestroy);
+        context.addTask(new NodePackageInstallTask(), []);
+    };
+}
+
+function updateConfig(): Rule {
+    function setOption(target: TargetDefinition) {
+        if (!target.options) {
+            target.options = {};
+        }
+        target.options['plugin'] = 'ng-afelio/builders/plugin.js';
+    }
+    return updateWorkspace((workspace: WorkspaceDefinition) => {
+        for (const [, project] of workspace.projects) {
+            for (const [name, target] of project.targets) {
+                switch (name) {
+                    case 'build':
+                        target.builder = 'ngx-build-plus:browser';
+                        setOption(target);
+                        break;
+                    case 'serve':
+                        target.builder = 'ngx-build-plus:dev-server';
+                        setOption(target);
+                        break;
+                    case 'test':
+                        target.builder = 'ngx-build-plus:karma';
+                        setOption(target);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        if (!workspace.extensions['cli']) {
+            workspace.extensions['cli'] = {};
+        }
+        (workspace.extensions['cli'] as any)['defaultCollection'] = 'ng-afelio';
+    });
+}
+
+export default function(options: AddOptions): Rule {
+    return async (host: Tree) => {
+        const workspace = await getWorkspace(host);
+        const project = workspace.projects.get(options.project);
+
+        if (!project) {
+            throw new SchematicsException(`Project "${options.project}" not found.`);
+        }
+
+        return chain([
+            branchAndMerge(
+                chain([
+                    installNgxBuildPlus(options),
+                    updateConfig(),
+                ])
+            ),
+        ]);
+    };
+}
