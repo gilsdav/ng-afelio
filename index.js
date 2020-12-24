@@ -87,7 +87,10 @@ program
 program
   .command('generate <type> [name]')
   .alias('g')
-  .description(`Generates and/or modifies files based on angular schematics \n\n${colors.cyan(Object.keys(schematics).filter(name => !name.startsWith('install-') && !name.startsWith('ng-')).join('\n'))}`)
+  .description(`Generates and/or modifies files based on angular schematics`, {
+    type: `One type from this list:\n    ${colors.cyan(Object.keys(schematics).filter(name => !name.startsWith('install-') && !name.startsWith('ng-')).join('\n    '))}`,
+    name: 'Name of element to generate.'
+  })
   .allowUnknownOption()
   .parse(process.argv)
   .action((type, name) => {
@@ -95,13 +98,15 @@ program
   });
 
 program
-  .command('install <type> [name]')
+  .command('install <type>')
   .alias('i')
-  .description(`Add libs from ng-afelio schematics \n\n${colors.cyan(Object.keys(schematics).filter(name => name.startsWith('install-')).map(name => name.replace('install-', '')).join('\n'))}`)
+  .description(`Add libs from ng-afelio schematics`, {
+    type: `One type from this list:\n    ${colors.cyan(Object.keys(schematics).filter(name => name.startsWith('install-')).map(name => name.replace('install-', '')).join('\n    '))}`
+  })
   .allowUnknownOption()
   .parse(process.argv)
-  .action((type, name) => {
-    generate(`install-${type}`, name, getRemainingArgs(program));
+  .action((type) => {
+    generate(`install-${type}`, undefined, getRemainingArgs(program));
   });
 
 program
