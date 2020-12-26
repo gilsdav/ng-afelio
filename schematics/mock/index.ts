@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Path, join, strings } from '@angular-devkit/core';
 import { Rule, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, template, url } from '@angular-devkit/schematics';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
@@ -48,20 +47,26 @@ function includesIntoProject(path: string, options: MockOptions): Rule {
              // Add Store to ts import
             const mockPath = join(path as Path, options.file.replace('.ts', ''));
             const relativeMockPath = buildRelativePath(mockListPath, `${mockPath}.ts`).slice(0, -3);
-            const mocksToAdd = `${options.file.match(/(\w*).mock.ts/)[1]}Mocks`;
-            changes.push(insertImport(source, mockListPath, `listeners as ${mocksToAdd}`, relativeMockPath));
-            // Add Store to Barrel array
-            const node = getMocksNode(source);
-            if (node) {
-                const commat = node.getChildCount() > 0 ? ',' : '';
-                changes.push(
-                    new InsertChange(
-                        mockListPath,
-                        node.getEnd(),
-                        `${commat}\n    ...${mocksToAdd}`
-                    )
-                );
+            const nameExtraction = options.file.match(/(\w*).mock.ts/);
+            if (nameExtraction) {
+                const mocksToAdd = `${nameExtraction[1]}Mocks`;
+                changes.push(insertImport(source, mockListPath, `listeners as ${mocksToAdd}`, relativeMockPath));
+                // Add Store to Barrel array
+                const node = getMocksNode(source);
+                if (node) {
+                    const commat = node.getChildCount() > 0 ? ',' : '';
+                    changes.push(
+                        new InsertChange(
+                            mockListPath,
+                            node.getEnd(),
+                            `${commat}\n    ...${mocksToAdd}`
+                        )
+                    );
+                }
+            } else {
+                throw new SchematicsException(`Can not extract name from file name ${options.file}`);
             }
+            
             // Save changes
             applyChangesToHost(host, mockListPath, changes);
         }
@@ -139,7 +144,7 @@ function getListenersNode(source: ts.SourceFile): ts.Node | undefined {
     let listeners: ts.Node | undefined;
     const listenNode = findNode(source, ts.SyntaxKind.VariableDeclaration, /^listeners/, false);
     if (listenNode && ts.isVariableDeclaration(listenNode)) {
-        listeners = listenNode.initializer.getChildAt(1);
+        listeners = listenNode.initializer?.getChildAt(1);
     }
     return listeners;
 }
@@ -171,7 +176,7 @@ const ${mockName}Mock = (request: HttpRequest<any>) => new HttpResponse({
     );
 }
 
-function addMockIntoExistingFile(mockPath: string, options: MockOptions) {
+function addMockIntoExistingFile(mockPath: string, options: MockOptions): Rule {
     return host => {
         const text = host.read(mockPath);
         if (!text) {
@@ -231,7 +236,7 @@ export default function(options: MockOptions): Rule {
         ]);
 
         let steps = [];
-        const mockPath = join(options.path, options.file);
+        const mockPath = join(options.path as Path, options.file);
         const fileExists = !!host.read(mockPath);
         if (fileExists) {
             steps = [
