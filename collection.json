@@ -42,8 +42,16 @@
                 "ngxs"
             ],
             "factory": "./schematics/store",
-            "description": "Creates a new generic Store definition in the given or default project.",
+            "description": "Creates a new generic Store definition in current path.",
             "schema": "./schematics/store/schema.json"
+        },
+        "mock": {
+            "aliases": [
+                "mo"
+            ],
+            "factory": "./schematics/mock",
+            "description": "Creates a new generic Mock definition in current path.",
+            "schema": "./schematics/mock/schema.json"
         },
         "component": {
             "aliases": [

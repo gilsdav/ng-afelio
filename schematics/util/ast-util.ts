@@ -119,7 +119,7 @@ export function getSourceNodes(sourceFile: ts.SourceFile): ts.Node[] {
     return result;
 }
 
-export function findNode(node: ts.Node, kind: ts.SyntaxKind, text: string | RegExp): ts.Node | null {
+export function findNode(node: ts.Node, kind: ts.SyntaxKind, text: string | RegExp, complete = false): ts.Node | null {
     
     if (typeof text === 'string') {
         if (node.kind === kind && node.getText() === text) {
@@ -129,6 +129,7 @@ export function findNode(node: ts.Node, kind: ts.SyntaxKind, text: string | RegE
             return node;
         }
     } else {
+        // console.log(node.getText(), node.kind);
         if (node.kind === kind && text.test(node.getText())) {
             // throw new Error(node.getText());
             return node;
@@ -140,6 +141,11 @@ export function findNode(node: ts.Node, kind: ts.SyntaxKind, text: string | RegE
     ts.forEachChild(node, childNode => {
         foundNode = foundNode || findNode(childNode, kind, text);
     });
+    if (!foundNode && complete) {
+        node.getChildCount() > 0 ? node.getChildren().forEach(childNode => {
+            foundNode = foundNode || findNode(childNode, kind, text, complete);
+        }) : foundNode;
+    }
 
     return foundNode;
 }

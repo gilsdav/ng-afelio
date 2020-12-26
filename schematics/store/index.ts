@@ -9,7 +9,7 @@ import ts = require('typescript');
 import { findNodes, insertImport } from '../util/ast-util';
 import { Change, InsertChange, applyChangesToHost } from '../util/change';
 
-import { Schema as ModuleOptions } from './schema';
+import { Schema as StoreOptions } from './schema';
 
 function getStoreNode(source: ts.SourceFile): ts.Node | undefined {
     const keywords = findNodes(source, ts.SyntaxKind.VariableStatement);
@@ -27,7 +27,7 @@ function getStoreNode(source: ts.SourceFile): ts.Node | undefined {
     }
 }
 
-function addIntoIndex(path: string, options: ModuleOptions): Rule {
+function addIntoIndex(path: string, options: StoreOptions): Rule {
     return host => {
         if (options.barrel) {
             const changes: Change[] = [];
@@ -67,7 +67,7 @@ function addIntoIndex(path: string, options: ModuleOptions): Rule {
     };
 }
 
-export default function(options: ModuleOptions): Rule {
+export default function(options: StoreOptions): Rule {
     return async (host: Tree) => {
         if (!options.project) {
             throw new SchematicsException('Option (project) is required.');

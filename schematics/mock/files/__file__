@@ -1,0 +1,15 @@
+import { HttpRequest, HttpResponse } from '@angular/common/http';
+
+import { Mock } from './mockHttpInterceptor';
+
+
+const <%= camelize(name) %>Mock = (request: HttpRequest<any>) => new HttpResponse({
+    status: 200,
+    body: {
+        url: 'https://www.wikipedia.org'
+    }
+});
+
+export const listeners: Mock[] = [
+    { url: '/some/urls', methods: 'GET', name: '<%= camelize(name) %>', response: <%= camelize(name) %>Mock }
+];

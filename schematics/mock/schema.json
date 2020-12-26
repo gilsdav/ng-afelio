@@ -1,0 +1,58 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "id": "SchematicsNgAfelioMock",
+    "title": "ng-afelio Generate store files",
+    "type": "object",
+    "properties": {
+      "path": {
+        "type": "string",
+        "format": "path",
+        "description": "The path to create the module",
+        "visible": false
+      },
+      "project": {
+        "type": "string",
+        "description": "The name of the project",
+        "$default": {
+          "$source": "projectName"
+        }
+      },
+      "name": {
+        "type": "string",
+        "description": "The name of the Mock",
+        "$default": {
+          "$source": "argv",
+          "index": 0
+        },
+        "x-prompt":"Enter the name of the Mock:"
+      },
+      "example": {
+        "type": "boolean",
+        "description": "Flag to indicate if files must contains examples",
+        "default": false
+      },
+      "includes": {
+        "type": "boolean",
+        "description": "Flag to indicate if must be added into list of mocks",
+        "default": true
+      },
+      "environment": {
+        "type": "boolean",
+        "description": "Flag to indicate if must be added into environment.ts",
+        "default": true
+      },
+      "file": {
+        "type": "string",
+        "description": "File that must contains the new mock. A new file will be created if it doesn't exist. Must ends with \"mock.ts\" !",
+        "$default": {
+          "$source": "argv",
+          "index": 1
+        },
+        "x-prompt":"Enter the file where add the Mock:"
+      }
+    },
+    "required": [
+        "name",
+        "file"
+    ]
+}
