@@ -1,13 +1,13 @@
-
+import { strings } from '@angular-devkit/core';
 import { TargetDefinition, WorkspaceDefinition } from '@angular-devkit/core/src/workspace';
-import { Rule, SchematicContext, SchematicsException, Tree, branchAndMerge, chain } from '@angular-devkit/schematics';
+import { Rule, SchematicContext, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, template, url } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 import { getWorkspace , updateWorkspace } from '@schematics/angular/utility/workspace';
 
 import { Schema as AddOptions } from './schema';
 
-function installNgxBuildPlus(options: AddOptions): Rule {
+function installNgxBuildPlus(): Rule {
     return (host: Tree, context: SchematicContext) => {
         const builder: NodeDependency = {
             type: NodeDependencyType.Dev,
@@ -62,6 +62,30 @@ function updateConfig(): Rule {
     });
 }
 
+function updateScripts(): Rule {
+    return (host: Tree) => {
+        const packageFile = '/package.json';
+        const text = host.read(packageFile);
+        if (!text) {
+            throw new SchematicsException(`Can not find "package.json" file in your project.`);
+        }
+        const sourceText = text.toString('utf8');
+        const toInsert = `"start": "ng-afelio start"`;
+        const alreadyInstalled = sourceText.indexOf(toInsert) !== -1;
+        if (!alreadyInstalled) {
+            const toReplaceMatch = sourceText.match(/"start": "(.+)"/);
+            if (toReplaceMatch) {
+                const jsonContent = JSON.parse(sourceText);
+                jsonContent.scripts['ng-afelio'] = 'ng-afelio';
+                jsonContent.scripts['start'] = 'ng-afelio serve';
+                jsonContent.scripts['build'] = 'ng-afelio build';
+                host.overwrite(packageFile, JSON.stringify(jsonContent, null, 2));
+            }
+        }
+        return host;
+    };
+}
+
 export default function(options: AddOptions): Rule {
     return async (host: Tree) => {
         const workspace = await getWorkspace(host);
@@ -71,11 +95,21 @@ export default function(options: AddOptions): Rule {
             throw new SchematicsException(`Project "${options.project}" not found.`);
         }
 
+        const templateSource = apply(url('./files'), [
+            template({
+              ...strings,
+              ...options,
+            }),
+            move('/'),
+        ]);
+
         return chain([
             branchAndMerge(
                 chain([
-                    installNgxBuildPlus(options),
+                    mergeWith(templateSource),
+                    installNgxBuildPlus(),
                     updateConfig(),
+                    updateScripts(),
                 ])
             ),
         ]);

@@ -125,6 +125,9 @@ export class ReplaceChange implements Change {
 }
 
 export function applyChangesToHost(host: Tree, path: string, changes: Change[]) {
+    if (changes.length === 0) {
+        return;
+    }
     const recorder = host.beginUpdate(path);
     for (const change of changes) {
         if (change instanceof InsertChange) {

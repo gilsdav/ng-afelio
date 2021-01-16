@@ -81,4 +81,3 @@ node_modules
 !builders/**/schema.d.ts
 !schematics/**/schema.d.ts
 !schematics/*/files/**/*
-.vscode
