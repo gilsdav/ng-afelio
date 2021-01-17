@@ -1,6 +1,9 @@
 {
     "schematics": {
         "ng-add": {
+            "aliases": [
+                "add"
+            ],
             "factory": "./schematics/add",
             "description": "Adds ng-afelio",
             "schema": "./schematics/add/schema.json"
@@ -146,7 +149,9 @@
             "aliases": [
                 "new"
             ],
-            "extends": "@schematics/angular:ng-new"
+            "factory": "./schematics/new",
+            "description": "Create project with ng-afelio included",
+            "schema": "./schematics/new/schema.json"
         }
     }
 }

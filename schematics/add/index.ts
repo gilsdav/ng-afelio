@@ -7,7 +7,7 @@ import { getWorkspace , updateWorkspace } from '@schematics/angular/utility/work
 
 import { Schema as AddOptions } from './schema';
 
-function installNgxBuildPlus(): Rule {
+function installNgxBuildPlus(mustApplyInstall: boolean): Rule {
     return (host: Tree, context: SchematicContext) => {
         const builder: NodeDependency = {
             type: NodeDependencyType.Dev,
@@ -23,7 +23,9 @@ function installNgxBuildPlus(): Rule {
         };
         addPackageJsonDependency(host, builder);
         addPackageJsonDependency(host, untilDestroy);
-        context.addTask(new NodePackageInstallTask(), []);
+        if (mustApplyInstall) {
+            context.addTask(new NodePackageInstallTask(), []);
+        }
     };
 }
 
@@ -103,14 +105,16 @@ export default function(options: AddOptions): Rule {
             move('/'),
         ]);
 
+        const uiKitToInstall = options.uiKit && options.uiKit !== 'none';
+
         return chain([
             branchAndMerge(
                 chain([
                     mergeWith(templateSource),
-                    installNgxBuildPlus(),
+                    installNgxBuildPlus(!uiKitToInstall),
                     updateConfig(),
                     updateScripts(),
-                    ...(options.uiKit !== 'none' ? [
+                    ...(uiKitToInstall ? [
                         schematic('install-uikit', { type: options.uiKit }),
                     ] : []),
                 ])

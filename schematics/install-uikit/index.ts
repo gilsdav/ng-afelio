@@ -1,5 +1,5 @@
 import { Path, join, strings } from '@angular-devkit/core';
-import { MergeStrategy, Rule, SchematicContext, SchematicsException, Tree, apply, chain, externalSchematic, mergeWith, move,  template, url } from '@angular-devkit/schematics';
+import { MergeStrategy, Rule, SchematicContext, SchematicsException, Tree, apply, chain, externalSchematic, mergeWith, move, template, url } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 
@@ -68,15 +68,8 @@ function updateScripts(): Rule {
     };
 }
 
-async function applyUiKitTemplate(host: Tree, options: UIKitOptions): Promise<Rule> {
-    // const workspace = await getWorkspace(host);
-    // const project = workspace.projects.get('ui-kit');
+async function applyUiKitTemplate(options: UIKitOptions): Promise<Rule> {
     const projectUiKitPath = '/projects/ui-kit/src';
-    // if (project) {
-    //     projectUiKitPath = buildDefaultPath(project);
-    // } else {
-    //     throw new SchematicsException(`Project "ui-kit" not found.`);
-    // }
     const templateSource = apply(url(join('./files' as Path, options.type)), [
         template({
           ...strings,
@@ -88,7 +81,7 @@ async function applyUiKitTemplate(host: Tree, options: UIKitOptions): Promise<Ru
 }
 
 export default function(options: UIKitOptions): Rule {
-    return async (host: Tree) => {
+    return async () => {
         return chain([
             externalSchematic('@schematics/angular', 'application', {
                 name: 'ui-kit',
@@ -98,7 +91,7 @@ export default function(options: UIKitOptions): Rule {
                 skipInstall: true,
                 minimal: true,
             }),
-            await applyUiKitTemplate(host, options),
+            await applyUiKitTemplate(options),
             updateScripts(),
             installDependencies(),
         ]);

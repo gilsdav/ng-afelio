@@ -6,9 +6,11 @@ const colors = require('colors');
 
 const cli = require('@angular/cli');
 
-const addLocalCli = require('./scripts/add-local-cli');
+// const addLocalCli = require('./scripts/add-local-cli');
 
-const uiKitTypes = require('./models/ui-kit-types.enum');
+// const uiKitTypes = require('./models/ui-kit-types.enum');
+const config = require('./config');
+const { version } = require('./package.json');
 
 // const currentPath = process.cwd();
 
@@ -24,15 +26,19 @@ const getAngularVersion = async () => {
 }
 
 const createNewProject = async (name, uiKitType, ngOptionsString) => {
-    await cli.default({cliArgs: ['new', name, '--routing', '--style=scss', ...produceNgOptions(ngOptionsString)]});
+    await cli.default({cliArgs: ['new', name, '--routing', '--style=scss', '--skip-install', ...produceNgOptions(ngOptionsString)]});
     process.chdir(`./${name}`);
-    if (uiKitType !== uiKitTypes.NONE) {
-        const { fillUiKit, runUiKit } = require('./scripts/generate-ui-kit');
-        await cli.default({cliArgs: ['generate', 'application', 'ui-kit', '--routing', '--style=scss', '--skip-tests']});
-        await fillUiKit(uiKitType);
-        await runUiKit();
-    }
-    return await addLocalCli(uiKitType !== uiKitTypes.NONE);
+    const ngAfelioSrc = config.production ? `ng-afelio@${version}` : __dirname;
+    await cli.default({cliArgs: ['add', ngAfelioSrc, `--ui-kit=${uiKitType}`]});
+    // process.chdir(`./${name}`);
+    // if (uiKitType !== uiKitTypes.NONE) {
+    //     const { fillUiKit, runUiKit } = require('./scripts/generate-ui-kit');
+    //     await cli.default({cliArgs: ['generate', 'application', 'ui-kit', '--routing', '--style=scss', '--skip-tests']});
+    //     await fillUiKit(uiKitType);
+    //     await runUiKit();
+    // }
+    // return await addLocalCli(uiKitType !== uiKitTypes.NONE);
+    // await cli.default({cliArgs: ['new', name, '--routing', '--style=scss', `--collection=${__dirname}`, ...produceNgOptions(ngOptionsString)]});
 };
 
 const serveUIKit = async (port, ngOptionsString) => {
