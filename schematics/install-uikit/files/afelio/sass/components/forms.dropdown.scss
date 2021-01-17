@@ -1,0 +1,230 @@
+////////////////////////////////////////////////////
+//
+//                  Variables
+//
+////////////////////////////////////////////////////
+
+$root: '.dropdown';
+
+#{$root} {
+    ////////////////////////////////////////////////////
+    //
+    //         <select> & <select> common
+    //
+    ////////////////////////////////////////////////////
+
+    @extend .textfield;
+
+    padding-top: compute-grid($grid-xxs/2);
+    padding-bottom: compute-grid($grid-xxs/2);
+
+    @extend .c-pointer;
+
+    outline: none;
+
+    &.select .ng-select-container,
+    #{$root}__field {
+        background-image: url('/assets/pictures/icons/select.svg');
+        background-repeat: no-repeat;
+        background-size: 10px;
+        background-position: right 8px center;
+        @extend .c-pointer;
+        outline: none;
+    }
+
+
+    ////////////////////////////////////////////////////
+    //
+    //         <select> HTML component
+    //
+    ////////////////////////////////////////////////////
+
+    #{$root}__field {
+        @extend .textfield__field;
+        @extend .pr-xl;
+
+        appearance: none;
+
+        &::-ms-expand {
+            display: none;
+        }
+    }
+
+
+    ////////////////////////////////////////////////////
+    //
+    //         <select> Angular component
+    //
+    ////////////////////////////////////////////////////
+
+    &.select {
+
+        //
+        //  Defaults style for select
+        //
+
+        padding-top: 0;
+        padding-bottom: 0;
+        border: 0;
+
+        &.select-focused:not(.select-opened)>.select-container,
+        &.select-focused.select-container {
+            border-color: transparent;
+            box-shadow: none !important;
+        }
+
+        .select-container {
+            @extend .textfield__field;
+            @extend .c-pointer;
+            @extend .pr-l;
+
+            padding-left: 0;
+
+            appearance: none;
+            box-shadow: none;
+            border: none;
+
+            input[type="text"] {
+                @extend .f-s;
+                height: 24px;
+            }
+
+            .ng-value-container {
+                @extend .pl-xs;
+
+                .ng-input {
+                    @extend .pl-xs;
+
+                    input {
+                        @extend .p-none;
+                        height: 20px;
+                    }
+                }
+
+                .ng-placeholder {
+                    @extend .c-grey03;
+                    font-weight: 400;
+
+                    // @extend .pl-none;
+                    // @extend .pb-none;
+                }
+            }
+        }
+
+        .ng-arrow-wrapper {
+            display: none;
+        }
+
+        .ng-clear-wrapper {
+            @extend .mr-m;
+        }
+
+        &.-no-searchable .select-container {
+            display: none;
+        }
+
+
+
+        //
+        // Panel showed when the select is open
+        //
+
+        .ng-dropdown-panel {
+            @extend .bg-grey00;
+            border: 1px solid $grey02;
+            box-shadow: none;
+            width: 100% !important;
+
+            // Panel on bottom
+            &.select-bottom {
+                border-bottom-right-radius: 2px;
+                border-bottom-left-radius: 2px;
+                border-top-color: $grey01;
+
+                .ng-dropdown-panel-items .option:last-child
+                {
+                    @extend .br-none;
+                }
+            }
+
+            // Panel on top
+            &.select-top {
+                border-top-right-radius: 2px;
+                border-top-left-radius: 2px;
+                border-bottom-color: $grey02;
+            }
+
+            // Style for each item in panel
+            .ng-dropdown-panel-items .option {
+                white-space: initial;
+                @extend .f-s;
+
+                // If selected
+                &.option-selected,
+                &.option-selected.option-marked {
+                    background-color: $grey02 !important;
+                }
+
+                // If hover
+                &.option-marked:hover {
+                    @extend .bg-grey01;
+                }
+            }
+        }
+
+
+        //
+        //  Single choice select
+        //
+
+        &.select-single {
+            .select-container .ng-value-container .ng-input {
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+
+
+        //
+        //  Multiple choices select
+        //
+
+
+        &.select-multiple  .select-container {
+            min-height: 38px;
+            height: auto !important;
+            @extend .pt-none;
+            padding-bottom: compute-grid($grid-xxs/2);
+
+            .ng-value-container {
+                padding-top: compute-grid($grid-xxs/2 + $grid-xxs);
+
+                .ng-input {
+                    @extend .pl-none;
+                }
+
+                .ng-placeholder {
+                    top: 50%;
+                    transform: translateY(-50%);
+                    @extend .pt-xxs;
+                }
+
+                .ng-value {
+                    background-color: $primary01 !important;
+                    @extend .c-primary03;
+                    @extend .flex;
+                    flex-direction: row-reverse;
+
+                    .ng-value-icon,
+                    .ng-value-icon.left {
+                        border-right: none !important;
+
+                        &:hover {
+                            background-color: $primary02 !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

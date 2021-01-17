@@ -29,6 +29,14 @@
             "description": "Install NGXS.",
             "schema": "./schematics/install-store/schema.json"
         },
+        "install-uikit": {
+            "aliases": [
+                "i-ui"
+            ],
+            "factory": "./schematics/install-uikit",
+            "description": "Add UI Kit.",
+            "schema": "./schematics/install-uikit/schema.json"
+        },
         "module": {
             "aliases": [
                 "m"

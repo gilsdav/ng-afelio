@@ -10,6 +10,28 @@
         "$default": {
           "$source": "projectName"
         }
+      },
+      "uiKit": {
+        "type": "string",
+        "description": "UI Kit type `afelio` or `bootstrap`",
+        "x-prompt": {
+            "message": "Which UI Kit would you like to use?",
+            "type": "list",
+            "items": [
+                {
+                    "value": "afelio",
+                    "label": "afelio"
+                },
+                {
+                    "value": "bootstrap",
+                    "label": "bootstrap"
+                },
+                {
+                  "value": "none",
+                  "label": "none"
+              }
+            ]
+        }
       }
     },
     "required": []

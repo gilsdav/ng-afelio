@@ -1,0 +1,31 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "id": "SchematicsNgAfelioUiKit",
+    "title": "ng-afelio Generate UI Kit project",
+    "type": "object",
+    "properties": {
+        "type": {
+            "type": "string",
+            "description": "UI Kit type `afelio` or `bootstrap`",
+            "$default": {
+                "$source": "argv",
+                "index": 0
+            },
+            "x-prompt": {
+                "message": "Which UI Kit would you like to use?",
+                "type": "list",
+                "items": [
+                    {
+                        "value": "afelio",
+                        "label": "afelio"
+                    },
+                    {
+                        "value": "bootstrap",
+                        "label": "bootstrap"
+                    }
+                ]
+            }
+        }
+    },
+    "required": []
+}

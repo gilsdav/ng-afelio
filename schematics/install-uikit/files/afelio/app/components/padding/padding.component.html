@@ -1,0 +1,229 @@
+<div class="uikit-inner">
+    <div class="app-express">
+        <section class="uikit-section">
+            <h1 class="uikit-h1">
+                Padding
+            </h1>
+            <p class="uikit-subheading">
+                The padding sits between the border and the content area.
+                <br>
+                Unlike paddings you cannot have negative amounts of padding, so the value must be 0 or a positive value.
+                <br>
+                Any background applied to your element will display behind the padding, and it is typically used to push
+                the content away from the border.
+                <br>
+                For the examples below, let's assume that our HTML boxes without style are white square and the ones
+                stylized are grey.
+                <br>
+                In the stylized boxes the lighter grey is the active content box.
+            </p>
+            <h2 class="mt-l">Margin & padding values</h2>
+            <table class="uikit-table mt-m">
+                <thead>
+                    <th>Name</th>
+                    <th>Value</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>none</td>
+                        <td>0px</td>
+                    </tr>
+                    <tr>
+                        <td>xxs</td>
+                        <td>4px</td>
+                    </tr>
+                    <tr>
+                        <td>xs</td>
+                        <td>8px</td>
+                    </tr>
+                    <tr>
+                        <td>s</td>
+                        <td>12px</td>
+                    </tr>
+                    <tr>
+                        <td>m</td>
+                        <td>16px</td>
+                    </tr>
+                    <tr>
+                        <td>l</td>
+                        <td>24px</td>
+                    </tr>
+                    <tr>
+                        <td>xl</td>
+                        <td>32px</td>
+                    </tr>
+                    <tr>
+                        <td>xxl</td>
+                        <td>64px</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section class="uikit-section -separator">
+            <h2 class="uikit-h2">
+                Basic usage
+            </h2>
+
+            <div class="uikit-swatch">
+                <div class="uikit-swatch__body flex">
+                    <div class="square"></div>
+                    <div class="square -stylized p-none">
+                        <div class="bg-grey04 w-100 h-100"></div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <span class="uikit-swatch__label">
+                        No-padding
+                    </span>
+                    <textarea highlight-js [lang]="'html'">
+                        <div class="p-none"></div>
+                    </textarea>
+                    <span class="uikit-swatch__legend">
+                        .p-none
+                    </span>
+                </div>
+            </div>
+            <div class="uikit-swatch mt-m">
+                <div class="uikit-swatch__body flex">
+                    <div class="square"></div>
+                    <div class="square -stylized p-s">
+                        <div class="bg-grey04 w-100 h-100"></div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <span class="uikit-swatch__label">
+                        Padding applied on top, right, bottom, left
+                    </span>
+                    <textarea highlight-js [lang]="'html'">
+                        <div class="p-s"></div>
+                    </textarea>
+                    <span class="uikit-swatch__legend">
+                        .p-#value#
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <section class="uikit-section">
+            <p class="uikit-subheading">
+                We can control the padding on each side of an element individually using the padding property, or each
+                side individually using the equivalent longhand properties.
+                We'll use the 'S' size but every other size will work too.
+            </p>
+            <div class="uikit-swatch mt-m">
+                <div class="uikit-swatch__body flex">
+                    <div class="square"></div>
+                    <div class="square -stylized pt-s">
+                        <div class="bg-grey04 w-100 h-100"></div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <span class="uikit-swatch__label">
+                        padding top
+                    </span>
+                    <textarea highlight-js [lang]="'html'">
+                        <div class="pt-s"></div>
+                    </textarea>
+                    <span class="uikit-swatch__legend">
+                        .pt-#value#
+                    </span>
+                </div>
+            </div>
+            <div class="uikit-swatch mt-m">
+                <div class="uikit-swatch__body flex">
+                    <div class="square"></div>
+                    <div class="square -stylized pr-s">
+                        <div class="bg-grey04 w-100 h-100"></div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <span class="uikit-swatch__label">
+                        padding right
+                    </span>
+                    <textarea highlight-js [lang]="'html'">
+                        <div class="pr-s"></div>
+                    </textarea>
+                    <span class="uikit-swatch__legend">
+                        .pr-#value#
+                    </span>
+                </div>
+            </div>
+            <div class="uikit-swatch mt-m">
+                <div class="uikit-swatch__body flex">
+                    <div class="square"></div>
+                    <div class="square -stylized pb-s">
+                        <div class="bg-grey04 w-100 h-100"></div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <span class="uikit-swatch__label">
+                        padding bottom
+                    </span>
+                    <textarea highlight-js [lang]="'html'">
+                        <div class="pb-s"></div>
+                    </textarea>
+                    <span class="uikit-swatch__legend">
+                        .pb-#value#
+                    </span>
+                </div>
+            </div>
+            <div class="uikit-swatch mt-m">
+                <div class="uikit-swatch__body flex">
+                    <div class="square"></div>
+                    <div class="square -stylized pl-s">
+                        <div class="bg-grey04 w-100 h-100"></div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <span class="uikit-swatch__label">
+                        padding left
+                    </span>
+                    <textarea highlight-js [lang]="'html'">
+                        <div class="pl-s"></div>
+                    </textarea>
+                    <span class="uikit-swatch__legend">
+                        .pl-#value#
+                    </span>
+                </div>
+            </div>
+            <div class="uikit-swatch mt-m">
+                <div class="uikit-swatch__body flex">
+                    <div class="square"></div>
+                    <div class="square -stylized px-s">
+                        <div class="bg-grey04 w-100 h-100"></div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <span class="uikit-swatch__label">
+                        padding left & right
+                    </span>
+                    <textarea highlight-js [lang]="'html'">
+                        <div class="px-s"></div>
+                    </textarea>
+                    <span class="uikit-swatch__legend">
+                        .px-#value#
+                    </span>
+                </div>
+            </div>
+            <div class="uikit-swatch mt-m">
+                <div class="uikit-swatch__body flex">
+                    <div class="square"></div>
+                    <div class="square -stylized py-s">
+                        <div class="bg-grey04 w-100 h-100"></div>
+                    </div>
+                </div>
+                <div class="uikit-swatch__footer">
+                    <span class="uikit-swatch__label">
+                        padding top & bottom
+                    </span>
+                    <textarea highlight-js [lang]="'html'">
+                        <div class="py-s"></div>
+                    </textarea>
+                    <span class="uikit-swatch__legend">
+                        .py-#value#
+                    </span>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

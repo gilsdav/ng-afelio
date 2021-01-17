@@ -1,6 +1,6 @@
 import { strings } from '@angular-devkit/core';
 import { TargetDefinition, WorkspaceDefinition } from '@angular-devkit/core/src/workspace';
-import { Rule, SchematicContext, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, template, url } from '@angular-devkit/schematics';
+import { Rule, SchematicContext, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, template, url, schematic } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 import { getWorkspace , updateWorkspace } from '@schematics/angular/utility/workspace';
@@ -110,6 +110,9 @@ export default function(options: AddOptions): Rule {
                     installNgxBuildPlus(),
                     updateConfig(),
                     updateScripts(),
+                    ...(options.uiKit !== 'none' ? [
+                        schematic('install-uikit', { type: options.uiKit }),
+                    ] : []),
                 ])
             ),
         ]);

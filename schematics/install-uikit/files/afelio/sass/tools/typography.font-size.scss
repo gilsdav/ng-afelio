@@ -1,0 +1,43 @@
+//
+//  Font-size
+//  Compute the font size based on the font-base
+//  Compute the line-height for readibility if not defined
+//
+//  @param $font-size Number    The font-size
+//  @param $line-height Number  The line-height. Default: auto
+//
+@mixin font-size($font-size, $line-height: auto)
+{
+  font-size: ($font-size / $font-size-base) * 1rem;
+
+  @if $line-height == auto
+  {
+    // line-height: ceil($font-size * $line-height-base);
+  }
+  @else
+  {
+    @if (type-of($line-height) == number or $line-height == inherit or $line-height == normal)
+    {
+      line-height: $line-height;
+    }
+    @else if ($line-height != none and $line-height != false)
+    {
+      @warn "D'oh! '#{$line-height}' is not a valid value for `line-height`";
+    }
+  }
+}
+
+//
+//  Font Utility
+//  Generate the utility classes for the font-sizes
+//
+//  @param $name String   The name of the utility left hand
+//  @param $ratio Number  The ratio to use
+//
+@mixin font-utility($name, $ratio)
+{
+  .f-#{$name}
+  {
+    @include font-size($ratio * $font-size-base);
+  }
+}

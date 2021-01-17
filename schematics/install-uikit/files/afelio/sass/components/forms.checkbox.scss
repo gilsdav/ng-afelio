@@ -1,0 +1,195 @@
+/*****************************************************************************
+    HTML Structure
+
+    <label class="checkbox -disabled">
+        <div class="checkbox__check">
+            <input class="checkbox__input" type="checkbox" checked="true" />
+            <span class="checkbox__checker"></span>
+        </div>
+        <span class="checkbox__label">Mon label</span>
+    </label>
+*****************************************************************************/
+
+$root: ".checkbox";
+
+#{$root}
+{
+    $size: 16px;
+    min-height: $size;
+
+    @extend .w-100;
+
+    margin: 0;
+
+    @extend .block;
+    @extend .relative;
+
+    cursor: pointer;
+    font-size: 22px;
+    user-select: none;
+
+    @extend .flex;
+    @extend .flex-start;
+    @extend .flex-top;
+
+    &.-auto
+    {
+        width: auto;
+    }
+
+    &:hover {
+        #{$root}__check {
+            border: 1px solid $primary03;
+        }
+    }
+
+    #{$root}__label {
+        @extend .block;
+        @extend .relative;
+
+        @extend .w-100;
+
+        @extend .f-s;
+        line-height: $size;
+
+        @extend .c-grey08;
+        @extend .f-regular;
+        @extend .pl-xs;
+    }
+
+    #{$root}__input {
+        @extend .absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    #{$root}__check {
+        @extend .relative;
+
+        @extend .br-xs;
+
+        min-height: $size;
+        min-width: $size;
+
+        @extend .bg-grey00;
+        border: 1px solid $grey03;
+
+        transition-property: border-color;
+        transition-duration: 200ms;
+        transition-timing-function: ease-in-out;
+    }
+
+    #{$root}__checker {
+        @extend .absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+
+        $size-checker: 100%;
+        height: $size-checker;
+        width: $size-checker;
+    }
+
+    &:hover #{$root}__input~#{$root}__checker {
+        border-color: $grey03;
+    }
+
+    #{$root}__input:checked~#{$root}__checker {
+        &:after
+        {
+            content: '';
+            background-image: url('/assets/pictures/icons/tick.svg');
+            background-size: 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+            @extend .absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateY(-50%) translateX(-50%);
+
+            $size-checker: 16px;
+            height: $size-checker;
+            width: $size-checker;
+        }
+    }
+
+    &.-disabled
+    {
+        cursor: default;
+        pointer-events: none;
+
+        opacity: .3;
+    }
+
+    // MODIFIER PLUS & MINUS
+
+    &.-plus, &.-minus
+    {
+        $size: 16px;
+
+        height: $size;
+        min-height: $size;
+
+        width: $size;
+
+        @extend .f-s;
+
+        &:hover {
+            #{$root}__check {
+                @extend .bw-none;
+            }
+        }
+
+        #{$root}__check
+        {
+            height: $size;
+            width: $size;
+
+        @extend .bw-none;
+
+        }
+
+        #{$root}__checker
+        {
+            @extend .flex;
+            @extend .flex-middle;
+            @extend .flex-center;
+
+            @extend .br-xs;
+            @extend .bs-solid;
+            @extend .bw-xxs;
+            @extend .bc-grey03;
+
+            @extend .icon;
+        }
+
+        #{$root}__input:checked~#{$root}__checker
+        {
+            @extend .c-primary04;
+            @extend .bg-primary01;
+
+            @extend .bc-primary04;
+
+            &:after
+            {
+                @extend .d-none;
+            }
+        }
+
+    }
+
+
+    &.-plus
+    {
+        #{$root}__checker {
+            @extend .icon-plus;
+        }
+    }
+
+    &.-minus
+    {
+        #{$root}__checker {
+            @extend .icon-minus;
+        }
+    }
+}

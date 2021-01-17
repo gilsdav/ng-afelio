@@ -1,0 +1,44 @@
+//  Make the typeface available
+//  1. declare the font-face
+//  2. create the utility classes
+//
+//  @param $family Font family
+//  @param $filename Name of the file
+//  @param $fontname Name of the font in the css
+@mixin typeface($family, $filename, $fontname, $shortname, $fontweight)
+{
+  @if $family != null
+  {
+    $filepath: '/assets/fonts/' + $family + '/' + $filename;
+
+    @font-face
+    {
+      font-family: $fontname;
+      font-style: normal;
+      font-weight: $fontweight;
+      src: url($filepath + '.eot');
+    }
+
+    @font-face
+    {
+        font-family: $fontname;
+        font-style: normal;
+        font-weight: $fontweight;
+        src:  url($filepath + '.eot#iefix') format('embedded-opentype'),
+            url($filepath+'.woff2') format('woff2'),
+            url($filepath+'.woff') format('woff'),
+            url($filepath+'.ttf') format('truetype');
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+  }
+
+  .f-#{$shortname}
+  {
+    font-family: $fontname,
+                 Arial,
+                 Helvetica,
+                 sans-serif;
+    font-weight: $fontweight;
+  }
+}

@@ -1,0 +1,357 @@
+
+$icon-admin: unicode(ea02);
+$icon-arrow-left: unicode(ea03);
+$icon-annulation: unicode(ea04);
+$icon-arrow-bottom-alt: unicode(ea05);
+$icon-arrow-bottom: unicode(ea06);
+$icon-arrow-right-alt: unicode(ea07);
+$icon-arrow-right-long: unicode(ea08);
+$icon-arrow-right: unicode(ea09);
+$icon-arrow-top-alt: unicode(ea0a);
+$icon-arrow-top: unicode(ea0b);
+$icon-attach: unicode(ea0c);
+$icon-bell-filled: unicode(ea0d);
+$icon-bell: unicode(ea0e);
+$icon-bold: unicode(ea0f);
+$icon-calendar: unicode(ea10);
+$icon-agression: unicode(ea11);
+$icon-clock: unicode(ea12);
+$icon-cloture-tache: unicode(ea13);
+$icon-confirmation: unicode(ea14);
+$icon-conflict: unicode(ea15);
+$icon-contentieux: unicode(ea16);
+$icon-copy: unicode(ea17);
+$icon-cross: unicode(ea18);
+$icon-document: unicode(ea19);
+$icon-double-arrow: unicode(ea1a);
+$icon-checked: unicode(ea1b);
+$icon-enrolement: unicode(ea1c);
+$icon-error: unicode(ea1d);
+$icon-esigna-alt-2: unicode(ea1e);
+$icon-esigna-alt: unicode(ea1f);
+$icon-esigna: unicode(ea20);
+$icon-etablissement: unicode(ea21);
+$icon-eur: unicode(ea22);
+$icon-eye: unicode(ea23);
+$icon-gid: unicode(ea24);
+$icon-help-alt: unicode(ea25);
+$icon-help: unicode(ea26);
+$icon-info: unicode(ea27);
+$icon-initial: unicode(ea28);
+$icon-italic: unicode(ea29);
+$icon-left-indent: unicode(ea2a);
+$icon-line: unicode(ea2b);
+$icon-minus: unicode(ea2c);
+$icon-modification-REC: unicode(ea2d);
+$icon-modification: unicode(ea2e);
+$icon-ol: unicode(ea2f);
+$icon-opposite-arrows: unicode(ea30);
+$icon-pending: unicode(ea31);
+$icon-perefisc: unicode(ea32);
+$icon-plus-alt: unicode(ea33);
+$icon-plus: unicode(ea34);
+$icon-point-menu-contextuel: unicode(ea35);
+$icon-rejected: unicode(ea36);
+$icon-right-indent: unicode(ea37);
+$icon-search: unicode(ea38);
+$icon-tab-close: unicode(ea39);
+$icon-tab-management: unicode(ea3a);
+$icon-tab: unicode(ea3b);
+$icon-task-late: unicode(ea3c);
+$icon-task-ok: unicode(ea3d);
+$icon-task: unicode(ea3e);
+$icon-tick: unicode(ea3f);
+$icon-trash: unicode(ea40);
+$icon-ul: unicode(ea41);
+$icon-underlined: unicode(ea42);
+$icon-upload: unicode(ea43);
+$icon-warning-alt: unicode(ea44);
+$icon-warning: unicode(ea45);
+$icon-arrow-left-long: unicode(ea46);
+$icon-download: unicode(ea47);
+$icon-arrow-left-alt: unicode(ea48);
+
+.icon-admin::before {
+  content: $icon-admin;
+}
+
+.icon-arrow-left::before {
+  content: $icon-arrow-left;
+}
+
+.icon-annulation::before {
+  content: $icon-annulation;
+}
+
+.icon-arrow-bottom-alt::before {
+  content: $icon-arrow-bottom-alt;
+}
+
+.icon-arrow-bottom::before {
+  content: $icon-arrow-bottom;
+}
+
+.icon-arrow-right-alt::before {
+  content: $icon-arrow-right-alt;
+}
+
+.icon-arrow-right-long::before {
+  content: $icon-arrow-right-long;
+}
+
+.icon-arrow-right::before {
+  content: $icon-arrow-right;
+}
+
+.icon-arrow-top-alt::before {
+  content: $icon-arrow-top-alt;
+}
+
+.icon-arrow-top::before {
+  content: $icon-arrow-top;
+}
+
+.icon-attach::before {
+  content: $icon-attach;
+}
+
+.icon-bell-filled::before {
+  content: $icon-bell-filled;
+}
+
+.icon-bell::before {
+  content: $icon-bell;
+}
+
+.icon-bold::before {
+  content: $icon-bold;
+}
+
+.icon-calendar::before {
+  content: $icon-calendar;
+}
+
+.icon-agression::before {
+  content: $icon-agression;
+}
+
+.icon-clock::before {
+  content: $icon-clock;
+}
+
+.icon-cloture-tache::before {
+  content: $icon-cloture-tache;
+}
+
+.icon-confirmation::before {
+  content: $icon-confirmation;
+}
+
+.icon-conflict::before {
+  content: $icon-conflict;
+}
+
+.icon-contentieux::before {
+  content: $icon-contentieux;
+}
+
+.icon-copy::before {
+  content: $icon-copy;
+}
+
+.icon-cross::before {
+  content: $icon-cross;
+}
+
+.icon-document::before {
+  content: $icon-document;
+}
+
+.icon-double-arrow::before {
+  content: $icon-double-arrow;
+}
+
+.icon-checked::before {
+  content: $icon-checked;
+}
+
+.icon-enrolement::before {
+  content: $icon-enrolement;
+}
+
+.icon-error::before {
+  content: $icon-error;
+}
+
+.icon-esigna-alt-2::before {
+  content: $icon-esigna-alt-2;
+}
+
+.icon-esigna-alt::before {
+  content: $icon-esigna-alt;
+}
+
+.icon-esigna::before {
+  content: $icon-esigna;
+}
+
+.icon-etablissement::before {
+  content: $icon-etablissement;
+}
+
+.icon-eur::before {
+  content: $icon-eur;
+}
+
+.icon-eye::before {
+  content: $icon-eye;
+}
+
+.icon-gid::before {
+  content: $icon-gid;
+}
+
+.icon-help-alt::before {
+  content: $icon-help-alt;
+}
+
+.icon-help::before {
+  content: $icon-help;
+}
+
+.icon-info::before {
+  content: $icon-info;
+}
+
+.icon-initial::before {
+  content: $icon-initial;
+}
+
+.icon-italic::before {
+  content: $icon-italic;
+}
+
+.icon-left-indent::before {
+  content: $icon-left-indent;
+}
+
+.icon-line::before {
+  content: $icon-line;
+}
+
+.icon-minus::before {
+  content: $icon-minus;
+}
+
+.icon-modification-REC::before {
+  content: $icon-modification-REC;
+}
+
+.icon-modification::before {
+  content: $icon-modification;
+}
+
+.icon-ol::before {
+  content: $icon-ol;
+}
+
+.icon-opposite-arrows::before {
+  content: $icon-opposite-arrows;
+}
+
+.icon-pending::before {
+  content: $icon-pending;
+}
+
+.icon-perefisc::before {
+  content: $icon-perefisc;
+}
+
+.icon-plus-alt::before {
+  content: $icon-plus-alt;
+}
+
+.icon-plus::before {
+  content: $icon-plus;
+}
+
+.icon-point-menu-contextuel::before {
+  content: $icon-point-menu-contextuel;
+}
+
+.icon-rejected::before {
+  content: $icon-rejected;
+}
+
+.icon-right-indent::before {
+  content: $icon-right-indent;
+}
+
+.icon-search::before {
+  content: $icon-search;
+}
+
+.icon-tab-close::before {
+  content: $icon-tab-close;
+}
+
+.icon-tab-management::before {
+  content: $icon-tab-management;
+}
+
+.icon-tab::before {
+  content: $icon-tab;
+}
+
+.icon-task-late::before {
+  content: $icon-task-late;
+}
+
+.icon-task-ok::before {
+  content: $icon-task-ok;
+}
+
+.icon-task::before {
+  content: $icon-task;
+}
+
+.icon-tick::before {
+  content: $icon-tick;
+}
+
+.icon-trash::before {
+  content: $icon-trash;
+}
+
+.icon-ul::before {
+  content: $icon-ul;
+}
+
+.icon-underlined::before {
+  content: $icon-underlined;
+}
+
+.icon-upload::before {
+  content: $icon-upload;
+}
+
+.icon-warning-alt::before {
+  content: $icon-warning-alt;
+}
+
+.icon-warning::before {
+  content: $icon-warning;
+}
+
+.icon-arrow-left-long::before {
+  content: $icon-arrow-left-long;
+}
+
+.icon-download::before {
+  content: $icon-download;
+}
+
+.icon-arrow-left-alt::before {
+  content: $icon-arrow-left-alt;
+}
+
