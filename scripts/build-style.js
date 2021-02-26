@@ -1,11 +1,10 @@
-const cli = require('@angular/cli');
 const { Bundler } = require('scss-bundle');
 const fs = require('fs');
 // const fse = require('fs-extra');
 const decomment = require('decomment');
 const colors = require('colors');
 
-const sass = require('node-sass');
+const sass = require('sass');
 const magicImporter = require('node-sass-magic-importer');
 
 const cssNodeExtract = require('css-node-extract');
@@ -19,6 +18,13 @@ const configPath = 'ng-afelio.json';
 let outputDirectory = '../../styles';
 let inputDirectory = './projects/ui-kit';
 let angularConfigPath = '../../angular.json';
+
+function enforceDirectoryExistance(currentPath) {
+    const directory = path.dirname(currentPath);
+    if (!fs.existsSync(directory)){
+        fs.mkdirSync(directory);
+    }
+}
 
 function readConfig() {
     if(!fs.existsSync(configPath)) {
@@ -48,12 +54,13 @@ function initFolder(config) {
     angularConfigPath = `${countSlashes}angular.json`;
 }
 
-function buildUtils(config, bundler) {
+function buildUtils(config, bundlerBasePath) {
+    const bundler = new Bundler(undefined, bundlerBasePath);
     const enabled = (config && config.style && config.style.styleUtils && config.style.styleUtils.enable);
     if (enabled) {
         const input = (config && config.style && config.style.styleUtils && config.style.styleUtils.input) || 'styles.scss';
         const output = (config && config.style && config.style.styleUtils && config.style.styleUtils.output) || 'style-utils.scss';
-        return bundler.Bundle(path.join('./src/', input)).then(result => {
+        return bundler.bundle(path.join('./src/', input)).then(result => {
             const toWrite = decomment.text(result.bundledContent/*, {safe: true}*/);
             const options = {
                 css: toWrite,
@@ -62,6 +69,7 @@ function buildUtils(config, bundler) {
             };
             return cssNodeExtract.process(options).then((extractedCss) => {
                 const outputPath = path.join(outputDirectory, output);
+                enforceDirectoryExistance(outputPath);
                 fs.writeFile(outputPath, extractedCss, function(err){
                     if(!err){
                         console.info(`${colors.green('BUILD style utils')} was saved in "${outputPath}"`);
@@ -78,17 +86,19 @@ function buildUtils(config, bundler) {
     }
 }
 
-function buildStyleFiles(config, bundler) {
+function buildStyleFiles(config, bundlerBasePath) {
     const files = (config && config.style && config.style.files) || [{ "input": "styles.scss", "output": "main.scss" }];
-    
+
     return files.map(file => {
         const input = file.input;
         const output = file.output || file.input;
         const isGlobal = file.global;
+        const bundler = new Bundler(undefined, bundlerBasePath);
 
-        return bundler.Bundle(path.join('./src/', input)).then(result => {
+        return bundler.bundle(path.join('./src/', input)).then(result => {
             const toWrite = decomment.text(result.bundledContent/*, {safe: true}*/);
             const outputPath = path.join(outputDirectory, output);
+            enforceDirectoryExistance(outputPath);
 
             const cwd = process.cwd();
             process.chdir(path.dirname(path.join(process.cwd(), './src/', input)));
@@ -113,10 +123,7 @@ function buildStyleFiles(config, bundler) {
 
             process.chdir(cwd);
 
-            if (isGlobal) {
-                const fileName = output.substring(0, output.lastIndexOf('.'));
-
-                const toAddToStyleScss = `@import '../styles/${output}';`;
+            if (isGlobal) {                const toAddToStyleScss = `@import '../styles/${output}';`;
                 const stylePath = '../../src/styles.scss';
                 const fileContent = fs.readFileSync(stylePath, 'utf8');
                 if (!fileContent.includes(toAddToStyleScss)) {
@@ -168,11 +175,9 @@ function buildStyleFromUIKit() {
 
     const currentPath = process.cwd();
 
-    const bundler = new Bundler(undefined, currentPath);
-
     return Promise.all([
-        buildUtils(config, bundler),
-        ...buildStyleFiles(config, bundler)
+        buildUtils(config, currentPath),
+        ...buildStyleFiles(config, currentPath)
     ]).then(() => {
         checkAssetsConfiguration();
         checkStyleShortcut();

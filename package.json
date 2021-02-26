@@ -37,10 +37,10 @@
     "decomment": "0.9.2",
     "fs-extra": "9.0.1",
     "inquirer": "5.2.0",
-    "node-sass": "4.14.1",
+    "sass": "1.32.8",
     "node-sass-magic-importer": "5.3.2",
-    "postcss-scss": "2.1.1",
-    "scss-bundle": "2.4.0"
+    "postcss-scss": "3.0.4",
+    "scss-bundle": "3.1.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.1100.4",
