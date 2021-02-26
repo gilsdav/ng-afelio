@@ -123,7 +123,8 @@ function buildStyleFiles(config, bundlerBasePath) {
 
             process.chdir(cwd);
 
-            if (isGlobal) {                const toAddToStyleScss = `@import '../styles/${output}';`;
+            if (isGlobal) {
+                const toAddToStyleScss = `@import '../styles/${output}';`;
                 const stylePath = '../../src/styles.scss';
                 const fileContent = fs.readFileSync(stylePath, 'utf8');
                 if (!fileContent.includes(toAddToStyleScss)) {
