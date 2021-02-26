@@ -68,7 +68,9 @@
             "aliases": [
                 "c"
             ],
-            "extends": "@schematics/angular:component"
+            "factory": "./node_modules/@schematics/angular/component",
+            "description": "Create an Angular component.",
+            "schema": "./schematics/component/schema.json"
         },
         "class": {
             "aliases": [
