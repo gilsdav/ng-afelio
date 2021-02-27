@@ -40,6 +40,14 @@
             "description": "Add UI Kit.",
             "schema": "./schematics/install-uikit/schema.json"
         },
+        "install-docker": {
+            "aliases": [
+                "i-docker"
+            ],
+            "factory": "./schematics/install-docker",
+            "description": "Add Docker.",
+            "schema": "./schematics/install-docker/schema.json"
+        },
         "module": {
             "aliases": [
                 "m"

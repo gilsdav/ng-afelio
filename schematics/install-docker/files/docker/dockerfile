@@ -1,0 +1,61 @@
+### STAGE 1: Build ###
+
+# We label our stage as 'builder'
+FROM node:12-slim as builder
+ARG BUILD_ID
+LABEL project=front
+LABEL stage=builder
+LABEL build=$BUILD_ID
+
+RUN echo "BuildId: $BUILD_ID"
+
+WORKDIR /ng-app
+
+COPY package.json package-lock.json .npmrc postinstall.js ./
+
+## Storing node modules on a separate layer will prevent unnecessary npm installs at each build
+RUN npm ci
+
+COPY . .
+
+## Build the angular app in production mode and store the artifacts in dist folder
+RUN npm run build
+
+## STAGE 1.1: check baseImage issues ##
+# FROM nginx:1.17.1-alpine
+# RUN apk add --no-cache ca-certificates && update-ca-certificates
+# ADD https://get.aquasec.com/microscanner .
+# RUN chmod +x microscanner
+# RUN ./microscanner #add token
+
+# TODO: set Github token
+
+# FROM nginx:1.19.1-alpine
+
+# RUN apk add curl \
+#   && curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/master/contrib/install.sh | sh -s -- -b /usr/local/bin \
+#   && trivy filesystem --exit-code 1 --severity HIGH,CRITICAL --no-progress /
+
+
+### STAGE 2: Runtime ###
+FROM nginx:1.19.1-alpine
+ARG BUILD_ID
+LABEL project=front
+LABEL stage=runtime
+LABEL build=$BUILD_ID
+
+## Copy our default nginx config
+COPY nginx/default.conf /etc/nginx/conf.d/
+
+## Remove default nginx website
+RUN rm -rf /usr/share/nginx/html/*
+
+## From 'builder' stage copy over the artifacts in dist folder to default nginx public folder
+COPY --from=builder /ng-app/dist/<%= project %> /usr/share/nginx/html
+
+COPY nginx/run.sh .
+# Fix when file comes from Windows
+RUN cat run.sh | tr -d '\r' >> run.sh.tmp
+RUN mv run.sh.tmp run.sh;
+
+ENTRYPOINT ["sh", "run.sh"]
