@@ -1,0 +1,50 @@
+import {
+    ActivatedRouteSnapshot,
+    CanActivateChild,
+    Router,
+    RouterStateSnapshot,
+    CanActivate
+} from '@angular/router';
+import { Injectable } from '@angular/core';
+import { AuthenticationService } from '../services/authentication.service';
+
+import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+
+@Injectable()
+export class AuthGuard implements CanActivate, CanActivateChild {
+    constructor(private authService: AuthenticationService, private router: Router) {
+    }
+
+    canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+        return this.authService.getTokenAsync().pipe(
+            filter(token => !!token),
+            map(() => {
+                return this.isFailure(state);
+            })
+        );
+    }
+
+    canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+        return this.authService.getTokenAsync().pipe(
+            filter(token => !!token),
+            map(() => {
+                return this.isFailure(state);
+            })
+        );
+    }
+
+    isFailure(state: RouterStateSnapshot): boolean {
+        if (this.authService.authFailure) {
+            this.router.navigateByUrl('/notauthorized');
+            return false;
+        } else {
+            if (state.url.includes('/notauthorized')) {
+                this.router.navigate(['/']);
+                return false;
+            }
+            return true;
+        }
+    }
+
+}
