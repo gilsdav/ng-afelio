@@ -84,29 +84,39 @@ program
     Promise.all([serveMain(options.env, options.port, options.ng), serveUIKit(options.uiPort, options.ng)]);
   });
 
-program
-  .command('generate <type> [name]')
+const generateCommand = program.command('generate [type] [name]')
+generateCommand
   .alias('g')
   .description(`Generates and/or modifies files based on angular schematics`, {
     type: `One type from this list:\n    ${colors.cyan(Object.keys(schematics).filter(name => !name.startsWith('install-') && !name.startsWith('ng-')).join('\n    '))}`,
     name: 'Name of element to generate.'
   })
+  .option('-h, --help', 'output help message')
   .allowUnknownOption()
-  .parse(process.argv)
+  // .parse(process.argv)
   .action((type, name) => {
-    generate(type, name, getRemainingArgs(program));
-  });
+    if (type) {
+      generate(type, name, getRemainingArgs(program));
+    } else {
+      return bob.outputHelp();
+    }
+  })
 
-program
-  .command('install <type>')
+const installCommand = program.command('install [type]');
+installCommand
   .alias('i')
   .description(`Add libs from ng-afelio schematics`, {
     type: `One type from this list:\n    ${colors.cyan(Object.keys(schematics).filter(name => name.startsWith('install-')).map(name => name.replace('install-', '')).join('\n    '))}`
   })
+  .option('-h, --help', 'output help message')
   .allowUnknownOption()
-  .parse(process.argv)
+  // .parse(process.argv)
   .action((type) => {
-    generate(`install-${type}`, undefined, getRemainingArgs(program));
+    if (type) {
+      generate(`install-${type}`, undefined, getRemainingArgs(program));
+    } else {
+      return installCommand.outputHelp();
+    }
   });
 
 program
