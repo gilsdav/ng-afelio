@@ -98,7 +98,7 @@ generateCommand
     if (type) {
       generate(type, name, getRemainingArgs(program));
     } else {
-      return bob.outputHelp();
+      return generateCommand.outputHelp();
     }
   })
 
