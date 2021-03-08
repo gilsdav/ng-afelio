@@ -7,6 +7,7 @@ import { OAuthService, OAuthStorage } from 'angular-oauth2-oidc';
 import { AuthenticationService } from './services/authentication.service';
 import { authenticationInterceptorProvider } from './interceptors/authentication.interceptor';
 import { authenticationInitializerProvider } from './initializers/authentication.initializer';
+import { AuthGuard } from './guards/authentication-guard';
 import { PermissionGuard } from './guards/permission-guard';
 import { CanAccessDirective } from './directives/canAccess.directive';
 
@@ -35,6 +36,7 @@ export class AuthenticationModule {
                 authenticationInterceptorProvider,
                 authenticationInitializerProvider,
                 PermissionGuard,
+                AuthGuard,
                 { provide: OAuthStorage, useFactory: storageFactory }
             ]
         };
