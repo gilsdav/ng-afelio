@@ -178,8 +178,8 @@ function buildStyleFromUIKit() {
         buildUtils(config, bundler),
         ...buildStyleFiles(config, bundler)
     ]).then(() => {
-        checkAssetsConfiguration();
-        checkStyleShortcut();
+        checkAssetsConfiguration(config);
+        checkStyleShortcut(config);
     });
   }
   
