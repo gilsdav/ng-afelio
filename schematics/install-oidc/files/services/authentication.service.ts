@@ -95,6 +95,7 @@ export class AuthenticationService {
                 switchMap(isLogged => {
                     if (isLogged) {
                         this.tokenSubject.next(this.getToken());
+                        this.oauthService.setupAutomaticSilentRefresh();
                         return of(true);
                     } else {
                         this.tokenSubject.next(null);
