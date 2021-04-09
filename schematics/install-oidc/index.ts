@@ -1,6 +1,6 @@
 import { Path, join, strings } from '@angular-devkit/core';
 import { Rule, SchematicContext, SchematicsException, Tree, branchAndMerge, chain, apply, url, template, move, mergeWith } from '@angular-devkit/schematics';
-// import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
@@ -22,7 +22,7 @@ function installOAuth(): Rule {
             overwrite: false,
         };
         addPackageJsonDependency(host, lib);
-        // context.addTask(new NodePackageInstallTask(), []);
+        context.addTask(new NodePackageInstallTask(), []);
     };
 }
 
