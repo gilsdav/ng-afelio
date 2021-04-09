@@ -5,12 +5,12 @@ import {
     CanActivate,
     Router
 } from '@angular/router';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, filter, catchError } from 'rxjs/operators';
 
 import { AuthenticationService } from '../services/authentication.service';
-import { environment } from '../../../../../environments/environment';
+import { AuthenticationConfig, AUTHENTICATION_CONFIG } from '../interfaces/authentication-config.interface';
 
 /**
  * Use this Guard to make sure that user is connected to access to a route.
@@ -21,9 +21,12 @@ import { environment } from '../../../../../environments/environment';
  * You can set `environment.oidc.authErrorRoute` to redirect to an error page in authentication error case.
  */
 @Injectable()
-export class AuthGuard implements CanActivate, CanActivateChild {
-    constructor(private authService: AuthenticationService, private router: Router) {
-    }
+export class AuthenticationGuard implements CanActivate, CanActivateChild {
+    constructor(
+        private authService: AuthenticationService,
+        private router: Router,
+        @Inject(AUTHENTICATION_CONFIG) private config: AuthenticationConfig
+    ) {}
 
     canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
         return this.canNavigate(state.url);
@@ -49,8 +52,8 @@ export class AuthGuard implements CanActivate, CanActivateChild {
                 return true;
             }),
             catchError(() => {
-                if (environment.oidc.authErrorRoute) {
-                    this.router.navigate([environment.oidc.authErrorRoute]);
+                if (this.config.authErrorRoute) {
+                    this.router.navigate([this.config.authErrorRoute]);
                 }
                 return of(false);
             })

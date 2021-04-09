@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, from, Observable, of, throwError } from 'rxjs';
 import { map, skipWhile, skip, shareReplay, filter, switchMap, catchError } from 'rxjs/operators';
 
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
 
-import { environment } from '../../../../../environments/environment';
+import { AuthenticationConfig, AUTHENTICATION_CONFIG } from '../interfaces/authentication-config.interface';
 
 export interface UserInfo {
     userName: string;
@@ -20,8 +20,8 @@ export class AuthenticationService {
         filter(token => token !== null),
         map(() => {
             const claims: any = this.oauthService.getIdentityClaims();
-            const roles: string[] = claims?.resource_access?.[environment.oidc.clientId]?.roles ?
-                claims?.resource_access?.[environment.oidc.clientId]?.roles :
+            const roles: string[] = claims?.resource_access?.[this.config.clientId]?.roles ?
+                claims?.resource_access?.[this.config.clientId]?.roles :
                 [];
             const userInfo: UserInfo = {
                 userName: claims.preferred_username,
@@ -35,7 +35,8 @@ export class AuthenticationService {
     );
 
     constructor(
-        private oauthService: OAuthService
+        private oauthService: OAuthService,
+        @Inject(AUTHENTICATION_CONFIG) private config: AuthenticationConfig
     ) { }
 
     public getToken(): string {
@@ -64,12 +65,12 @@ export class AuthenticationService {
         if (redirectPath) {
             redirectUri = `${location.origin}${redirectPath.split(/[?;]/)[0]}`;
         } else {
-            redirectUri = isRoot ? environment.oidc.redirectUri : location.href.split(/[?;]/)[0]; // Remove query params
+            redirectUri = isRoot ? this.config.redirectUri : location.href.split(/[?;]/)[0]; // Remove query params
         }
         const config = {
-            ...environment.oidc,
+            ...this.config,
             redirectUri,
-            issuer: environment.oidc.issuer
+            issuer: this.config.issuer
         };
 
         const configure = (realm: string) => {
@@ -80,18 +81,18 @@ export class AuthenticationService {
             this.oauthService.configure(tempConfig);
         };
 
-        const loadDocuments = (realm: string) => {
-            configure(realm);
-            return from(this.oauthService.loadDiscoveryDocument());
-        };
+        // const loadDocuments = (realm: string) => {
+        //     configure(realm);
+        //     return from(this.oauthService.loadDiscoveryDocument());
+        // };
 
         const login = (realm: string) => {
             configure(realm);
             return from(this.oauthService.loadDiscoveryDocumentAndLogin());
         };
 
-        if (environment.oidc.completeSecure || loggin) {
-            const loginOrchestration$ = login(environment.oidc.realm).pipe(
+        if (this.config.completeSecure || loggin) {
+            const loginOrchestration$ = login(this.config.realm).pipe(
                 switchMap(isLogged => {
                     if (isLogged) {
                         this.tokenSubject.next(this.getToken());
@@ -110,7 +111,8 @@ export class AuthenticationService {
             );
             return loginOrchestration$.toPromise();
         } else {
-            return loadDocuments(environment.oidc.realm).toPromise();
+            // return loadDocuments(this.config.realm).toPromise();
+            return Promise.resolve(true);
         }
     }
 
@@ -135,6 +137,10 @@ export class AuthenticationService {
                 })
             );
         }
+    }
+
+    public logout(): void {
+        this.oauthService.logOut();
     }
 
     private checkPermissions(currentPermissions: string[], permissionsToCheck: string[]): boolean {
