@@ -45,10 +45,12 @@ function applyModuleImports(projectAppPath: string, options: OIDCOptions): Rule 
             const projectAuthPath = join(projectAppPath as Path, buildPath);
             const relativeAuthPath = buildRelativePath(modulePath, projectAuthPath);
             // Add ts imports
+            changes.push(insertImport(source, modulePath, 'HttpClientModule', '@angular/common/http'));
             changes.push(insertImport(source, modulePath, 'OAuthModule', 'angular-oauth2-oidc'));
             changes.push(insertImport(source, modulePath, 'AuthenticationModule', relativeAuthPath));
             changes.push(insertImport(source, modulePath, 'environment', '../environments/environment'));
             // Add ng imports
+            changes.push(...addImportToModule(source, modulePath, 'HttpClientModule', null as any));
             changes.push(...addImportToModule(source, modulePath, 'OAuthModule.forRoot()', null as any));
             changes.push(...addImportToModule(source, modulePath, 'AuthenticationModule.forRoot(environment.oidc)', null as any));
             // Save changes
@@ -101,13 +103,14 @@ function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule
     oidc: {
         issuer: 'http://keycloak:8080/auth/realms',
         redirectUri: 'http://localhost:4200',
+        realm: 'myrealm',
         clientId: 'myapp',
         responseType: 'code',
         scope: 'openid profile email offline_access roles',
         showDebugInformation: true,
         requireHttps: false,
         disableAtHashCheck: true,
-        completeSecure: false,
+        completeSecure: true,
         authErrorRoute: '/auth-error',
         storage: 'session' as const
     }`
