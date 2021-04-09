@@ -48,6 +48,14 @@
             "description": "Add Docker.",
             "schema": "./schematics/install-docker/schema.json"
         },
+        "install-oidc": {
+            "aliases": [
+                "i-oidc"
+            ],
+            "factory": "./schematics/install-oidc",
+            "description": "Generate OIDC system.",
+            "schema": "./schematics/install-oidc/schema.json"
+        },
         "module": {
             "aliases": [
                 "m"

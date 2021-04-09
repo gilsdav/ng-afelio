@@ -92,9 +92,11 @@ program
     name: 'Name of element to generate.'
   })
   .allowUnknownOption()
-  .parse(process.argv)
+  // .parse(process.argv)
   .action((type, name) => {
-    generate(type, name, getRemainingArgs(program));
+    generate(type, name, getRemainingArgs(program)).then(() => {
+      process.exit(0);
+    });
   });
 
 program
@@ -104,9 +106,11 @@ program
     type: `One type from this list:\n    ${colors.cyan(Object.keys(schematics).filter(name => name.startsWith('install-')).map(name => name.replace('install-', '')).join('\n    '))}`
   })
   .allowUnknownOption()
-  .parse(process.argv)
+  // .parse(process.argv)
   .action((type) => {
-    generate(`install-${type}`, undefined, getRemainingArgs(program));
+    generate(`install-${type}`, undefined, getRemainingArgs(program)).then(() => {
+      process.exit(0);
+    });
   });
 
 program
@@ -118,21 +122,27 @@ program
   .option('--base-href <href>', 'Base url for the application being built')
   .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--namedChunks=false --extractLicenses=true"')
   .action((options) => {
-    build(options.env, options.ssr || false, options.baseHref, options.ng);
+    build(options.env, options.ssr || false, options.baseHref, options.ng).then(() => {
+      process.exit(0);
+    });
   });
 
 program
   .command('style')
   .description('Build style from UI Kit')
   .action(() => {
-    buildStyle();
+    buildStyle().then(() => {
+      process.exit(0);
+    });
   });
 
 program
   .command('mocks')
   .description('Generate mocks system')
   .action(() => {
-    generate('install-mocks');
+    generate('install-mocks').then(() => {
+      process.exit(0);
+    });
   });
 
 program
@@ -182,7 +192,9 @@ program.parse(process.argv);
 
 if (program.versionFull) {
   console.info(version);
-  getAngularVersion();
+  getAngularVersion().then(() => {
+    process.exit(0);
+  });
 }
 
 if (!process.argv.slice(2).length) {
