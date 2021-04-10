@@ -96,7 +96,9 @@ generateCommand
   // .parse(process.argv)
   .action((type, name) => {
     if (type) {
-      generate(type, name, getRemainingArgs(program));
+      generate(type, name, getRemainingArgs(program)).then(() => {
+        process.exit(0);
+      });
     } else {
       return generateCommand.outputHelp();
     }
@@ -113,7 +115,9 @@ installCommand
   // .parse(process.argv)
   .action((type) => {
     if (type) {
-      generate(`install-${type}`, undefined, getRemainingArgs(program));
+      generate(`install-${type}`, undefined, getRemainingArgs(program)).then(() => {
+        process.exit(0);
+      });
     } else {
       return installCommand.outputHelp();
     }
@@ -128,21 +132,27 @@ program
   .option('--base-href <href>', 'Base url for the application being built')
   .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--namedChunks=false --extractLicenses=true"')
   .action((options) => {
-    build(options.env, options.ssr || false, options.baseHref, options.ng);
+    build(options.env, options.ssr || false, options.baseHref, options.ng).then(() => {
+      process.exit(0);
+    });
   });
 
 program
   .command('style')
   .description('Build style from UI Kit')
   .action(() => {
-    buildStyle();
+    buildStyle().then(() => {
+      process.exit(0);
+    });
   });
 
 program
   .command('mocks')
   .description('Generate mocks system')
   .action(() => {
-    generate('install-mocks');
+    generate('install-mocks').then(() => {
+      process.exit(0);
+    });
   });
 
 program
@@ -192,7 +202,9 @@ program.parse(process.argv);
 
 if (program.versionFull) {
   console.info(version);
-  getAngularVersion();
+  getAngularVersion().then(() => {
+    process.exit(0);
+  });
 }
 
 if (!process.argv.slice(2).length) {
