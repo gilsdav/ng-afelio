@@ -137,35 +137,39 @@ function buildStyleFiles(config, bundlerBasePath) {
     });
 }
 
-function checkAssetsConfiguration() {
-    const assetsPath = `${inputDirectory.replace('./', '')}/src/assets`;
-    const toAddToAngularConfig = { "input": assetsPath, "glob": "**/*", "output": "./assets" };
-    const fileContent = fs.readFileSync(angularConfigPath, 'utf8');
-    if (!fileContent.includes(`"input": "${assetsPath}"`)) {
-        const jsonContent = JSON.parse(fileContent);
-        const defaultProject = jsonContent.defaultProject;
-        const builds = Object.keys(jsonContent.projects[defaultProject].architect);
-        builds.forEach((build) => {
-            const currentBuildConfig = jsonContent.projects[defaultProject].architect[build];
-            if (currentBuildConfig.options && currentBuildConfig.options.assets) {
-                currentBuildConfig.options.assets.push(toAddToAngularConfig);
-            }
-        });
-        fs.writeFileSync(angularConfigPath, JSON.stringify(jsonContent, null, 2), 'utf8');
-        console.info(`${colors.green('ADD ASSETS')} UI Kit assets added to ${defaultProject} project`);
+function checkAssetsConfiguration(config) {
+    if (!config || !config.style || config.style.addUiKitAssets !== false) {
+        const assetsPath = `${inputDirectory.replace('./', '')}/src/assets`;
+        const toAddToAngularConfig = { "input": assetsPath, "glob": "**/*", "output": "./assets" };
+        const fileContent = fs.readFileSync(angularConfigPath, 'utf8');
+        if (!fileContent.includes(`"input": "${assetsPath}"`)) {
+            const jsonContent = JSON.parse(fileContent);
+            const defaultProject = jsonContent.defaultProject;
+            const builds = Object.keys(jsonContent.projects[defaultProject].architect);
+            builds.forEach((build) => {
+                const currentBuildConfig = jsonContent.projects[defaultProject].architect[build];
+                if (currentBuildConfig.options && currentBuildConfig.options.assets) {
+                    currentBuildConfig.options.assets.push(toAddToAngularConfig);
+                }
+            });
+            fs.writeFileSync(angularConfigPath, JSON.stringify(jsonContent, null, 2), 'utf8');
+            console.info(`${colors.green('ADD ASSETS')} UI Kit assets added to ${defaultProject} project`);
+        }
     }
 }
 
-function checkStyleShortcut() {
-    const stylePath = path.join(inputDirectory, outputDirectory);
-    const fileContent = fs.readFileSync(angularConfigPath, 'utf8');
-    if (!fileContent.includes('"stylePreprocessorOptions"')) {
-        const jsonContent = JSON.parse(fileContent);
-        const defaultProject = jsonContent.defaultProject;
-        const buildOptions = jsonContent.projects[defaultProject].architect.build.options;
-        buildOptions.stylePreprocessorOptions = { includePaths: [stylePath] };
-        fs.writeFileSync(angularConfigPath, JSON.stringify(jsonContent, null, 2), 'utf8');
-        console.info(`${colors.green('ADD CSS SHORTCUT')} "styles" chortchut added to ${defaultProject} project`);
+function checkStyleShortcut(config) {
+    if (!config || !config.style || config.style.addAngularStyleShortcut !== false) {
+        const stylePath = path.join(inputDirectory, outputDirectory);
+        const fileContent = fs.readFileSync(angularConfigPath, 'utf8');
+        if (!fileContent.includes('"stylePreprocessorOptions"')) {
+            const jsonContent = JSON.parse(fileContent);
+            const defaultProject = jsonContent.defaultProject;
+            const buildOptions = jsonContent.projects[defaultProject].architect.build.options;
+            buildOptions.stylePreprocessorOptions = { includePaths: [stylePath] };
+            fs.writeFileSync(angularConfigPath, JSON.stringify(jsonContent, null, 2), 'utf8');
+            console.info(`${colors.green('ADD CSS SHORTCUT')} "styles" chortchut added to ${defaultProject} project`);
+        }
     }
 }
 
@@ -180,8 +184,8 @@ function buildStyleFromUIKit() {
         buildUtils(config, currentPath),
         ...buildStyleFiles(config, currentPath)
     ]).then(() => {
-        checkAssetsConfiguration();
-        checkStyleShortcut();
+        checkAssetsConfiguration(config);
+        checkStyleShortcut(config);
     });
   }
   
