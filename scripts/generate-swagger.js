@@ -40,6 +40,7 @@ function installSwaggerGen(scriptName, configFileName) {
     }
 
     fs.writeFileSync(filePath, JSON.stringify(jsonContent, null, 2), 'utf8');
+    console.info('Installing NgSwaggerGen');
     return pexec('npm install ng-swagger-gen@1.6.1 --save-dev');
 }
 
@@ -55,6 +56,7 @@ function installOpenapiGen(scriptName, configFileName) {
     }
 
     fs.writeFileSync(filePath, JSON.stringify(jsonContent, null, 2), 'utf8');
+    console.info('Installing NgOpenapiGen');
     return pexec('npm install ng-openapi-gen@0.2.3 --save-dev');
 }
 
@@ -67,6 +69,7 @@ function installOpenapiGen(scriptName, configFileName) {
  * @param {string} apiKey api key to get swagger config (optional)
  */
 function generateConfigSwagger(source, destination, fileName, moduleName, originalPath, apiKey, proxy) {
+    console.info('Generating Swagger configuration file');
     return pexec(`npm run ng-swagger-gen -- --gen-confi -i ${source} -o ${destination} -c ${fileName}`).then(() => {
         const filePath = `./${fileName}`;
         if (fs.existsSync(filePath)) {
@@ -99,6 +102,7 @@ function generateConfigSwagger(source, destination, fileName, moduleName, origin
  * @param {string} apiKey api key to get swagger config (optional)
  */
 function generateConfigOpenApi(source, destination, fileName, moduleName, originalPath, apiKey, proxy) {
+    console.info('Generating OpenApi configuration file');
     const currentPath = process.cwd();
     const templatePath = join(__dirname, '../templates/open-api/ng-openapi-gen.json');
     const configFileName = join(currentPath, fileName);
@@ -165,7 +169,7 @@ function generateProtectedConfigSwagger(source, destination, fileName, moduleNam
     });
 }
 
-function generateProtectedConfigOpenApi(source, destination, fileName, moduleName, apiKey) {
+function generateProtectedConfigOpenApi(source, destination, fileName, moduleName, apiKey, proxy) {
     return getConfigFromSecureSource(source, apiKey, fileName, proxy).then((path) => {
         return generateConfigOpenApi(path, destination, fileName, moduleName, source, apiKey, proxy);
     });
