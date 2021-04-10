@@ -1,6 +1,6 @@
-import { Directive, TemplateRef, ViewContainerRef, Input } from '@angular/core';
-import { untilDestroyed } from '@ngneat/until-destroy';
-import { Observable } from 'rxjs';
+import { Directive, TemplateRef, ViewContainerRef, Input, OnDestroy } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { AuthenticationService } from '../services/authentication.service';
 
@@ -13,7 +13,9 @@ import { AuthenticationService } from '../services/authentication.service';
     // tslint:disable-next-line: directive-selector
     selector: '[canAccess]'
 })
-export class CanAccessDirective {
+export class CanAccessDirective implements OnDestroy {
+
+    private destroy$ = new Subject();
 
     constructor(
         private authService: AuthenticationService,
@@ -21,9 +23,14 @@ export class CanAccessDirective {
         private viewContainer: ViewContainerRef
     ) {}
 
+    public ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
+
     @Input() set canAccess(permissionsNeeded: string[] | string) {
         this.compareAccess(permissionsNeeded).pipe(
-            untilDestroyed(this)
+            takeUntil(this.destroy$)
         ).subscribe(canAccess => {
             if (canAccess) {
                 this.viewContainer.createEmbeddedView(this.templateRef);
