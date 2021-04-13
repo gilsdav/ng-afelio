@@ -13,7 +13,7 @@ import { AuthenticationService } from '../services/authentication.service';
  * { path:..., canActivate: [ PermissionGuard ] data: { permissions: [...], unauthorizedRedirect: '...' } ... }
  * ```
  *
- * *Usage similar to dufCanAccess directive.*
+ * *Usage similar to canAccess directive.*
  */
 @Injectable()
 export class PermissionGuard implements CanActivate, CanActivateChild, CanLoad {
