@@ -70,15 +70,19 @@ function buildUtils(config, bundlerBasePath) {
             return cssNodeExtract.process(options).then((extractedCss) => {
                 const outputPath = path.join(outputDirectory, output);
                 enforceDirectoryExistance(outputPath);
-                fs.writeFile(outputPath, extractedCss, function(err){
-                    if(!err){
-                        console.info(`${colors.green('BUILD style utils')} was saved in "${outputPath}"`);
-                    } else {
-                        console.info(colors.red(`WRITE FILE ERROR ${output}`), err);
-                    }
+                return new Promise((resolve, error) => {
+                    fs.writeFile(outputPath, extractedCss, function(err){
+                        if(!err){
+                            console.info(`${colors.green('BUILD style utils')} was saved in "${outputPath}"`);
+                            resolve();
+                        } else {
+                            console.error(colors.red(`WRITE FILE ERROR ${output}`), err);
+                            error(err);
+                        }
+                    });
                 });
             }, err => {
-                console.info(colors.red(`BUILD ERROR ${output}`), err);
+                console.error(colors.red(`BUILD ERROR ${output}`), err);
             });
         });
     } else {
@@ -95,33 +99,38 @@ function buildStyleFiles(config, bundlerBasePath) {
         const isGlobal = file.global;
         const bundler = new Bundler(undefined, bundlerBasePath);
 
-        return bundler.bundle(path.join('./src/', input)).then(result => {
+        return bundler.bundle(path.join('./src/', input)).then(async result => {
             const toWrite = decomment.text(result.bundledContent/*, {safe: true}*/);
             const outputPath = path.join(outputDirectory, output);
             enforceDirectoryExistance(outputPath);
 
-            const cwd = process.cwd();
-            process.chdir(path.dirname(path.join(process.cwd(), './src/', input)));
+            // const cwd = process.cwd();
+            // process.chdir(path.dirname(path.join(process.cwd(), './src/', input)));
 
-            sass.render({
-                importer: magicImporter(),
-                data: toWrite, // [silent] from  
-                outFile: outputPath,
-            }, (err, result) => {
-                if(!err) {
-                    fs.writeFile(outputPath, result.css, function(err){
-                        if(!err){
-                            console.info(`${colors.green(`BUILD ${isGlobal ? 'global ' : ''}style`)} was saved in "${outputPath}"`);
-                        } else {
-                            console.info(colors.red(`WRITE FILE ERROR ${outputPath}`), err);
-                        }
-                    });
-                } else {
-                    console.info(colors.red(`BUILD ERROR ${outputPath}`), err);
-                }
-            });
+            await new Promise((resolve, error) => {
+                sass.render({
+                    importer: magicImporter(),
+                    data: toWrite, // [silent] from  
+                    outFile: outputPath,
+                }, (err, result) => {
+                    if(!err) {
+                        fs.writeFile(outputPath, result.css, function(err){
+                            if(!err){
+                                console.info(`${colors.green(`BUILD ${isGlobal ? 'global ' : ''}style`)} was saved in "${outputPath}"`);
+                                resolve();
+                            } else {
+                                console.error(colors.red(`WRITE FILE ERROR ${outputPath}`), err);
+                                error(err);
+                            }
+                        });
+                    } else {
+                        console.error(colors.red(`BUILD ERROR ${outputPath}`), err);
+                        error(err);
+                    }
+                });
+            })
 
-            process.chdir(cwd);
+            // process.chdir(cwd);
 
             if (isGlobal) {
                 const toAddToStyleScss = `@import '../styles/${output}';`;

@@ -195,7 +195,7 @@ const generateConfigs = {
     }
 };
 
-function generateSwagger(source, name, apiKey, extract, version, proxy) {
+async function generateSwagger(source, name, apiKey, extract, version, proxy) {
     if (!name) {
         name = 'api';
     }
@@ -214,7 +214,7 @@ function generateSwagger(source, name, apiKey, extract, version, proxy) {
     if (installator) {
         const generator = installator(regenerateScriptName, configFileName);
 
-        return generator.then(() => {
+        await generator.then(() => {
             const generateConfig = generateConfigs[version];
             let configGeneration;
             if (apiKey) {
@@ -224,7 +224,7 @@ function generateSwagger(source, name, apiKey, extract, version, proxy) {
             } else {
                 configGeneration = generateConfig.simple(source, destination, configFileName, moduleName);
             }
-            configGeneration.then(() => {
+            return configGeneration.then(() => {
                 return generateApiFiles(configFileName).then(() => {
                     console.info(`${colors.green('Swagger generated')} and new script 'npm run ${regenerateScriptName}' added.`);
                     console.info(`${colors.blue('Please')} don't forget to import '${moduleName}Module' into your 'AppModule'.`);
@@ -236,7 +236,7 @@ function generateSwagger(source, name, apiKey, extract, version, proxy) {
     }
 }
 
-function regenerateSwagger(source) {
+async function regenerateSwagger(source) {
     if (!fs.existsSync(source)) {
         console.log(`${colors.red(`Swagger config does not exist`)} can not find ${source}`);
         return;
@@ -255,7 +255,7 @@ function regenerateSwagger(source) {
         configSearch = Promise.resolve(false);
     }
 
-    configSearch.then(() => {
+    await configSearch.then(() => {
         return generateApiFiles(source)
             .then(() => {
                 console.info(`${colors.green('Swagger regenerated')} from ${source}`);

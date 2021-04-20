@@ -72,7 +72,7 @@ const generateApi = (source, moduleName, apiKey, extract, version, proxy) => {
 }
 
 const regenerateApi = (source) => {
-const { regenerateSwagger } = require('./scripts/generate-swagger');
+    const { regenerateSwagger } = require('./scripts/generate-swagger');
     return regenerateSwagger(source);
 };
 
