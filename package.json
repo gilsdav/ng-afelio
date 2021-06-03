@@ -1,6 +1,6 @@
 {
   "name": "ng-afelio",
-  "version": "2.0.0-rc2",
+  "version": "2.0.1-rc1",
   "description": "Extended Angular CLI",
   "main": "index.js",
   "bin": "./index.js",
@@ -29,7 +29,7 @@
     "url": "https://github.com/gilsdav/ng-afelio.git"
   },
   "dependencies": {
-    "@angular/cli": "^11.0.4",
+    "@angular/cli": "^12.0.2",
     "colors": "1.4.0",
     "commander": "7.2.0",
     "css-node-extract": "3.0.2",
@@ -42,20 +42,20 @@
     "scss-bundle": "3.1.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.1100.4",
-    "@angular-devkit/core": "^11.0.4",
-    "@angular-devkit/schematics": "^11.0.4",
-    "@schematics/angular": "^11.0.4",
-    "@types/webpack": "^4.41.25",
+    "@angular-devkit/build-angular": "^12.0.2",
+    "@angular-devkit/core": "^12.0.2",
+    "@angular-devkit/schematics": "^12.0.2",
+    "@schematics/angular": "^12.0.2",
+    "@types/webpack": "^5.0.0",
     "tslint": "^5.12.0",
     "tslint-ionic-rules": "0.0.21",
     "typescript": "4.1.3",
     "typescript-tslint-plugin": "^1.0.1"
   },
   "peerDependencies": {
-    "@angular-devkit/build-angular": "^0.1100.4",
-    "typescript": "~4.0.0 || ~4.1.0",
-    "webpack": "^4.0.0"
+    "@angular-devkit/build-angular": "^12.0.2",
+    "typescript": "~4.0.0 || ~4.1.0 || ~4.2.0",
+    "webpack": "^5.0.0"
   },
   "builders": "./builders.json",
   "schematics": "./collection.json",
