@@ -168,7 +168,7 @@ function checkStyleShortcut(config) {
             const buildOptions = jsonContent.projects[defaultProject].architect.build.options;
             buildOptions.stylePreprocessorOptions = { includePaths: [stylePath] };
             fs.writeFileSync(angularConfigPath, JSON.stringify(jsonContent, null, 2), 'utf8');
-            console.info(`${colors.green('ADD CSS SHORTCUT')} "styles" chortchut added to ${defaultProject} project`);
+            console.info(`${colors.green('ADD CSS SHORTCUT')} "styles" shortcut added to ${defaultProject} project`);
         }
     }
 }
