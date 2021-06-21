@@ -6,7 +6,7 @@ const packageJson = require('./package.json');
 
 const { schematics } = require('./collection.json');
 
-const { 
+const {
   createNewProject,
   // getAngularVersion,
   serveUIKit,
@@ -17,7 +17,8 @@ const {
   // generateMocks,
   generateApi,
   regenerateApi,
-  checkFiles
+  checkFiles,
+  generateI18n
 } = require('./logic');
 
 const { getAllArgs } = require('./remainer-args');
@@ -202,12 +203,20 @@ program
     }
   });
 
+program
+  .command('i18n')
+  .description('Generate labels based on a file (default is fr.json).')
+  .option('-m, --mainFile <mainFile>', 'Automaticaly align all files with the fr.')
+  .action((options) => {
+    generateI18n(options.mainFile);
+  });
+
 program.on('command:*', () => {
   console.error(colors.red('Invalid command: %s') + '\nSee --help for a list of available commands.', program.args.join(' '));
   program.outputHelp(((text) => `Here is how to use this CLI:\n\n${text}`));
   process.exit(1);
 });
-  
+
 program.parse(process.argv);
 
 // const options = program.opts();
