@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-const program = require('commander');
-const getRemainingArgs = require('commander-remaining-args');
+const { Command } = require('commander');
 const colors = require('colors');
 const packageJson = require('./package.json');
 
@@ -9,7 +8,7 @@ const { schematics } = require('./collection.json');
 
 const { 
   createNewProject,
-  getAngularVersion,
+  // getAngularVersion,
   serveUIKit,
   serveMain,
   generate,
@@ -20,6 +19,8 @@ const {
   regenerateApi,
   checkFiles
 } = require('./logic');
+
+const { getAllArgs } = require('./remainer-args');
 
 const uiKitTypes = require('./models/ui-kit-types.enum');
 
@@ -37,7 +38,13 @@ Angular Afelio CLI: ${packageJson.version}
 
   `);
 
-program.option('-v, --version-full', 'output the version number of ng-afelio and ng');
+const program = new Command();
+
+program
+  .version(version)
+  .description(version);
+
+// program.option('-v, --version-full', 'output the version number of ng-afelio and ng');
 
 program
   .command('new <name>')
@@ -48,6 +55,7 @@ program
   .action((name, options) => {
     createNewProject(name, options.uiKit || false, options.ng).then(() => {
       console.info(`Please go to new directory "cd ./${name}"`);
+      process.exit();
     });
   });
 
@@ -94,10 +102,10 @@ generateCommand
   .option('-h, --help', 'output help message')
   .allowUnknownOption()
   // .parse(process.argv)
-  .action((type, name) => {
+  .action((type, name, options, command) => {
     if (type) {
-      generate(type, name, getRemainingArgs(program)).then(() => {
-        process.exit(0);
+      generate(type, name, getAllArgs(command, options.help)).then(() => {
+        process.exit();
       });
     } else {
       return generateCommand.outputHelp();
@@ -113,10 +121,10 @@ installCommand
   .option('-h, --help', 'output help message')
   .allowUnknownOption()
   // .parse(process.argv)
-  .action((type) => {
+  .action((type, options, command) => {
     if (type) {
-      generate(`install-${type}`, undefined, getRemainingArgs(program)).then(() => {
-        process.exit(0);
+      generate(`install-${type}`, undefined, getAllArgs(command, options.help)).then(() => {
+        process.exit();
       });
     } else {
       return installCommand.outputHelp();
@@ -133,7 +141,7 @@ program
   .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--namedChunks=false --extractLicenses=true"')
   .action((options) => {
     build(options.env, options.ssr || false, options.baseHref, options.ng).then(() => {
-      process.exit(0);
+      process.exit();
     });
   });
 
@@ -142,7 +150,7 @@ program
   .description('Build style from UI Kit')
   .action(() => {
     buildStyle().then(() => {
-      process.exit(0);
+      process.exit();
     });
   });
 
@@ -151,7 +159,7 @@ program
   .description('Generate mocks system')
   .action(() => {
     generate('install-mocks').then(() => {
-      process.exit(0);
+      process.exit();
     });
   });
 
@@ -166,13 +174,17 @@ program
   .option('-p, --proxy <proxy>', 'Proxy url to get swagger file')
   .action((source, options) => {
     if (options.regenerate) {
-      regenerateApi(source);
+      regenerateApi(source).then(() => {
+        process.exit();
+      });
     } else {
       if (!options.apiVersion) {
         console.info(`${colors.blue('No api version given.')} Will use 2.`);
         options.apiVersion = 2;
       }
-      generateApi(source, options.name, options.apiKey, options.extract, options.apiVersion, options.proxy);
+      generateApi(source, options.name, options.apiKey, options.extract, options.apiVersion, options.proxy).then(() => {
+        process.exit();
+      });
     }
   });
 
@@ -182,31 +194,31 @@ program
   .option('-m, --mainFile <mainFile>', 'Automaticaly align all files with the main.')
   .action((type, options) => {
     if (type === 'environment' || type === 'i18n') {
-      checkFiles(type, options.mainFile);
+      checkFiles(type, options.mainFile).then(() => {
+        process.exit();
+      });
     } else {
       console.error(`${colors.red(`Type "${type}" does not exist.`)}`);
     }
   });
 
 program.on('command:*', () => {
-  console.error('Invalid command: %s\nSee --help for a list of available commands.', program.args.join(' '));
-  program.outputHelp(((text) => `Here is how to use this CLI:\n${text}`));
+  console.error(colors.red('Invalid command: %s') + '\nSee --help for a list of available commands.', program.args.join(' '));
+  program.outputHelp(((text) => `Here is how to use this CLI:\n\n${text}`));
   process.exit(1);
 });
-
-program
-  .version(version)
-  .description(version);
   
 program.parse(process.argv);
 
-if (program.versionFull) {
-  console.info(version);
-  getAngularVersion().then(() => {
-    process.exit(0);
-  });
-}
+// const options = program.opts();
 
-if (!process.argv.slice(2).length) {
-  program.outputHelp(((text) => `Here is how to use this CLI:\n${text}`));
-}
+// if (options.versionFull) {
+//   console.info(version);
+//   getAngularVersion().then(() => {
+//     process.exit();
+//   });
+// }
+
+// if (!process.argv.slice(2).length) {
+//   program.outputHelp(((text) => `Here is how to use this CLI:\n${text}`));
+// }

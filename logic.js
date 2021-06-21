@@ -1,6 +1,5 @@
-
 // const util = require('util');
-// const exec = require('child_process').exec;
+const exec = require('child_process').exec;
 const colors = require('colors');
 // const fs = require('fs');
 
@@ -12,14 +11,19 @@ const cli = require('@angular/cli');
 const config = require('./config');
 const { version } = require('./package.json');
 
-// const currentPath = process.cwd();
+const currentPath = process.cwd();
 
-// function promiseFromChildProcess(child) {
-//     return new Promise(function (resolve, reject) {
-//         child.addListener("error", reject);
-//         child.addListener("exit", resolve);
-//     });
-// }
+function promiseFromChildProcess(child) {
+    return new Promise(function (resolve, reject) {
+        child.stdout.pipe(process.stdout);
+        child.stderr.pipe(process.stderr);
+        child.addListener("error", reject);
+        child.addListener("exit", resolve);
+    });
+}
+
+pexec = (command, options) => promiseFromChildProcess(exec(command, options));
+
 
 const getAngularVersion = async () => {
     return await cli.default({cliArgs: ['--version']});
@@ -42,23 +46,25 @@ const createNewProject = async (name, uiKitType, ngOptionsString) => {
 };
 
 const serveUIKit = async (port, ngOptionsString) => {
-    return await cli.default({cliArgs: [
-        'serve',
-        'ui-kit',
-        `--port=${port||'5200'}`,
-        '--host=0.0.0.0',
-        ...produceNgOptions(ngOptionsString)
-    ]});
+    // return await cli.default({cliArgs: [
+    //     'serve',
+    //     'ui-kit',
+    //     `--port=${port||'5200'}`,
+    //     '--host=0.0.0.0',
+    //     ...produceNgOptions(ngOptionsString)
+    // ]});
+    return await pexec(`npx ng serve ui-kit --port=${port||'5200'} --host=0.0.0.0 ${produceNgOptions(ngOptionsString).join(' ')}`, { cwd: currentPath });
 }
 
 const serveMain = async (environment, port, ngOptionsString) => {
-    return await cli.default({cliArgs: [
-        'serve',
-        `--port=${port||'4200'}`,
-        '--host=0.0.0.0',
-        ...( environment ? [`--configuration=${environment}`] : []),
-        ...produceNgOptions(ngOptionsString)
-    ]});
+    // return await cli.default({cliArgs: [
+    //     'serve',
+    //     `--port=${port||'4200'}`,
+    //     '--host=0.0.0.0',
+    //     ...( environment ? [`--configuration=${environment}`] : []),
+    //     ...produceNgOptions(ngOptionsString)
+    // ]});
+    return await pexec(`npx ng serve --port=${port||'5200'} --host=0.0.0.0 ${environment ? [`--configuration=${environment}`] : ''} ${produceNgOptions(ngOptionsString).join(' ')}`, { cwd: currentPath });
 }
 
 const generate = async (type, name, ngOptions) => {
@@ -72,22 +78,23 @@ const generateApi = (source, moduleName, apiKey, extract, version, proxy) => {
 }
 
 const regenerateApi = (source) => {
-const { regenerateSwagger } = require('./scripts/generate-swagger');
+    const { regenerateSwagger } = require('./scripts/generate-swagger');
     return regenerateSwagger(source);
 };
 
 const build = async (environment, ssr, baseHref, ngOptionsString) => {
-    const baseArgs = [
-        'build',
-        '--prod',
-        `--configuration=${environment}`,
-        ...( baseHref ? [`--base-href=${baseHref}`] : []),
-        ...produceNgOptions(ngOptionsString)
-    ];
+    // const baseArgs = [
+    //     'build',
+    //     '--prod',
+    //     `--configuration=${environment}`,
+    //     ...( baseHref ? [`--base-href=${baseHref}`] : []),
+    //     ...produceNgOptions(ngOptionsString)
+    // ];
     if (ssr) {
         console.warn(colors.underline(colors.yellow('Not implemented yet.')));
     } else {
-        return await cli.default({cliArgs: baseArgs});
+        return await pexec(`npx ng build --prod --configuration=${environment} ${baseHref ? `--base-href=${baseHref}` : ''} ${produceNgOptions(ngOptionsString).join('')}`, { cwd: currentPath });
+        // return await cli.default({cliArgs: baseArgs});
     }
 }
 
