@@ -122,6 +122,13 @@ const checkFiles = async (type, mainFile) => {
     }
 }
 
+const generateI18n = async (mainFile = 'fr.json') => {
+    const checkI18nFiles = require('./scripts/check-files/check-i18n-files');
+    const generate = require('./scripts/generate-i18n');
+    const diff = await checkI18nFiles(mainFile);
+    return generate(diff, mainFile);
+}
+
 function produceNgOptions(ngOptionsString) {
     let ngOptions = [];
     if (ngOptionsString) {
@@ -142,5 +149,6 @@ module.exports = {
     // generateMocks,
     generateApi,
     regenerateApi,
-    checkFiles
+    checkFiles,
+    generateI18n
 };

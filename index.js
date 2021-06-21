@@ -7,7 +7,7 @@ const packageJson = require('./package.json');
 
 const { schematics } = require('./collection.json');
 
-const { 
+const {
   createNewProject,
   getAngularVersion,
   serveUIKit,
@@ -18,7 +18,8 @@ const {
   // generateMocks,
   generateApi,
   regenerateApi,
-  checkFiles
+  checkFiles,
+  generateI18n
 } = require('./logic');
 
 const uiKitTypes = require('./models/ui-kit-types.enum');
@@ -188,6 +189,14 @@ program
     }
   });
 
+program
+  .command('i18n')
+  .description('Generate labels based on a file (default is fr.json).')
+  .option('-m, --mainFile <mainFile>', 'Automaticaly align all files with the fr.')
+  .action((options) => {
+    generateI18n(options.mainFile);
+  });
+
 program.on('command:*', () => {
   console.error('Invalid command: %s\nSee --help for a list of available commands.', program.args.join(' '));
   program.outputHelp(((text) => `Here is how to use this CLI:\n${text}`));
@@ -197,7 +206,7 @@ program.on('command:*', () => {
 program
   .version(version)
   .description(version);
-  
+
 program.parse(process.argv);
 
 if (program.versionFull) {
