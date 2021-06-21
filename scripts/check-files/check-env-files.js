@@ -16,7 +16,7 @@ function getListOfEnvFiles(currentPath) {
 
 function checkDiff(mainFileContent, otherFileContent) {
     const reg = /export const environment = (\{[\s\S]*\});/;
-    const fixNoValueReg = /[,|{][\s]*([\w]*)[\s]*[,|}]/g;
+    const fixNoValueReg = /(?:[^$])[,|{][\s]*([\w]*)[\s]*[,|}]/g;
     const fixNoValue = (text) => text.match(reg)[1].replace(fixNoValueReg, (data, match) => { return data.replace(match, `${match}: 'temp'`) });
     const obj1Str = fixNoValue(mainFileContent);
     const obj2Str = fixNoValue(otherFileContent);

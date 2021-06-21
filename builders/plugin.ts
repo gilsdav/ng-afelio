@@ -1,24 +1,21 @@
-import { AngularCompilerPlugin } from '@ngtools/webpack';
-import { WebpackCompilerHost } from '@ngtools/webpack/src/compiler_host';
-import { AngularCompilerPluginOptions } from '@ngtools/webpack/src/interfaces';
+import { AngularWebpackPlugin, AngularWebpackPluginOptions } from '@ngtools/webpack';
+// import { WebpackCompilerHost } from '@ngtools/webpack/src/compiler_host';
 import webpack = require('webpack');
 
 import { takeUntilDestroyTransformer } from './ts-transformers/take-until-destroy.transformer';
-import { getSourceFile } from './webpack-compiler-host';
+// import { getSourceFile } from './webpack-compiler-host';
 
-export const JIT_MODE = '_JitMode';
-
-WebpackCompilerHost.prototype.getSourceFile = getSourceFile;
+// WebpackCompilerHost.prototype.getSourceFile = getSourceFile;
 
 function findAngularCompilerPlugin(webpackCfg: any): any {
     return webpackCfg?.plugins?.find((plugin: any) => {
-        return plugin?.constructor?.name === 'AngularCompilerPlugin';
+        return plugin?.constructor?.name === 'AngularWebpackPlugin';
     });
 }
 
-function isJitMode(acp: AngularCompilerPlugin) {
-    return acp[JIT_MODE];
-}
+// function isJitMode(acp: AngularWebpackPlugin) {
+//     return acp.options.jitMode;
+// }
 
 function addTransformerToAngularCompilerPlugin(acp: any, transformer: any): void {
     acp._transformers = [transformer, ...acp._transformers];
@@ -29,17 +26,17 @@ export default {
         if (webpackConfig.plugins && webpackConfig.plugins.length > 0) {
             const acp = findAngularCompilerPlugin(webpackConfig);
             if (!acp) {
-                throw new Error('AngularCompilerPlugin not found');
+                throw new Error('AngularWebpackPlugin not found');
             }
-            const options: AngularCompilerPluginOptions = {
+            const options: AngularWebpackPluginOptions = {
                 ...acp.options,
                 // directTemplateLoading: false,
             };
             webpackConfig.plugins = webpackConfig.plugins.filter(plugin => plugin !== acp);
-            const newCompilerPlugin = new AngularCompilerPlugin(options);
-            if (isJitMode(acp)) {
+            const newCompilerPlugin = new AngularWebpackPlugin(options);
+            // if (isJitMode(acp)) {
                 addTransformerToAngularCompilerPlugin(newCompilerPlugin, takeUntilDestroyTransformer);
-            }
+            // }
             webpackConfig.plugins.push(newCompilerPlugin);
         }
         return webpackConfig;
