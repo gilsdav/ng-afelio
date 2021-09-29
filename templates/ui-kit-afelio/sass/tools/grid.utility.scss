@@ -1,38 +1,4 @@
 //
-// Columns size
-// Create a utility class for the columns size in grid
-// .column-[$name]-[$qty]
-//
-// @param $name String  The name of the size
-//
-
-@mixin columns-size ($name)
-{
-  $iterator: 0;
-
-  @for $iterator from 0 to $columns+1
-  {
-    .column-#{$iterator},
-    .column-#{$name}-#{$iterator}
-    {
-      @extend .relative;
-      flex-basis: 100%;
-    }
-
-    @include media-up($name)
-    {
-      .column-#{$name}-#{$iterator}
-      {
-        $size: #{(100% / $columns) * $iterator};
-        flex-basis: $size;
-      }
-
-      $iterator: $iterator + 1;
-    }
-  }
-}
-
-//
 // Margin
 // Create a utility class for the margin
 // .mx-[$name]
