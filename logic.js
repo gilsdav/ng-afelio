@@ -93,7 +93,7 @@ const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString) => 
         await cli.default({cliArgs: ['new', name, '--routing', '--style=scss', '--skip-install', ...produceNgOptions(ngOptionsString)]});
         process.chdir(`./${name}`);
         const ngAfelioSrc = config.production ? `ng-afelio@${version}` : __dirname;
-        await cli.default({cliArgs: ['add', ngAfelioSrc, `--ui-kit=${uiKitType}`]});
+        await cli.default({cliArgs: ['add', ngAfelioSrc, '--skip-confirmation', `--ui-kit=${uiKitType}`]});
     }
     
 
