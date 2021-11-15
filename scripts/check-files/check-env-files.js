@@ -20,9 +20,18 @@ function checkDiff(mainFileContent, otherFileContent) {
     const fixNoValue = (text) => text.match(reg)[1].replace(fixNoValueReg, (data, match) => { return data.replace(match, `${match}: 'temp'`) });
     const obj1Str = fixNoValue(mainFileContent);
     const obj2Str = fixNoValue(otherFileContent);
+
+    // const commentRegexp = /\/\*[\s\S]*?\*\/|([^\\:]|^)\/\/.*$/gm;
+    // const removeComments = (text) => text.replace(commentRegexp, '$1');
+
+    const asConstRegexp = /as const/gm;
+    const removeAsConst = (text) => text.replace(asConstRegexp, '');
+
+    const obj1StrWithoutAsConst = removeAsConst(obj1Str);
+    const obj2StrWithoutAsConst = removeAsConst(obj2Str);
     
-    const obj1 = eval(`(${obj1Str})`);
-    const obj2 = eval(`(${obj2Str})`);
+    const obj1 = eval(`(${obj1StrWithoutAsConst})`);
+    const obj2 = eval(`(${obj2StrWithoutAsConst})`);
 
     const obj1Keys = Object.keys(flatten(obj1));
     const obj2Keys = Object.keys(flatten(obj2));
@@ -31,6 +40,7 @@ function checkDiff(mainFileContent, otherFileContent) {
         less: diff(obj1Keys, obj2Keys),
         more: diff(obj2Keys, obj1Keys)
     }
+    
 }
 
 function toConsoleText(diffs) {
