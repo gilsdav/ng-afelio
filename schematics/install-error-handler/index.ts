@@ -10,6 +10,8 @@ import * as ts from 'typescript';
 
 import { Schema as ErrorHandlerOptions } from './schema';
 
+const buildPath = './core/modules/http-error';
+
 function installNgxToastr(): Rule {
     return (host: Tree, context: SchematicContext) => {
         const ngxToastr: NodeDependency = {
@@ -80,6 +82,7 @@ function applyModuleImports(projectAppPath: string, options: ErrorHandlerOptions
 
             const changes: Change[] = [];
             const modulePath = join(projectAppPath as Path, options.appModule);
+
             const text = host.read(modulePath);
             if (!text) {
                 throw new SchematicsException(`Module file at ${modulePath} does not exist.`);
@@ -92,8 +95,11 @@ function applyModuleImports(projectAppPath: string, options: ErrorHandlerOptions
                 true
             );
 
+            const projectErrorHandlerPath = join(projectAppPath as Path, buildPath);
+            const relativeErrorHandlerPath = buildRelativePath(modulePath, projectErrorHandlerPath);
+
             // Add ts imports
-            changes.push(insertImport(source, modulePath, 'HttpErrorModule', './http-error/http-error.module'));
+            changes.push(insertImport(source, modulePath, 'HttpErrorModule', relativeErrorHandlerPath));
             if (useNgxToastr) {
                 changes.push(insertImport(source, modulePath, 'BrowserAnimationsModule', '@angular/platform-browser/animations'));
                 changes.push(insertImport(source, modulePath, 'ToastrModule', 'ngx-toastr'));
@@ -140,7 +146,8 @@ export default function (options: ErrorHandlerOptions): Rule {
             throw new SchematicsException(`Project "${options.project}" not found.`);
         }
 
-        const parsedPath = join(projectAppPath as Path, './http-error');
+        const parsedPath = join(projectAppPath as Path, buildPath);
+
         const templateSource = apply(url('./files'), [
             template({
                 ...strings,
