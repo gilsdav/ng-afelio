@@ -125,6 +125,27 @@ function applyModuleImports(projectAppPath: string, options: ErrorHandlerOptions
     };
 }
 
+function addNgxToastrStyle(projectAppPath: string): Rule {
+    return host => {
+        const changes: Change[] = [];
+        const stylePath = join(projectAppPath as Path, '../styles.scss');
+        const text = host.read(stylePath);
+        if (!text) {
+            throw new SchematicsException(`Can not add NgxStoastr style, ${stylePath} does not exist.`);
+        }
+
+        changes.push(
+            new InsertChange(
+                stylePath,
+                text.length,
+                `\n@import '~ngx-toastr/toastr';\n`
+            )
+        );
+        applyChangesToHost(host, stylePath, changes);
+        return host;
+    };
+}
+
 export default function(options: ErrorHandlerOptions): Rule {
     return async (host: Tree) => {
 
@@ -164,6 +185,7 @@ export default function(options: ErrorHandlerOptions): Rule {
 
         if (useNgxToastr) {
             rules.push(installNgxToastr());
+            rules.push(addNgxToastrStyle(projectAppPath));
         }
 
         return chain([branchAndMerge(chain(rules))]);
