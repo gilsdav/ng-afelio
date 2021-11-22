@@ -194,7 +194,7 @@ program
   .command('check <type>')
   .description('Check alignement between files (type: environment or i18n)')
   .option('-m, --mainFile <mainFile>', 'Automaticaly align all files with the main.')
-  .option('--fix', 'Generate labels based on a file (default is fr.json).')
+  .option('--fix', 'Generate i18n labels based on main file (default is fr.json).')
   .action((type, options) => {
     if (type === 'i18n' && options.fix) {
       generateI18n(options.mainFile);
