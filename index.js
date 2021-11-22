@@ -193,22 +193,17 @@ program
   .command('check <type>')
   .description('Check alignement between files (type: environment or i18n)')
   .option('-m, --mainFile <mainFile>', 'Automaticaly align all files with the main.')
+  .option('--fix', 'Generate labels based on a file (default is fr.json).')
   .action((type, options) => {
-    if (type === 'environment' || type === 'i18n') {
+    if (type === 'i18n' && options.fix) {
+      generateI18n(options.mainFile);
+    } else if (type === 'environment' || type === 'i18n') {
       checkFiles(type, options.mainFile).then(() => {
         process.exit();
       });
     } else {
       console.error(`${colors.red(`Type "${type}" does not exist.`)}`);
     }
-  });
-
-program
-  .command('i18n')
-  .description('Generate labels based on a file (default is fr.json).')
-  .option('-m, --mainFile <mainFile>', 'Automaticaly align all files with the fr.')
-  .action((options) => {
-    generateI18n(options.mainFile);
   });
 
 program.on('command:*', () => {

@@ -26,14 +26,14 @@ pexec = (command, options) => promiseFromChildProcess(exec(command, options));
 
 
 const getAngularVersion = async () => {
-    return await cli.default({cliArgs: ['--version']});
+    return await cli.default({ cliArgs: ['--version'] });
 }
 
 const createNewProject = async (name, uiKitType, ngOptionsString) => {
-    await cli.default({cliArgs: ['new', name, '--routing', '--style=scss', '--skip-install', ...produceNgOptions(ngOptionsString)]});
+    await cli.default({ cliArgs: ['new', name, '--routing', '--style=scss', '--skip-install', ...produceNgOptions(ngOptionsString)] });
     process.chdir(`./${name}`);
     const ngAfelioSrc = config.production ? `ng-afelio@${version}` : __dirname;
-    await cli.default({cliArgs: ['add', ngAfelioSrc, `--ui-kit=${uiKitType}`]});
+    await cli.default({ cliArgs: ['add', ngAfelioSrc, `--ui-kit=${uiKitType}`] });
     // process.chdir(`./${name}`);
     // if (uiKitType !== uiKitTypes.NONE) {
     //     const { fillUiKit, runUiKit } = require('./scripts/generate-ui-kit');
@@ -53,7 +53,7 @@ const serveUIKit = async (port, ngOptionsString) => {
     //     '--host=0.0.0.0',
     //     ...produceNgOptions(ngOptionsString)
     // ]});
-    return await pexec(`npx ng serve ui-kit --port=${port||'5200'} --host=0.0.0.0 ${produceNgOptions(ngOptionsString).join(' ')}`, { cwd: currentPath });
+    return await pexec(`npx ng serve ui-kit --port=${port || '5200'} --host=0.0.0.0 ${produceNgOptions(ngOptionsString).join(' ')}`, { cwd: currentPath });
 }
 
 const serveMain = async (environment, port, ngOptionsString) => {
@@ -64,12 +64,12 @@ const serveMain = async (environment, port, ngOptionsString) => {
     //     ...( environment ? [`--configuration=${environment}`] : []),
     //     ...produceNgOptions(ngOptionsString)
     // ]});
-    return await pexec(`npx ng serve --port=${port||'5200'} --host=0.0.0.0 ${environment ? [`--configuration=${environment}`] : ''} ${produceNgOptions(ngOptionsString).join(' ')}`, { cwd: currentPath });
+    return await pexec(`npx ng serve --port=${port || '5200'} --host=0.0.0.0 ${environment ? [`--configuration=${environment}`] : ''} ${produceNgOptions(ngOptionsString).join(' ')}`, { cwd: currentPath });
 }
 
 const generate = async (type, name, ngOptions) => {
     type = `ng-afelio:${type}`
-    return await cli.default({cliArgs: ['generate', type, ...(name ? [name] : []), ...ngOptions]});
+    return await cli.default({ cliArgs: ['generate', type, ...(name ? [name] : []), ...ngOptions] });
 }
 
 const generateApi = (source, moduleName, apiKey, extract, version, proxy) => {
@@ -102,7 +102,7 @@ const buildStyle = async () => {
     try {
         const buildStyleFromUIKit = require('./scripts/build-style');
         return await buildStyleFromUIKit();
-    } catch(e) {
+    } catch (e) {
         console.error(e);
         console.warn(colors.red('You must be in base folder of the application and have a "ui-kit" project to use this command.'));
     }
@@ -119,22 +119,21 @@ const buildStyle = async () => {
 const checkFiles = async (type, mainFile) => {
     try {
         if (type === 'environment') {
-            const checkEnvFiles = require('./scripts/check-files/check-env-files');
+            constcheckEnvFiles = require('./scripts/check-files/check-env-files');
             return await checkEnvFiles(mainFile || 'environment.ts');
         } else {
-            const checkI18nFiles = require('./scripts/check-files/check-i18n-files');
+            const checkI18nFiles = require('./scripts/check-files/check-i18n-files').checkFiles;
             return await checkI18nFiles(mainFile || 'fr.json');
         }
-    } catch(e) {
+    } catch (e) {
     }
 }
 
 const generateI18n = async (mainFile = 'fr.json') => {
-    const checkI18nFiles = require('./scripts/check-files/check-i18n-files');
-    const generate = require('./scripts/generate-i18n');
-    const diff = await checkI18nFiles(mainFile);
-    return generate(diff, mainFile);
+    const { fixI18n } = require('./scripts/check-files/check-i18n-files');
+    return fixI18n(mainFile);
 }
+
 
 function produceNgOptions(ngOptionsString) {
     let ngOptions = [];
