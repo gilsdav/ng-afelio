@@ -1,5 +1,4 @@
 export * from './models/http-error-config';
-export * from './interceptors/http-error.interceptor';
 export * from './services/error-handler.service';
 export * from './http-error.module';
 export * from './decorators/manage-http-errors.decorator';

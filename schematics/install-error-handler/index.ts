@@ -1,16 +1,17 @@
-import { join, Path, strings } from '@angular-devkit/core';
-import { apply, branchAndMerge, chain, mergeWith, move, Rule, SchematicContext, SchematicsException, template, Tree, url } from '@angular-devkit/schematics';
-import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
-import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
-import { buildRelativePath } from '@schematics/angular/utility/find-module';
+import { Path, join, strings } from '@angular-devkit/core';
+import { Rule, SchematicContext, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, template, url } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
-import { addImportToModule, findNodes, insertImport } from '../util/ast-util';
-import { applyChangesToHost, Change, InsertChange } from '../util/change';
+import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
+import { buildRelativePath } from '@schematics/angular/utility/find-module';
+import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import * as ts from 'typescript';
+
+import { addImportToModule, findNodes, insertImport } from '../util/ast-util';
+import { Change, InsertChange, applyChangesToHost } from '../util/change';
 
 import { Schema as ErrorHandlerOptions } from './schema';
 
-const buildPath = './core/modules/http-error';
+const buildPath = './core';
 
 function installNgxToastr(): Rule {
     return (host: Tree, context: SchematicContext) => {
@@ -95,7 +96,7 @@ function applyModuleImports(projectAppPath: string, options: ErrorHandlerOptions
                 true
             );
 
-            const projectErrorHandlerPath = join(projectAppPath as Path, buildPath);
+            const projectErrorHandlerPath = join(projectAppPath as Path, buildPath, 'modules', 'http-error');
             const relativeErrorHandlerPath = buildRelativePath(modulePath, projectErrorHandlerPath);
 
             // Add ts imports
@@ -109,14 +110,14 @@ function applyModuleImports(projectAppPath: string, options: ErrorHandlerOptions
             const projectEnvPath = join(projectAppPath as Path, '../environments/environment');
             const relativeEnvPath = buildRelativePath(modulePath, projectEnvPath);
             changes.push(insertImport(source, modulePath, 'environment', relativeEnvPath));
-            
+
             // Add ng imports
             changes.push(...addImportToModule(source, modulePath, 'HttpErrorModule.forRoot(environment.errorsHandler)', null as any));
             if (useNgxToastr) {
                 changes.push(...addImportToModule(source, modulePath, 'BrowserAnimationsModule', null as any));
                 changes.push(...addImportToModule(source, modulePath, 'ToastrModule.forRoot()', null as any));
             }
-            
+
             // Save changes
             applyChangesToHost(host, modulePath, changes);
         }
@@ -124,7 +125,7 @@ function applyModuleImports(projectAppPath: string, options: ErrorHandlerOptions
     };
 }
 
-export default function (options: ErrorHandlerOptions): Rule {
+export default function(options: ErrorHandlerOptions): Rule {
     return async (host: Tree) => {
 
         console.log('Options', options);
@@ -153,14 +154,14 @@ export default function (options: ErrorHandlerOptions): Rule {
                 ...strings,
                 ...options,
             }),
-            move(parsedPath)
+            move(parsedPath),
         ]);
 
         const rules: Rule[] = [
             mergeWith(templateSource),
             applyIntoEnvironment(projectAppPath, options.project),
             applyIntoEnvironment(projectAppPath, options.project, true),
-            applyModuleImports(projectAppPath, options, useNgxToastr)
+            applyModuleImports(projectAppPath, options, useNgxToastr),
         ];
 
         if (useNgxToastr) {
@@ -168,5 +169,5 @@ export default function (options: ErrorHandlerOptions): Rule {
         }
 
         return chain([branchAndMerge(chain(rules))]);
-    }
+    };
 }

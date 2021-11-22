@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';<% if(useNgxToastr) { %>
-import { ToastrModule } from 'ngx-toastr';<% } %>
+import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
+import { ToastrModule } from 'ngx-toastr';
 import { ErrorHandlerService } from './services/error-handler.service';
 import { HttpErrorConfig } from './models/http-error-config';
 
 @NgModule({
     imports: [
-        CommonModule,<% if(useNgxToastr) { %>
-        ToastrModule<% } %>
+        CommonModule,
+        ToastrModule
     ]
 })
 export class HttpErrorModule {
@@ -27,18 +27,12 @@ export class HttpErrorModule {
         };
     }
 
-    public static forChild(): ModuleWithProviders<HttpErrorModule> {
-        return {
-            ngModule: HttpErrorModule
-        };
-    }
-
-    constructor(@Optional() @SkipSelf() parentModule: HttpErrorModule, errorHandler: ErrorHandlerService) {
+    constructor(@Optional() @SkipSelf() parentModule: HttpErrorModule, @Optional() errorHandler: ErrorHandlerService) {
         if (parentModule) {
             throw new Error('HttpErrorModule is already loaded. Import it in your base AppModule only.');
         }
         if (!errorHandler) {
-            throw new Error('Can not handle global errors');
+            console.warn('The Global HTTP Error Handler is disabled');
         }
     }
 }

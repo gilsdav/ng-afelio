@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-import { ObjectHelper } from '../helpers/object.helper';
+import { ObjectHelper } from '../../../helpers/object.helper';
 
 export const ERROR_MESSAGE_CHANNEL = `__duf_httpError__${ObjectHelper.generateUUIDv4()}`;
 

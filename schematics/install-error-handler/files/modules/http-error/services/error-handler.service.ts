@@ -1,7 +1,7 @@
 import { Injectable, NgZone, OnDestroy } from '@angular/core';<% if(useNgxToastr) { %>
 import { ToastrService } from 'ngx-toastr';<% } %>
 import { Subject } from 'rxjs';
-import { Debounce } from '../decorators/debounce.decorator';
+import { Debounce } from '../../../decorators/debounce.decorator';
 import { HttpErrorConfig } from '../models/http-error-config';
 import { ERROR_MESSAGE_CHANNEL } from '../operators/catch-error-handler.operator';
 

@@ -4,9 +4,9 @@ import { Observable, throwError } from 'rxjs';
 import { catchErrorHandlerOperator, ErrorHandlerResultType } from '../operators/catch-error-handler.operator';
 
 //#region prerequis
-const localExclusionKey = '__duf_toExclude__';
-const localExclusionReactionKey = '__duf_ExclusionReaction__';
-const localIngoreKey = '__duf_toIngore__';
+const localExclusionKey = '__heh_toExclude__';
+const localExclusionReactionKey = '__heh_ExclusionReaction__';
+const localIngoreKey = '__heh_toIngore__';
 
 function fixMissingPrototype(value: any) {
     if (!value.prototype) {
