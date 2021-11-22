@@ -1,7 +1,9 @@
 // const util = require('util');
 const exec = require('child_process').exec;
 const colors = require('colors');
-// const fs = require('fs');
+const fs = require('fs');
+const fse = require('fs-extra');
+const { join } = require('path');
 
 const cli = require('@angular/cli');
 
@@ -29,11 +31,72 @@ const getAngularVersion = async () => {
     return await cli.default({ cliArgs: ['--version'] });
 }
 
-const createNewProject = async (name, uiKitType, ngOptionsString) => {
-    await cli.default({ cliArgs: ['new', name, '--routing', '--style=scss', '--skip-install', ...produceNgOptions(ngOptionsString)] });
-    process.chdir(`./${name}`);
-    const ngAfelioSrc = config.production ? `ng-afelio@${version}` : __dirname;
-    await cli.default({ cliArgs: ['add', ngAfelioSrc, `--ui-kit=${uiKitType}`] });
+const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString) => {
+    if (isOpenApi) {
+        console.info(`Creating project ${name}`);
+        await cli.default({ cliArgs: ['new', name, '--create-application=false', '--new-project-root=apis', '--skip-install', ...produceNgOptions(ngOptionsString)] });
+        console.info(`${colors.green('Project created')}`);
+
+        process.chdir(`./${name}`);
+
+        console.info(`Adding ng-afelio`);
+        const ngAfelioSrc = config.production ? `ng-afelio@${version}` : __dirname;
+        await cli.default({ cliArgs: ['add', ngAfelioSrc, '--skip-confirmation', '--ui-kit=none'] });
+        console.info(`${colors.green('ng-afelio installed')}`);
+
+        console.info(`Creating library project`);
+        await cli.default({ cliArgs: ['generate', 'library', 'api', '--prefix=lib'] });
+        console.info(`${colors.green('Library created')}`);
+
+        console.info(`Install dependencies`);
+        await pexec('npm install ng-openapi-gen@0.2.3 gulp@4.0.2 gulp-replace@1.0.0  --save-dev');
+        console.info(`${colors.green('Dependencies installed')}`);
+
+        console.info(`Apply template`);
+        if (fs.rm) {
+            fs.rmSync('apis/api/src/lib', { recursive: true, force: true });
+            fs.rmSync('apis/api/src/public-api.ts', { force: true });
+        } else {
+            fs.rmdirSync('apis/api/src/lib', { recursive: true });
+            fs.unlinkSync('apis/api/src/public-api.ts');
+        }
+
+        const subPackageJson = 'apis/api/package.json.tmpl';
+        fs.renameSync('apis/api/package.json', subPackageJson);
+        const packageJsonFileContent = JSON.parse(fs.readFileSync(subPackageJson, { encoding: 'utf8' }));
+        packageJsonFileContent.name = `@${name}/\${apiName}`;
+        packageJsonFileContent.version = '${apiVersion}';
+        packageJsonFileContent.publishConfig = { 'registry': '${apiVersion}' };
+        fs.writeFileSync(subPackageJson, JSON.stringify(packageJsonFileContent, null, 2), { encoding: 'utf8' });
+
+        const packageJsonPath = './package.json';
+        const packageJsonContent = JSON.parse(fs.readFileSync(packageJsonPath, { encoding: 'utf8' }));
+        packageJsonContent.scripts = {
+            'ng': 'ng',
+            'build': 'ng build --prod',
+            'ng-afelio': 'ng-afelio',
+            'ng-swagger-gen': 'ng-openapi-gen',
+            'regenerate-api': 'ng-afelio api -r ng-swagger-gen-api.json',
+            'install-deps': 'export NG_CLI_ANALYTICS=ci && npm ci && ng analytics off',
+            'prepare-workspace': 'gulp',
+            'package': 'npm run regenerate-api && npm run build',
+            'publish': 'npm publish dist/api'
+        }
+        fs.writeFileSync(packageJsonPath, JSON.stringify(packageJsonContent, null, 2), { encoding: 'utf8' });
+
+        const currentPath = process.cwd();
+        const templatePath = join(__dirname, 'templates/generate-swagger');
+        await fse.copy(templatePath, currentPath);
+        console.info(`${colors.green('Template applied')}`);
+
+    } else {
+        await cli.default({ cliArgs: ['new', name, '--routing', '--style=scss', '--skip-install', ...produceNgOptions(ngOptionsString)] });
+        process.chdir(`./${name}`);
+        const ngAfelioSrc = config.production ? `ng-afelio@${version}` : __dirname;
+        await cli.default({ cliArgs: ['add', ngAfelioSrc, '--skip-confirmation', `--ui-kit=${uiKitType}`] });
+    }
+
+
     // process.chdir(`./${name}`);
     // if (uiKitType !== uiKitTypes.NONE) {
     //     const { fillUiKit, runUiKit } = require('./scripts/generate-ui-kit');
