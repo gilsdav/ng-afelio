@@ -182,7 +182,7 @@ const buildStyle = async () => {
 const checkFiles = async (type, mainFile) => {
     try {
         if (type === 'environment') {
-            constcheckEnvFiles = require('./scripts/check-files/check-env-files');
+            const checkEnvFiles = require('./scripts/check-files/check-env-files');
             return await checkEnvFiles(mainFile || 'environment.ts');
         } else {
             const checkI18nFiles = require('./scripts/check-files/check-i18n-files').checkFiles;
