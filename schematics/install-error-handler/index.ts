@@ -128,8 +128,6 @@ function applyModuleImports(projectAppPath: string, options: ErrorHandlerOptions
 export default function(options: ErrorHandlerOptions): Rule {
     return async (host: Tree) => {
 
-        console.log('Options', options);
-
         const useNgxToastr: boolean = options.useNgxToastr;
 
         const workspaceConfigBuffer = host.read('angular.json');
