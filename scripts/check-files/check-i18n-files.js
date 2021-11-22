@@ -1,7 +1,9 @@
 const path = require('path');
 const fs = require('fs');
 const colors = require('colors');
-const { flatten, diff } = require('./util');
+const { flatten, diff, getConfig } = require('./util');
+
+const defaultFile = 'fr.json';
 
 function checkIfFilesExists(currentPath, file) {
     return fs.existsSync(path.join(currentPath, file));
@@ -46,6 +48,10 @@ function toConsoleText(diffs) {
 }
 
 function checkFiles(mainFile) {
+    if (!mainFile) {
+        const config = getConfig('i18n');
+        mainFile = config && config.mainFile || defaultFile;
+    }
     const currentPath = process.cwd();
     return new Promise((resolve, reject) => {
         const diffs = {};
@@ -79,6 +85,10 @@ function alignWith(base, target, suffix) {
 }
 
 function fixI18n(mainFile) {
+    if (!mainFile) {
+        const config = getConfig('i18n');
+        mainFile = config && config.mainFile || defaultFile;
+    }
     const mainFileContent = JSON.parse(fs.readFileSync(mainFile).toString());
     const otherFiles = getListOfLocalFiles(process.cwd()).filter((f) => f !== mainFile);
     otherFiles.forEach((otherFile) => {

@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/schema",
-    "id": "SchematicsNgAfelioStore",
+    "$id": "SchematicsNgAfelioStore",
     "title": "ng-afelio Generate store files",
     "type": "object",
     "properties": {

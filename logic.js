@@ -183,16 +183,17 @@ const checkFiles = async (type, mainFile) => {
     try {
         if (type === 'environment') {
             const checkEnvFiles = require('./scripts/check-files/check-env-files');
-            return await checkEnvFiles(mainFile || 'environment.ts');
+            return await checkEnvFiles(mainFile);
         } else {
             const checkI18nFiles = require('./scripts/check-files/check-i18n-files').checkFiles;
-            return await checkI18nFiles(mainFile || 'fr.json');
+            return await checkI18nFiles(mainFile);
         }
     } catch (e) {
+        // console.error(colors.red('Unexpected error', e));
     }
 }
 
-const generateI18n = async (mainFile = 'fr.json') => {
+const generateI18n = async (mainFile) => {
     const { fixI18n } = require('./scripts/check-files/check-i18n-files');
     return fixI18n(mainFile);
 }

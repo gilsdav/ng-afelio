@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/schema",
-    "id": "SchematicsNgAfelioUiKit",
+    "$id": "SchematicsNgAfelioUiKit",
     "title": "ng-afelio Generate UI Kit project",
     "type": "object",
     "properties": {

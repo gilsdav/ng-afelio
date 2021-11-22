@@ -103,12 +103,17 @@ export default function(options: AddOptions): Rule {
             move('/'),
         ]);
 
+        const templateConfigSource = apply(url('../../templates/config'), [
+            move('/'),
+        ]);
+
         const uiKitToInstall = options.uiKit && options.uiKit !== 'none';
 
         return chain([
             branchAndMerge(
                 chain([
                     mergeWith(templateSource),
+                    mergeWith(templateConfigSource),
                     // installNgxBuildPlus(!uiKitToInstall),
                     updateConfig(),
                     updateScripts(),
