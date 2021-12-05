@@ -17,7 +17,8 @@ const {
   // generateMocks,
   generateApi,
   regenerateApi,
-  checkFiles
+  checkFiles,
+  generateModelsFromGeneratedApi
 } = require('./logic');
 
 const { getAllArgs } = require('./remainer-args');
@@ -200,6 +201,19 @@ program
     } else {
       console.error(`${colors.red(`Type "${type}" does not exist.`)}`);
     }
+  });
+
+
+  program
+  .command('generate-models')
+  .description('Generate the models based upon the generated interfaces inside the specified folder')
+  .option('-f, --folder <folder>', 'The folder which holds the generated interfaces')
+  .option('-o, --output <output>', 'The folder which will hold the generated models')
+  .option('-a, --api <apiName>', 'The api name used in the imports')
+  .action((options) => {
+      generateModelsFromGeneratedApi(options.folder, options.output, options.api).then(() => {
+        process.exit();
+      });
   });
 
 program.on('command:*', () => {

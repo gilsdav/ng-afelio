@@ -1,0 +1,24 @@
+{{#imports}}
+import { invert } from 'lodash';
+import { {{{dtoName}}} } from '{{{path}}}';
+{{/imports}}
+
+export enum {{className}} {
+    {{#properties}}
+    {{^isLast}}{{key}} = '{{{value}}}',{{/isLast}}{{#isLast}}{{key}} = '{{{value}}}'{{/isLast}}
+    {{/properties}}
+}
+
+
+export const {{className}}FromDTO = {
+    {{#properties}}
+    {{^isLast}}
+    [{{dtoName}}.{{key}}]: {{className}}.{{key}},
+    {{/isLast}}
+    {{#isLast}}
+    [{{dtoName}}.{{key}}]: {{className}}.{{key}}
+    {{/isLast}}
+    {{/properties}}
+};
+
+export const {{className}}ToDTO = invert({{className}}FromDTO) as { [key: string]:  {{dtoName}} };

@@ -1,0 +1,107 @@
+{{#imports}}
+import { {{{name}}} } from '{{{path}}}';
+{{/imports}}
+
+export class {{className}} {
+
+    {{#properties}}
+    {{name}}{{#isNullable}}?{{/isNullable}}: {{{typeNotArray}}}{{#isArray}}[]{{/isArray}};
+    {{/properties}}
+
+    constructor(base?: Partial<{{className}}>) {
+        if (base) {
+            Object.assign(this, base);
+        }
+    }
+
+    public static fromDto(dto: {{dtoName}}): {{className}} {
+        if (!dto) {
+            return null;
+        }
+
+        return new {{className}}({
+			{{#properties}}
+			{{^isLast}}
+				{{^isArray}}
+					{{^isNested}}
+            {{name}}: dto.{{name}},
+					{{/isNested}}
+					{{#isNested}}
+            {{name}}: {{{type}}}.fromDto(dto.{{name}}),
+					{{/isNested}}
+				{{/isArray}}
+				{{#isArray}}
+					{{^isNested}}
+            {{name}}: dto.{{name}},
+					{{/isNested}}
+					{{#isNested}}
+            {{name}}: dto.{{name}}.map(obj => {{{typeNotArray}}}.fromDto(obj)),
+					{{/isNested}}
+				{{/isArray}}
+			{{/isLast}}
+			{{#isLast}}
+				{{^isArray}}
+					{{^isNested}}
+            {{name}}: dto.{{name}}
+					{{/isNested}}
+					{{#isNested}}
+            {{name}}: {{{type}}}.fromDto(dto.{{name}})
+					{{/isNested}}
+				{{/isArray}}
+				{{#isArray}}
+					{{^isNested}}
+            {{name}}: dto.{{name}}
+					{{/isNested}}
+					{{#isNested}}
+            {{name}}: dto.{{name}}.map(obj => {{{typeNotArray}}}.fromDto(obj))
+					{{/isNested}}
+				{{/isArray}}
+			{{/isLast}}
+			{{/properties}}
+        });
+    }
+
+    public toDto(): {{dtoName}} {
+        return {
+		{{#properties}}
+			{{^isLast}}
+				{{^isArray}}
+					{{^isNested}}
+            {{name}}: this.{{name}},
+					{{/isNested}}
+					{{#isNested}}
+            {{name}}: this.{{name}}.toDto(),
+					{{/isNested}}
+				{{/isArray}}
+				{{#isArray}}
+					{{^isNested}}
+            {{name}}: this.{{name}},
+					{{/isNested}}
+					{{#isNested}}
+            {{name}}: this.{{name}}.map(obj => obj.toDto()),
+					{{/isNested}}
+				{{/isArray}}
+			{{/isLast}}
+			{{#isLast}}
+				{{^isArray}}
+					{{^isNested}}
+            {{name}}: this.{{name}}
+					{{/isNested}}
+					{{#isNested}}
+            {{name}}: this.{{name}}.toDto()
+					{{/isNested}}
+				{{/isArray}}
+				{{#isArray}}
+					{{^isNested}}
+            {{name}}: this.{{name}}
+					{{/isNested}}
+					{{#isNested}}
+            {{name}}: this.{{name}}.map(obj => obj.toDto())
+					{{/isNested}}
+				{{/isArray}}
+			{{/isLast}}
+		{{/properties}}
+        };
+    }
+
+}
