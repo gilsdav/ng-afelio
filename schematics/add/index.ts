@@ -1,6 +1,6 @@
 import { strings } from '@angular-devkit/core';
 import { WorkspaceDefinition } from '@angular-devkit/core/src/workspace';
-import { Rule, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, schematic, template, url } from '@angular-devkit/schematics';
+import { MergeStrategy, Rule, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, schematic, template, url } from '@angular-devkit/schematics';
 import { updateWorkspace } from '@schematics/angular/utility/workspace';
 
 import { Schema as AddOptions } from './schema';
@@ -108,7 +108,7 @@ export default function(options: AddOptions): Rule {
         return chain([
             branchAndMerge(
                 chain([
-                    mergeWith(templateSource),
+                    mergeWith(templateSource, MergeStrategy.Overwrite),
                     // installNgxBuildPlus(!uiKitToInstall),
                     updateConfig(),
                     updateScripts(),
