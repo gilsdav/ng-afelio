@@ -85,7 +85,7 @@
             "aliases": [
                 "c"
             ],
-            "factory": "./node_modules/@schematics/angular/component",
+            "factory": "./schematics/component",
             "description": "Create an Angular component.",
             "schema": "./schematics/component/schema.json"
         },
