@@ -50,14 +50,21 @@
     },
     "viewEncapsulation": {
       "description": "The view encapsulation strategy to use in the new component.",
-      "enum": ["Emulated", "None", "ShadowDom"],
+      "enum": [
+        "Emulated",
+        "None",
+        "ShadowDom"
+      ],
       "type": "string",
       "alias": "v",
       "x-user-analytics": 11
     },
     "changeDetection": {
       "description": "The change detection strategy to use in the new component.",
-      "enum": ["Default", "OnPush"],
+      "enum": [
+        "Default",
+        "OnPush"
+      ],
       "type": "string",
       "default": "OnPush",
       "alias": "c"
@@ -80,7 +87,13 @@
       "description": "The file extension or preprocessor to use for style files, or 'none' to skip generating the style file.",
       "type": "string",
       "default": "scss",
-      "enum": ["css", "scss", "sass", "less", "none"],
+      "enum": [
+        "css",
+        "scss",
+        "sass",
+        "less",
+        "none"
+      ],
       "x-user-analytics": 5
     },
     "type": {
@@ -127,5 +140,7 @@
       "x-user-analytics": 19
     }
   },
-  "required": ["name"]
+  "required": [
+    "name"
+  ]
 }

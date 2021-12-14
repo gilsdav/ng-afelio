@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/schema",
-    "id": "SchematicsNgAfelioOIDCSystem",
+    "$id": "SchematicsNgAfelioOIDCSystem",
     "title": "ng-afelio Generate OIDC system",
     "type": "object",
     "properties": {

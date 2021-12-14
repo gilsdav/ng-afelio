@@ -9,5 +9,10 @@
             { "input": "styles.scss", "output": "main.scss", "global": true }
         ]
     },
-    "ng-swagger-gen" : "version"
+    "i18n": {
+        "mainFile": "fr.json"
+    },
+    "environment": {
+        "mainFile": "environment.ts"
+    }
 }

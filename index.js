@@ -6,7 +6,7 @@ const packageJson = require('./package.json');
 
 const { schematics } = require('./collection.json');
 
-const { 
+const {
   createNewProject,
   // getAngularVersion,
   serveUIKit,
@@ -17,7 +17,8 @@ const {
   // generateMocks,
   generateApi,
   regenerateApi,
-  checkFiles
+  checkFiles,
+  generateI18n
 } = require('./logic');
 
 const { getAllArgs } = require('./remainer-args');
@@ -193,8 +194,11 @@ program
   .command('check <type>')
   .description('Check alignement between files (type: environment or i18n)')
   .option('-m, --mainFile <mainFile>', 'Automaticaly align all files with the main.')
+  .option('--fix', 'Generate i18n labels based on main file (default is fr.json).')
   .action((type, options) => {
-    if (type === 'environment' || type === 'i18n') {
+    if (type === 'i18n' && options.fix) {
+      generateI18n(options.mainFile);
+    } else if (type === 'environment' || type === 'i18n') {
       checkFiles(type, options.mainFile).then(() => {
         process.exit();
       });
@@ -208,7 +212,7 @@ program.on('command:*', () => {
   program.outputHelp(((text) => `Here is how to use this CLI:\n\n${text}`));
   process.exit(1);
 });
-  
+
 program.parse(process.argv);
 
 // const options = program.opts();

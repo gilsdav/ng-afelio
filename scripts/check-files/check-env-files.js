@@ -1,10 +1,12 @@
 const path = require('path');
 const fs = require('fs');
 const colors = require('colors');
-const { flatten, diff } = require('./util');
+const { flatten, diff, getConfig } = require('./util');
 
-function checkIfFilesExists(currentPath) {
-    return fs.existsSync(path.join(currentPath, 'environment.ts'));
+const defaultFile = 'environment.ts';
+
+function checkIfFilesExists(currentPath, fileName) {
+    return fs.existsSync(path.join(currentPath, fileName));
 }
 
 function getListOfEnvFiles(currentPath) {
@@ -61,10 +63,14 @@ function toConsoleText(diffs) {
 }
 
 function checkFiles(mainFile) {
+    if (!mainFile) {
+        const config = getConfig('environment');
+        mainFile = config && config.mainFile || defaultFile;
+    }
     const currentPath = process.cwd();
     return new Promise((resolve, reject) => {
         const diffs = {};
-        if (checkIfFilesExists(currentPath)) {
+        if (checkIfFilesExists(currentPath, mainFile)) {
             const filesToCheck = getListOfEnvFiles(currentPath).filter(name => name !== mainFile);
             const mainFileConent = fs.readFileSync(mainFile).toString();
             filesToCheck.forEach(fileName => {
@@ -73,7 +79,7 @@ function checkFiles(mainFile) {
             console.log(toConsoleText(diffs));
             resolve(diffs);
         } else {
-            console.error(colors.red(`Can not found "environment.ts" in this directory. Go into the "environment" directory before using this command.`));
+            console.error(colors.yellow(`Can not found "${mainFile}" in this directory. Go into the "environment" directory before using this command.`));
             reject();
         }
     });

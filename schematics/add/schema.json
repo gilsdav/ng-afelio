@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/schema",
-    "id": "SchematicsNgAfelioAdd",
+    "$id": "SchematicsNgAfelioAdd",
     "title": "ng-afelio Add ng-afelio into project",
     "type": "object",
     "properties": {

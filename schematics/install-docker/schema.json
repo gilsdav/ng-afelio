@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "id": "SchematicsNgAfelioDocker",
+  "$id": "SchematicsNgAfelioDocker",
   "title": "ng-afelio Generate Docker part",
   "type": "object",
   "properties": {
