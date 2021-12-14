@@ -1,0 +1,9 @@
+<div class="textfield" [class.is-invalid]="showError" [ngClass]="{'-error': showError}">
+    <daenae-sub-datepicker
+        [id]="field.id"
+        [placeholder]="to.placeholder | translate"
+        [formControl]="formControl"
+        [minDate]="to.minDate"
+        [maxDate]="to.maxDate">
+    </daenae-sub-datepicker>
+</div>

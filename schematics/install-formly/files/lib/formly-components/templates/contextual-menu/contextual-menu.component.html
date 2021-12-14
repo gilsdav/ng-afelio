@@ -1,0 +1,22 @@
+<div class="contextual-menu"  [ngClass]="{'-error': showError}" #menu (clickOutside)="close()">
+    <button  type="button" data-test="menu-label" [ngClass]="to.buttonClassName" (click)="toggleMenu()" [disabled]="to.disabled">{{to.buttonLabel | translate}}<span class="icon icon-chevronAlt-bottom"></span></button>
+    <ul *ngIf="isVisible$ | async" class="menu">
+        <ng-container *ngIf="to.options | formlySelectOptions: field | async as items">
+            <ng-container *ngIf="to._flatOptions; else grouplist">
+                <li *ngFor="let item of items" [innerHTML]="item.label | smartTranslate" (click)="clickItem(item)"></li>
+            </ng-container>
+            <ng-template #grouplist>
+                <ng-container *ngFor="let opt of items; last as isLast">
+                    <li *ngIf="!opt.group; else optgroup" [innerHTML]="opt.label | smartTranslate" (click)="clickItem(opt)"></li>
+                    <ng-template #optgroup>
+                        <li *ngFor="let option of opt.group" [innerHTML]="option.label | smartTranslate"
+                            (click)="clickItem(option, opt.label)"></li>
+                        <li *ngIf="!isLast" class="-separator">
+                            <span></span>
+                        </li>
+                    </ng-template>
+                </ng-container>
+            </ng-template>
+        </ng-container>
+    </ul>
+</div>

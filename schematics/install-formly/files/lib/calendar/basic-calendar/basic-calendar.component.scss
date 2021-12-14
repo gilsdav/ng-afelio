@@ -1,0 +1,15 @@
+:host() ::ng-deep .fc-view-harness {
+    background-color: white;
+
+    .weekend {
+        background-color: #F9FAFB;
+    }
+}
+
+.invisible {
+    width: 0px;
+}
+
+.dropdown {
+    z-index: 10;
+}

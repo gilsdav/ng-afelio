@@ -1,0 +1,9 @@
+<button
+    type="button"
+    [ngClass]="[to.className, to.isButton ? 'button' : '']"
+    [disabled]="to.disabled"
+    (click)="to.click(this.field)"
+>
+    <span *ngIf="to.iconClassName" class="icon" [ngClass]="to.iconClassName"></span>
+    {{ to.label | translate }}
+</button>

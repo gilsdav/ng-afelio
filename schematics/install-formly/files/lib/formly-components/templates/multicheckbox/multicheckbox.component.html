@@ -1,0 +1,29 @@
+<div class="checkboxes" *ngIf="checkboxes$ | async as checkboxes" [ngClass]="{
+            'scrollable-error': showError
+        }">
+
+    <div data-test="allTogglableCheckbox" class="mb-m" *ngIf="to.toggleAll">
+        <div class="checkbox"
+            [ngClass]="{'-partial': numberOfSelected > 0 && numberOfSelected !== checkboxes.length, 'checked': numberOfSelected === checkboxes.length}">
+            <button class="checkbox__label button" type="button" (click)="toggleSelectAll()" [disabled]="to.disabled">
+                <div class="checkbox__box"></div>
+                <div class="checkbox__text">
+                    <span class="checkbox__text-label">{{ 'FORM.ACTION_LABELS.SELECT_ALL' | translate }}</span>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <div class="checkboxes__columns" [ngClass]="{'-double' : !to.singleColumn && checkboxes.length > 4}">
+        <div class="checkbox" *ngFor="let option of checkboxes">
+            <label class="checkbox__label" [for]="option.key + '-' + field.id">
+                <input class="checkbox__input" type="checkbox" [id]="option.key + '-' + field.id"
+                    [formControl]="formCheckbox.get(option.key)" />
+                <div class="checkbox__box"></div>
+                <div class="checkbox__text">
+                    <span data-test="checkbox-label" class="checkbox__text-label">{{ option.label | translate }}</span>
+                </div>
+            </label>
+        </div>
+    </div>
+</div>

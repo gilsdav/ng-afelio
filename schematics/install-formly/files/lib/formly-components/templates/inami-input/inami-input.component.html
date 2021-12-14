@@ -1,0 +1,11 @@
+<div [attr.class]="showError ? 'textfield -error' : 'textfield mb-xs'">
+    <input
+        class="textfield__field"
+        type="text"
+        [formControl]="formControl"
+        [placeholder]="!formControl.disabled && to.placeholder ? (to.placeholder | translate) : '−'"
+        (keypress)="checkSpecialCharacters($event, 'digitsOnly')"
+        (paste)="blockPastSpecialCharracters($event, formControl, 'digitsOnly')"
+        mask="0-00000-00-000"
+    />
+</div>

@@ -1,0 +1,18 @@
+<div class="switch" [ngClass]="{'-light': to.hideBorder,'-large': to.switchLabel}">
+    <input class="switch__input"
+    type="checkbox"
+    [id]="to.key"
+    [name]="to.name"
+    [value]="to.key"
+    [formControl]="formControl"/>
+    <label class="switch__label" [for]="to.key">
+        <div class="switch__text">
+            <span *ngIf="to?.icon" class="switch__text-icon icon-{{to?.icon}}"></span>
+            <div>
+                <span class="switch__text-title">{{to?.switchLabel | translate}}</span>
+                <span class="switch__text-label">{{to?.switchDescription | translate}}</span>
+            </div>
+        </div>
+        <div class="switch__slider"></div>
+    </label>
+</div>

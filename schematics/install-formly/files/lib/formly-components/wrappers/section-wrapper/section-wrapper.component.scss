@@ -1,0 +1,21 @@
+@import '/styles/style-utils.scss';
+
+.label ~ .subtitle {
+    margin-top: -12px;
+}
+
+.card__header .tag {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    display:flex;
+    align-items: center;
+}
+
+@include media-down('l') {
+    .card__header {
+        display: block;
+    }
+    .tag-or-button .dot {
+        display: none;
+    }
+}

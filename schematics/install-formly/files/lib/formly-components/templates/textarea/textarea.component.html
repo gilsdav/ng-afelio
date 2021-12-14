@@ -1,0 +1,23 @@
+<div class="textfield -textarea" [ngClass]="{'-error': (showError$ | async)}">
+    <textarea
+        *ngIf="!formControl.disabled"
+        autosize
+        [minRows]="to.minRows"
+        [onlyGrow]="to.onlyGrow"
+        [formControl]="formControl"
+        [cols]="to.cols"
+        [maxlength]="to.maxLength"
+        [placeholder]="!formControl.disabled && to.placeholder ? (to.placeholder | translate) : '−'"
+        class="textfield__field textfield__size wrap__text"
+        [class.is-invalid]="showError"
+        (blur)="inputBlur$.next()">
+    </textarea>
+    <div *ngIf="formControl.disabled" class="-textarea-read-only -text-info">
+        <div *ngIf="formControl.value">
+            {{formControl.value}}
+        </div>
+        <div *ngIf="!formControl.value">
+            {{ 'GENERAL.EMPTY_FIELD' | translate }}
+        </div>
+    </div>
+</div>

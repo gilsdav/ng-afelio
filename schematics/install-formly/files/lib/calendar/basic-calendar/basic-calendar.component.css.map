@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,KAAM,GAAE,SAAS,CAAC,gBAAgB,CAAC;EAC/B,gBAAgB,EAAE,KAAK;CAK1B;;AAND,AAGI,KAHE,GAAE,SAAS,CAAC,gBAAgB,CAG9B,QAAQ,CAAC;EACL,gBAAgB,EAAE,OAAO;CAC5B;;AAGL,AAAA,UAAU,CAAC;EACP,KAAK,EAAE,GAAG;CACb;;AAED,AAAA,SAAS,CAAC;EACN,OAAO,EAAE,EAAE;CACd",
+    "sources": [
+        "basic-calendar.component.scss"
+    ],
+    "names": [],
+    "file": "basic-calendar.component.css"
+}

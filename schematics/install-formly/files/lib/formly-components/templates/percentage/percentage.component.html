@@ -1,0 +1,12 @@
+<div class="textfield -icon w-50" [ngClass]="{'-error': showError, '-disabled': to.disabled}">
+    <input
+        type="text"
+        mask="percent"
+        suffix="%"
+        (keydown)="onKeyDown($event)"
+        (paste)="onPaste($event)"
+        class="textfield__field"
+        [placeholder]="!formControl.disabled && to.placeholder ? (to.placeholder | translate) : '−'"
+        [formControl]="formControl"
+    />
+</div>

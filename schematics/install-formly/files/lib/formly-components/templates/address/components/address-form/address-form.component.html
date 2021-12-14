@@ -1,0 +1,7 @@
+<daenae-address-autocomplete [addressControl]="controlAddressAutoComplete" (addressSelected)="addressSelected($event)">
+</daenae-address-autocomplete>
+<div class="mt-xs" *ngIf="showManual">
+  <div data-test="data-manualSearch" class="link -primary f-s" (click)="manualAddress()">
+    {{ 'ADDRESS.MANUAL_SEARCH' | translate}}
+  </div>
+</div>

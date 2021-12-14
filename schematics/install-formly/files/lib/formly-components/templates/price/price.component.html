@@ -1,0 +1,13 @@
+<div class="textfield -icon w-50" [ngClass]="{'-error': showError, '-disabled': to.disabled}">
+    <input
+        type="text"
+        mask="separator.2"
+        thousandSeparator="."
+        class="textfield__field"
+        [placeholder]="!formControl.disabled && to.placeholder ? (to.placeholder | translate) : '−'"
+        [formControl]="formControl"
+    />
+    <label class="textfield__icon">
+        <span class="icon-euro"></span>
+    </label>
+</div>

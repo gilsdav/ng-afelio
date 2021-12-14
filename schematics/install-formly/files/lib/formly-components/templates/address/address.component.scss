@@ -1,0 +1,9 @@
+@import '/styles/style-utils.scss';
+
+.remove-address{
+    left: calc(100% - 19px);
+
+    @include media-down('l') {
+        left: calc(100% - 45px);
+    }
+}

@@ -1,0 +1,23 @@
+<div class="sidebar -stepper">
+    <div class="sidebar__content ">
+        <ng-container *ngFor="let step of steps; let i = index">
+            <p *ngIf="step.groupHeaderLabel" class="c-grey05 f-xs ml-m uppercase" [ngClass]="i !== 0 ? 'mt-xl' : 'mt-none'" >{{ step.groupHeaderLabel }}</p>
+            <button class="button" [ngClass]="{
+                    '-selected': selectedIndex === i,
+                    '-error': (selectedIndex !== i && step.stepControl && step.stepControl.invalid && step.stepControl.touched),
+                    '-disabled': stepState[i]?.disabled
+                }" (click)="selectStepByIndex(i)">
+            {{ step.label }}
+            {{ (selectedIndex !== i && step.stepControl && step.stepControl.invalid && step.stepControl.touched)
+                ? step.errorMessage : '' }}
+            </button>
+        </ng-container>
+    </div>
+</div>
+<div class="row">
+    <div class="col-8 col-lg-9 offset-4 offset-lg-3 col-xxl-12">
+        <div class="pb-xxl mb-xxl">
+            <div [ngTemplateOutlet]="selected ? selected.content : null"></div>
+        </div>
+    </div>
+</div>

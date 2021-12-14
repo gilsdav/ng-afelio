@@ -1,0 +1,14 @@
+<div class="checkbox" [ngClass]="{'-error': showError, '-disabled' : to.disabled}">
+    <label class="checkbox__label" [for]="field.id + '_' + to.key">
+        <input class="checkbox__input" type="checkbox"
+        [id]="field.id + '_' + to.key"
+        [formControl]="formControl"
+        />
+        <div class="checkbox__box"></div>
+        <div class="checkbox__text">
+        <span
+            class="checkbox__text-label">{{ to.checkboxLabel | translate }}</span>
+        </div>
+    </label>
+</div>
+

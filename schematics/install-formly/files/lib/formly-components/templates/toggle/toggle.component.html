@@ -1,0 +1,43 @@
+<div *ngIf="to.options"
+    [ngClass]="{
+        'choices': !to.isSpaced,
+        'choices-card mb-m': to.isSpaced,
+        'vertical': to.isVertical,
+        'scrollable-error': showError$ | async,
+        '-error': showError$ | async,
+        'row': to.cards
+    }">
+    <div class="choice"
+        [ngClass]="{'-disabled': option.disabled || to.disabled, 'col-6 col-lg-3 pr-none': to.cards }"
+        *ngFor="let option of (to.options | asObservable | async)"
+        [matTooltip]="option.tooltip | translate"
+        matTooltipClass="tooltip__infos">
+        <input class="choice__input"
+            type="radio"
+            [disabled]="option.disabled || to.disabled ? 'disabled' : null"
+            [id]="getId(option)"
+            [value]="option.value"
+            [name]="id"
+            [(ngModel)]="value"
+            (ngModelChange)="setValue($event)"
+            [placeholder]="option.placeholder" />
+        <label [for]="getId(option)">
+            <!-- Case with no cards -->
+            <div class="choice__text" *ngIf="!to.cards"> {{ option.label | translate }}</div>
+            <!-- Case with cards on add request screen -->
+            <div class="card -admin" *ngIf="to.cards">
+                <div class="card__content">
+                    <div class="card__icon">
+                        <span class="icon" [ngClass]="option.iconClass"></span>
+                    </div>
+                    <div class="card__content-item">
+                        <span class="card__content-item__text f-s">
+                            {{ option.label | translate}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </label>
+
+    </div>
+</div>

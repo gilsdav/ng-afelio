@@ -1,0 +1,20 @@
+<div class="flex">
+    <div class="select -prefix mr-xxs" [ngClass]="{'-disabled': to.disabled}">
+        <select class="select__field" [formControl]="phoneFormGroup.get('prefix')" [ngClass]="{'-disabled': to.disabled}">
+          <option *ngFor="let prefix of prefixesValues" [value]="prefix">
+            {{ prefix }}
+          </option>
+        </select>
+    </div>
+
+    <div [attr.class]="showError ? 'textfield ml-xxs -error' : 'textfield ml-xxs'">
+        <input class="textfield__field"  type="tel"
+            [formControl]="phoneFormGroup.get('phone')"
+            [placeholder]="!formControl.disabled && to.placeholder ? (to.placeholder | translate) : '−'"
+            (keydown)="checkSpecialCharacters($event, 'digitsOnly')"
+            (paste)="blockPastSpecialCharracters($event, phoneFormGroup.get('phone'), 'digitsOnly')"
+            (blur)="isTouched()"
+            maxlength="13"
+            [ngClass]="{'-disabled': to.disabled}"/>
+    </div>
+</div>

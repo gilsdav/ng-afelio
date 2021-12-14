@@ -1,0 +1,52 @@
+@import '/styles/style-utils.scss';
+
+.card-host {
+    position: relative;
+
+    .card__header {
+        padding-right: 60px;
+    }
+
+    .remove-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        @include media-down('l'){
+            height: 38px;
+            width: 38px;
+            border-radius: 4px;
+
+            span {
+                background: $grey00;
+            }
+        }
+        &.card-button{
+            position: absolute;
+            top: 8px;
+            left: calc(100% - 48px);
+            z-index: 99;
+        }
+    }
+
+    .duplicate-button {
+        position: absolute;
+        top: 8px;
+        right: 42px;
+    }
+
+    .repeater-separator {
+        margin-top: 50px;
+    }
+
+    &:last-of-type .repeater-separator {
+        display: none;
+    }
+
+    .remove-tooltip {
+        height: 50px;
+        width: 50px;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+}

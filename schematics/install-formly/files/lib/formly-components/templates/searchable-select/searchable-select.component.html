@@ -1,0 +1,25 @@
+<ng-select
+    [ngClass]="{'-error': showError}"
+    [items]="options$ | async"
+    [virtualScroll]="true"
+    [notFoundText]="to.notFoundText | translate"
+    [multiple]="to.multiple"
+    [closeOnSelect]="true"
+    [searchable]="true"
+    [groupBy]="to.groupBy"
+    bindLabel="label"
+    bindValue="value"
+    [placeholder]="!formControl.disabled && to.placeholder ? (to.placeholder | translate) : '−'"
+    [formControl]="formControl"
+    [class]="'select'"
+>
+    <ng-template ng-label-tmp let-item="item">
+        {{ item.label | translate }} <span *ngIf="item.isDefault" class="tag -small ml-xs"> {{'GENERAL.SUGGEST' | translate}} </span>
+    </ng-template>
+    <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+        {{ item.label | translate }} <span *ngIf="item.isDefault"  class="tag -small ml-xs"> {{'GENERAL.SUGGEST' | translate}} </span>
+    </ng-template>
+    <ng-template ng-optgroup-tmp let-item="item">
+        {{ item.sectorType | translate }}
+    </ng-template>
+</ng-select>

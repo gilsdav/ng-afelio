@@ -1,0 +1,16 @@
+:host() ::ng-deep .fc-view-harness {
+  background-color: white;
+}
+
+:host() ::ng-deep .fc-view-harness .weekend {
+  background-color: #F9FAFB;
+}
+
+.invisible {
+  width: 0px;
+}
+
+.dropdown {
+  z-index: 10;
+}
+/*# sourceMappingURL=basic-calendar.component.css.map */

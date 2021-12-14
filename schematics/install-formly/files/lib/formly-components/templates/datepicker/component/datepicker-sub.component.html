@@ -1,0 +1,10 @@
+<div class="textfield">
+    <input [id]="'text_' + id" #inputControl class="textfield__field" type="text" [placeholder]="placeholder" mask="00/00/0000"
+        [(ngModel)]="inputValue" (blur)="onBlur()" (change)="onInputChange(inputControl.value)" [disabled]="disabled"/>
+    <label class="textfield__button">
+        <span class="icon-calendar"></span>
+        <input [id]="'button_' + id" class="invisible" type="text" #datepickerControl bsDatepicker [bsConfig]="bsConfig" (blur)="onBlur()"
+            [(ngModel)]="datepickerValue" (ngModelChange)="onDatepickerChange(datepickerControl.value)" (onHidden)="onBlur()"
+            [disabled]="disabled"/>
+    </label>
+</div>

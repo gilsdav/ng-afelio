@@ -1,0 +1,21 @@
+<div
+    class="textfield -icon w-50"
+    [ngClass]="{'-error': (showError$ | async), 'w-33':to.max<999999999, 'w-25':to.max<9999}"
+>
+    <input
+        type="number"
+        class="textfield__field"
+        [placeholder]="!formControl.disabled && to.placeholder ? (to.placeholder | translate) : '−'"
+        [formControl]="formControl"
+        (keydown)="onKeyDown($event)"
+        (input)="onInput($event)"
+        (paste)="onPaste($event)"
+        #numberInput
+        [attr.min]="to.min"
+        [attr.max]="to.max"
+        (blur)="inputBlur$.next()"
+    />
+    <label class="textfield__icon" *ngIf="to.showEuro">
+        <span class="icon-euro"></span>
+    </label>
+</div>

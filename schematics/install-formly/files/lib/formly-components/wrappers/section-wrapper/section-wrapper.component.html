@@ -1,0 +1,31 @@
+
+<h2 class="mt-xxl" *ngIf="to.labelSection">{{ to.labelSection  | translate }}</h2>
+<div class="f-body-bold f-m mb-m mt-xl label" *ngIf="to.label">{{ to.label  | translate }}</div>
+<div class="c-grey04 mb-m subtitle" *ngIf="to.cardInfo">{{ to.cardInfo | translate }}</div>
+
+<div class="section-title" *ngIf="to.cardTitle">{{ to.cardTitle | smartTranslate }}</div>
+<div *ngIf="to.cardStyle !== false" class="card">
+    <div class="card__header flex flex-middle" *ngIf="to.cardHeader">
+        {{ to.cardHeader | smartTranslate }}
+
+        <div class="flex flex-middle mt-xxs tag-or-button" *ngIf="to.cardTitleTag || to.cardTitleButton">
+            <span class="c-primary03 mx-s f-xs dot">•</span>
+            <span class="tag" *ngIf="to.cardTitleTag">
+                <span class="icon icon-check -left"></span>
+                {{ to.cardTitleTag | smartTranslate}}
+            </span>
+            <button *ngIf="to.cardTitleButton"
+                type="button"
+                class="button"
+                [ngClass]="[to.cardTitleButton.className]"
+                [disabled]="to.cardTitleButton.disabled"
+                (click)="to.cardTitleButton.click(this.field)">
+                {{ to.cardTitleButton.label | smartTranslate }}
+            </button>
+        </div>
+    </div>
+    <div class="card__content">
+        <ng-container #fieldComponent></ng-container>
+    </div>
+</div>
+<ng-container *ngIf="to.cardStyle === false" #fieldComponent></ng-container>

@@ -1,0 +1,20 @@
+<div class="modal-overlay"></div>
+<div class="modal col-11 col-md-9 col-lg-8 col-xl-7">
+    <div class="modal__header">
+      <h3 class="modal__title" *ngIf="to.title">{{ to.title  | translate }}</h3>
+      <button class="modal__close button -icon-alone" (click)="buttonsClicked(false)">
+        <span class="icon icon-close"></span>
+      </button>
+    </div>
+    <div class="modal__body">
+        <ng-container #fieldComponent></ng-container>
+    </div>
+    <div class="modal__footer">
+      <div class="row">
+            <div class="modal__buttons col-12 flex flex-center">
+                <button type="button" class="button -primary" (click)="buttonsClicked(true)">{{ to?.buttons?.confirm | translate }}</button>
+                <button type="button" class="button -ternary pr-s" (click)="buttonsClicked(false)">{{ to?.buttons?.cancel | translate }}</button>
+            </div>
+      </div>
+    </div>
+  </div>

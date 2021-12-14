@@ -1,0 +1,23 @@
+<div class="dropdown-menu" *ngIf="config">
+    <button (click)="toggleDropdown()" class="button -bg-hover -icon -right -grey -xs">
+        {{ config.toggleDropdownLabel | translate }}
+        <span class="icon" [ngClass]="[(isVisible$ | async) ? 'icon-chevronAlt-up' : 'icon-chevronAlt-bottom']"></span>
+    </button>
+    <div *ngIf="isVisible$ | async" class="dropdown-menu__menu">
+        <form *ngIf="config.form" [formGroup]="config.form.formGroup">
+            <formly-form
+                [form]="config.form.formGroup"
+                [fields]="config.form.formlyConfig"
+                [model]="config.form.model"
+            >
+            </formly-form>
+        </form>
+        <button
+            *ngFor="let button of config.actionButtons"
+            (click)="buttonClicked(button.type)"
+            [ngClass]="button.classes"
+        >
+            {{ button.label | translate }}
+        </button>
+    </div>
+</div>

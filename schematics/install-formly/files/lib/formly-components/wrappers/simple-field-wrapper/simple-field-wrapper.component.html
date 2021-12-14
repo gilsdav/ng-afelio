@@ -1,0 +1,30 @@
+<div class="simple-field" [ngClass]="{'-left': to.left,'-no-label': to.noLabelEdit,'-icon': to.icon, '-disabled':formControl.disabled}">
+    <div class="simple-field__icon" *ngIf="to.icon">
+        <span class="icon" [ngClass]="to.icon"></span>
+    </div>
+    <div class="simple-field__label" *ngIf="to.label" [style.height]="forcedHeight">
+        <div>
+            <div class="f-m">{{ to.label | translate }}</div>
+            <div class="f-s c-grey04" *ngIf="to.subLabel">{{ to.subLabel | translate }}</div>
+        </div>
+        <span
+            class="icon icon-info c-primary03 f-xxl ml-xs"
+            *ngIf="to.tooltip"
+            [matTooltip]="to.tooltip | translate"
+        ></span>
+        <span  *ngIf="to.popover"
+            class="icon icon-info c-primary03 f-xxl ml-xs"
+            [popover]="popTemplate"
+            triggers="mouseenter:mouseleave"
+        >
+
+        </span>
+    </div>
+    <div [ngClass]="{'simple-field__field': !to.externalField}">
+        <ng-container #fieldComponent></ng-container>
+        <div *ngIf="showError && !to.hideError" class="error">
+            <formly-validation-message [field]="field"></formly-validation-message>
+        </div>
+    </div>
+</div>
+<ng-template #popTemplate><div [innerHtml]="to.popover | smartTranslate"></div></ng-template>

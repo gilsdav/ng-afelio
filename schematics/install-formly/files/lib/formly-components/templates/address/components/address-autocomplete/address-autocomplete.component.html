@@ -1,0 +1,24 @@
+<div *ngIf="addressControl !== null">
+    <div class="textfield -suggestion">
+        <input
+            matInput
+            [matAutocomplete]="matAutocompleteAddress"
+            [ngClass]="{'-open': matAutocompleteAddress.isOpen}"
+            class="textfield__field" type="text" [formControl]="addressControl"
+            [placeholder]="'ADDRESS.FORMS.PLACEHOLDERS.ADDRESS_AUTOCOMPLETE' | translate"
+        />
+        <label class="textfield__icon">
+            <span class="icon-search"></span>
+        </label>
+    </div>
+    <mat-autocomplete #matAutocompleteAddress="matAutocomplete" [disableRipple]="true" class="autocomplete -suggestion"
+        (optionSelected)="selectedAddressEvent($event.option.id)">
+        <mat-option *ngIf="isLoading$ | async" class="is-loading"> {{ 'ADDRESS.LOADING' | translate }}</mat-option>
+        <ng-container *ngIf="!(isLoading$ | async)">
+            <mat-option *ngFor="let address of (autoCompleteAddress$ | async); let i = index" [matTooltip]="address"
+                [value]="address" [id]="i">
+            {{ address }}
+            </mat-option>
+        </ng-container>
+    </mat-autocomplete>
+</div>

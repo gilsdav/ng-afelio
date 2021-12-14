@@ -1,0 +1,27 @@
+<div class="card-input mb-s" *ngIf="fieldsToDisplay$ | async as fields" [ngClass]="{'-disabled':formControl.disabled}">
+    <input type="checkbox" [checked]="fields.length || (to.hiddenField && model[to.hiddenField])" disabled [name]="id" [id]="id"/>
+    <label [for]="id" class="card-input__label">
+        <div class="card-input__body">
+            <div>
+                <div class="card-input__title">{{ to.label | translate }}</div>
+                <div class="card-input__description">{{ to.description | translate }}</div>
+            </div>
+            <div class="card-input__buttons">
+                <button class="button -ghost card-input__buttons-add" type="button"
+                    *ngIf="!fields.length && (!to.hiddenField || !model[to.hiddenField]) && !formControl.disabled" (click)="openPopin()">{{ 'GENERAL.ADD' | smartTranslate}}</button>
+                <button class="button -ghost -icon-alone-button icon-edit"
+                    type="button" (click)="openPopin()" *ngIf="(fields.length || (to.hiddenField && model[to.hiddenField])) && !formControl.disabled"></button>
+                <button class="button -ghost -icon-alone-button icon-trash"
+                    type="button" *ngIf="(fields.length || (to.hiddenField && model[to.hiddenField])) && !formControl.disabled" (click)="deletePlan()"></button>
+            </div>
+        </div>
+        <div class="card-input__details" *ngFor="let field of fields">
+            <div class="card-input__details-label">{{field.label | smartTranslate}}</div>
+            <div class="my-xs card-input__details-text" *ngIf="field.type === 'text'">{{field['value']}}</div>
+            <ul class="my-xs card-input__details-text" *ngIf="field.type === 'list'">
+                <li *ngFor="let value of field['values']">{{ value | smartTranslate}}</li>
+            </ul>
+        </div>
+    </label>
+    <ng-container #fieldComponent></ng-container>
+</div>

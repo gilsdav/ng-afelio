@@ -1,0 +1,18 @@
+<ng-select
+    class="select"
+    [items]="options$ | async"
+    [multiple]="true"
+    [closeOnSelect]="false"
+    [searchable]="false"
+    bindLabel="label"
+    bindValue="value"
+    [placeholder]="to.placeholder ? (to.placeholder | translate) : '−'"
+    [formControl]="formControl"
+>
+    <ng-template ng-label-tmp let-item="item">
+        {{ item.label | translate }}
+    </ng-template>
+    <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+        {{ item.label | translate }}
+    </ng-template>
+</ng-select>

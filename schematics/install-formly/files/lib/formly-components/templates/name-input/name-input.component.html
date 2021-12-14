@@ -1,0 +1,12 @@
+<div class="textfield" [ngClass]="[to.className, showError ? '-error' : '']">
+    <input
+        class="textfield__field"
+        type="text"
+        [formControl]="formControl"
+        [placeholder]="!formControl.disabled && to.placeholder ? (to.placeholder | translate) : '−'"
+        [attr.minLength]="to.minLength ? to.minLength : null"
+        [attr.maxLength]="to.maxLength ? to.maxLength : 50"
+        (keypress)="checkSpecialCharacters($event, 'name')"
+        (paste)="blockPastSpecialCharracters($event, formControl , 'name')"
+    />
+</div>

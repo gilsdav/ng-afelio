@@ -1,0 +1,9 @@
+<div class="textfield" [ngClass]="{'-error': (showError$ | async)}">
+    <input
+        class="textfield__field"
+        type="email"
+        [formControl]="formControl"
+        [placeholder]="!formControl.disabled && to.placeholder ? (to.placeholder | translate) : '−'"
+        (blur)="inputBlur$.next()"
+    />
+</div>

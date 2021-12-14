@@ -1,0 +1,131 @@
+ <div *ngIf="!field.formControl?.disabled" class="row p-none mb-xs">
+    <div class="col-12 hidden">
+        <label class="form__label" [for]="AddressFormEnum.ADDRESS">
+            {{'ADDRESS.FORMS.LABELS.ADDRESS_AUTOCOMPLETE' | translate}}
+        </label>
+    </div>
+    <div class="col-12">
+        <daenae-address-form 
+            [initializedAddress]="to.initializedAddress"
+            [controlStreet]="addressFormGroup.controls[AddressFormEnum.STREETNAME]"
+            [controlNumber]="addressFormGroup.get(AddressFormEnum.STREETNUMBER)"
+            [controlBoxNumber]="addressFormGroup.get(AddressFormEnum.BOXNUMBER)"
+            [controlPostalCode]="addressFormGroup.get(AddressFormEnum.POSTALCODE)"
+            [controlMunicipality]="addressFormGroup.get(AddressFormEnum.MUNICIPALITY)"
+            [controlFloor]="addressFormGroup.get(AddressFormEnum.FLOOR)"
+            [controlAddressAutoComplete]="addressFormGroup.get('addressAutocomplete')"
+            (showAllFields)="setShouldShowAllAddressFields($event)"
+            (isAddressValidated)="onBlur($event)"
+            [showManual]="!(shouldShowAllAddressFields$ | async) && !to.showAllFields">
+        </daenae-address-form>
+    </div>
+</div>
+
+<ng-container *ngIf="(shouldShowAllAddressFields$ | async) || !!to.showAllFields" [formGroup]="addressFormGroup">
+    <div *ngIf="!formControl?.disabled">
+        <div class="row p-none relative mb-xs">
+            <div class="col-11 col-lg-12">
+                <div class="form__group">
+                    <div class="textfield" [ngClass]="{'-error': hasError(AddressFormEnum.STREETNAME)}">
+                        <input [id]="AddressFormEnum.STREETNAME + '-' + field.id" class="textfield__field" type="text"
+                            [formControlName]="AddressFormEnum.STREETNAME"
+                            [placeholder]=" 'ADDRESS.FORMS.PLACEHOLDERS.STREETNAME' | translate " (blur)="onBlur()"/>
+                        <div *ngIf="hasError(AddressFormEnum.STREETNAME)" class="textfield__error">
+                            {{'CREATEBENEFICIARY.ERRORS.FIELDS_REQUIRED' | translate}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button"
+                *ngIf="!isAddressEmpty() && !field.formControl?.disabled"
+                tabindex="-1"
+                class="form__group-close button -icon-alone remove-address absolute"
+                (click)="clearAddressControls()" data-test="remove-address">
+                <span class="icon icon-close c-red-base f-s"></span>
+            </button>
+        </div>
+        <div class="row p-none mb-xs">
+            <div class="col-11 col-lg-12">
+                <div class="row">
+                    <div class="col-4 pr-none -number">
+                        <div class="textfield" [ngClass]="hasError(AddressFormEnum.STREETNUMBER) ? '-error' : ''">
+                            <input [id]="AddressFormEnum.STREETNUMBER + '-' + field.id" class="textfield__field" type="text"
+                                [formControlName]="AddressFormEnum.STREETNUMBER"
+                                [placeholder]=" 'ADDRESS.FORMS.PLACEHOLDERS.STREETNUMBER' | translate "
+                                (blur)="onBlur()"/>
+                            <div *ngIf="hasError(AddressFormEnum.STREETNUMBER)" class="textfield__error">
+                                {{'CREATEBENEFICIARY.ERRORS.FIELDS_REQUIRED' | translate}}</div>
+                        </div>
+
+                    </div>
+                    <div class="col-4 px-xs -box">
+                        <div class="textfield">
+                            <input [id]="AddressFormEnum.BOXNUMBER + '-' + field.id" class="textfield__field" type="text"
+                                [formControlName]="AddressFormEnum.BOXNUMBER"
+                                [placeholder]=" 'ADDRESS.FORMS.PLACEHOLDERS.BOXNUMBER' | translate " />
+                        </div>
+                    </div>
+                    <div class="col-4 pl-none">
+                        <div class="textfield">
+                            <input [id]="AddressFormEnum.FLOOR + '-' + field.id" class="textfield__field" type="text"
+                                [formControlName]="AddressFormEnum.FLOOR"
+                                [placeholder]=" 'ADDRESS.FORMS.PLACEHOLDERS.FLOOR' | translate " />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-11 col-lg-12">
+                <div class="row">
+                    <div class="col-4 pr-none">
+                        <div class="textfield" [ngClass]="hasError(AddressFormEnum.POSTALCODE) ? '-error' : ''">
+                            <input [id]="AddressFormEnum.POSTALCODE + '-' + field.id" class="textfield__field" type="text"
+                                [formControlName]="AddressFormEnum.POSTALCODE"
+                                [placeholder]=" 'ADDRESS.FORMS.PLACEHOLDERS.POSTALCODE' | translate " (blur)="onBlur()" />
+                            <div *ngIf="hasError(AddressFormEnum.POSTALCODE)" class="textfield__error">
+                                {{'CREATEBENEFICIARY.ERRORS.FIELDS_REQUIRED' | translate}}</div>
+                        </div>
+                    </div>
+                    <div class="col-8 pl-xs">
+                        <div class="textfield" [ngClass]="hasError(AddressFormEnum.MUNICIPALITY) ? '-error' : ''">
+                            <input [id]="AddressFormEnum.MUNICIPALITY + '-' + field.id" class="textfield__field" type="text"
+                                [formControlName]="AddressFormEnum.MUNICIPALITY"
+                                [placeholder]=" 'ADDRESS.FORMS.PLACEHOLDERS.MUNICIPALITY' | translate " (blur)="onBlur()"/>
+                            <div *ngIf="hasError(AddressFormEnum.MUNICIPALITY)" class="textfield__error">
+                                {{'CREATEBENEFICIARY.ERRORS.FIELDS_REQUIRED' | translate}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="formControl?.disabled && addressValue" class="f-m">
+        <div>
+            <span *ngIf="addressValue.streetName" class="pr-s">{{addressValue.streetName}}</span>
+            <span *ngIf="addressValue.houseNumber" class="pr-s"> {{addressValue.houseNumber}}</span>
+            <span *ngIf="addressValue.boxNumber" class="pr-s"> {{'ADDRESS.FORMS.PLACEHOLDERS.BOXNUMBER' | translate }} {{addressValue.boxNumber}}</span>
+            <span *ngIf="addressValue.floor">{{'ADDRESS.FORMS.PLACEHOLDERS.FLOOR' | translate}} {{addressValue.floor}}</span>
+        </div>
+        <div>
+            <span *ngIf="addressValue.postalCode" class="pr-s">{{addressValue.postalCode}}</span>
+            <span *ngIf="addressValue.city">{{addressValue.city}}</span>
+        </div>
+    </div>
+</ng-container>
+<ng-container *ngIf="to.showValidated && formControl.value" >
+    <div *ngIf="formControl.value.isValidated" class="flex flex-middle pt-xs">
+        <span class="icon icon-check mr-xxs f-xl c-green-base"></span>
+        <span>
+            {{'ADDRESS.FORMS.MESSAGES.VALID_ADDRESS' | translate }}
+            <span *ngIf="formControl.value.nis9Title">&nbsp;- {{ formControl.value.nis9Title}} </span>
+        </span>
+    </div>
+    <div *ngIf="!formControl.value.isValidated" class="error flex flex-middle pt-xs">
+        <span class="pl-s">
+            {{'ADDRESS.FORMS.MESSAGES.INVALID_ADDRESS' | translate }}
+        </span>
+        <span class="icon icon-info c-red-base f-xl ml-xxs" [matTooltip]="'ADDRESS.FORMS.MESSAGES.TOOLTIP_INVALID_ADDRESS' | translate"></span>
+    </div>
+</ng-container>

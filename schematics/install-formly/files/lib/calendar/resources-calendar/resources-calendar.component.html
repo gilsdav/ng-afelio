@@ -1,0 +1,26 @@
+<div class="w-100 flex flex-between flex-middle">
+    <div class="flex flex-between">
+        <button class="button -bg-hover -grey -icon-alone-button icon-chevron-left" type="button" (click)="previous()"></button>
+        <button class="button -bg-hover -grey" type="button" (click)="jumpToToday()">{{ labels.today | translate }}</button>
+        <button class="button -bg-hover -grey -icon-alone-button icon-chevron-right" type="button" (click)="next()"></button>
+    </div>
+    <div>
+        <label class="time-label button -bg-hover -grey px-xs f-m ">
+            <time *ngIf="currentDate$ | async as currentDate">
+                    {{currentDay$ | async}}
+            </time>
+            <span class="icon-chevronAlt-bottom"></span>
+            <input class="invisible" type="text" #datepickerControl bsDatepicker [bsConfig]="bsConfig"
+                [formControl]="datepickerForm" />
+        </label>
+    </div>
+    <div *ngFor="let action of buttons">
+        <button (click)="buttonClick.emit(action.callbackKey)" class="button -bg-hover -grey"
+            type="button" [ngClass]="action.classes">
+            <span *ngIf="action.icon" class="icon" [ngClass]="action.icon"></span>
+                {{ action.label | translate }}
+        </button>
+    </div>
+</div>
+<full-calendar [options]="calendarOptions"></full-calendar>
+

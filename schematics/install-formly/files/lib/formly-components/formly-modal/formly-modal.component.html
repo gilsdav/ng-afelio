@@ -1,0 +1,45 @@
+<div class="modal" [ngClass]="classes">
+    <div class="modal__header">
+        <h3 class="modal__title">
+            {{ data.labels.title | translate }}
+        </h3>
+    </div>
+    <div class="modal__dropdown dropdown -right" *ngIf="data?.actions">
+        <button class="button -primary -icon-alone">
+            <span class="icon icon-more"></span>
+        </button>
+        <div class="dropdown__list max-content">
+            <div *ngFor="let action of data.actions">
+                <button class="button" [ngClass]="[action?.icon ? '-icon' : '', action?.className ? action.className : '']" type="button" (click)="actionClicked(action.key)">
+                    <span *ngIf="action?.icon" class="icon" [ngClass]="action.icon"></span>
+                    {{action.label | translate}}
+                </button>
+            </div>
+        </div>
+    </div>
+    <button class="modal__close button -icon-alone" (click)="closeDialog()">
+        <span class="icon icon-close"></span>
+    </button>
+    <div class="modal__body">
+        <form [formGroup]="data.formConfig.formGroup">
+            <formly-form
+                [fields]="data.formConfig.formlyConfig"
+                [form]="data.formConfig.formGroup"
+                [model]="data.formConfig.model"
+                [className]="'formly -center -calendar'"
+                [options]="{formState: data.formConfig.formState ? data.formConfig.formState : {}}"
+            >
+            </formly-form>
+        </form>
+    </div>
+    <div class="modal__footer">
+        <div class="modal__buttons">
+            <button type="button" class="button -primary" (click)="submit()">
+                {{ data.labels.submit| translate }}
+            </button>
+            <button type="button" class="button -ternary" (click)="closeDialog()">
+                {{ data.labels.cancel | translate }}
+            </button>
+        </div>
+    </div>
+</div>

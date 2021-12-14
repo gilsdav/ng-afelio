@@ -1,0 +1,15 @@
+<div class="list-wrapper">
+    <div class="list-wrapper__label">
+        <span class="f-m">{{ to.label | translate }}</span>
+        <ng-container *ngIf="to.tooltip">
+            {{ to.tooltip.title  | translate }}
+            {{ to.tooltip.message  | translate }}
+        </ng-container>
+    </div>
+    <div class="list-wrapper__field">
+        <ng-container #fieldComponent></ng-container>
+        <div *ngIf="showError" class="error">
+            <formly-validation-message [field]="field"></formly-validation-message>
+        </div>
+    </div>
+</div>

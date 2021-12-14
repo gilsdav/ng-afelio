@@ -1,0 +1,15 @@
+<div class="select" [ngClass]="{'-error': showError,'-empty': formControl.value === null}">
+    <select class="select__field"
+        [compareWith]="compareWith"
+        [ngClass]="{'-placeholder': !to.disabled && formControl.value === null}"
+        [name]="to.name" [id]="key"
+        [formControl]="formControl"
+        [required]="to.required">
+        <option class="test_placeholder" *ngIf="to.placeholder && !formControl.disabled" [ngValue]="null" disabled hidden>
+        {{ to.placeholder | translate }}
+        </option>
+        <ng-container *ngFor="let option of options$ | async">
+            <option [disabled]="option.disabled || to.disabled ? 'disabled' : null" [ngValue]="option.value" [innerHTML]="option.label | translate"></option>
+        </ng-container>
+    </select>
+</div>

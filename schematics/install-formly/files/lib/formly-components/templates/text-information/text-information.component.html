@@ -1,0 +1,7 @@
+<div class="simple-text">
+    <div class="f-m"
+        [ngClass]="{'text-info-body': !to.label, 'scrollable-error': showError$ | async}"
+        data-test="testInformation"
+        [innerHTML]="to.text | smartTranslate : to.translateArguments">
+    </div>
+</div>

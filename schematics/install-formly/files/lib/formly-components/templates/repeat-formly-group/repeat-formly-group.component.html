@@ -1,0 +1,46 @@
+<ng-container *ngIf="(minMax$ | async) as minMax">
+    <div class="f-body-bold f-m mb-m mt-xl label" *ngIf="to.firstRepeatLabel">{{ to.firstRepeatLabel  | translate }}</div>
+    <div class="c-grey04 mb-m subtitle" *ngIf="to.firstRepeatSubLabel">{{ to.firstRepeatSubLabel  | translate }}</div>
+    <div *ngFor="let field of field.fieldGroup; let i = index; let first = first " class="card-host">
+        <formly-field #fieldRepeated [field]="fillIndex(field, i)"></formly-field>
+
+        <button *ngIf="to.canDuplicate && canAddGroup(minMax) && !field.formControl.disabled"
+            type="button"
+            class="button -ghost -icon-alone icon-duplicate duplicate-button"
+            [ngClass]="{'card-button' : to.cardButton}"
+            [matTooltip]="to.duplicateText| smartTranslate"
+            (click)="duplicateItem(i, minMax)">
+        </button>
+
+        <div
+            *ngIf="to.showRemoveButton && (minMax.min ? (i + 1) > minMax.min : true) && !field.formControl.disabled"
+            [matTooltip]="(!field.templateOptions?.buttonTooltip) ? '' : field.templateOptions.buttonTooltip | translate" class="remove-tooltip">
+            <button
+                type="button"
+                class="button -icon-alone remove-button"
+                [ngClass]="{'card-button' : to.cardButton, '-disabled': !!field.templateOptions.unremovable}" data-test="removeButton"
+                (click)="deleteItem(i, minMax)">
+                <span class="icon icon-close c-red-base f-s"></span>
+            </button>
+        </div>
+
+        <hr *ngIf="to.bottomBar" class="repeater-separator">
+    </div>
+    <div *ngIf="!field.formControl.disabled && canAddGroup(minMax) && to.showAddButton" [ngClass]="{'add-button-wrapper': to.cardWrapper}">
+        <div class="col p-none mt-xxs">
+            <div class="text-center pb-m" *ngIf="to.noElementText && field.fieldGroup.length === 0">
+                <span class="c-grey04">{{ to.noElementText | translate }}</span>
+            </div>
+            <button type="button"
+                [ngClass]="(to.addButtonNoElementClasses && field.fieldGroup.length === 0) ? to.addButtonNoElementClasses : 'link -primary f-s -pre add-button'"
+                data-test="addButton"
+                (click)="addItem(minMax)" >
+                <span class="link__icon icon-plus"></span>
+                {{ to.addText | smartTranslate }}
+            </button>
+        </div>
+    </div>
+    <div *ngIf="field.formControl.disabled && to.emptyDisableMessage && field.fieldGroup.length === 0">
+        <p class="f-s mt-none mb-xs">  {{ to.emptyDisableMessage | smartTranslate}}</p>
+    </div>
+</ng-container>
