@@ -1,9 +1,9 @@
 import { strings } from '@angular-devkit/core';
 import { WorkspaceDefinition } from '@angular-devkit/core/src/workspace';
-import { Rule, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, schematic, template, url } from '@angular-devkit/schematics';
+import { apply, branchAndMerge, chain, MergeStrategy, mergeWith, move, Rule, schematic, SchematicsException, template, Tree, url } from '@angular-devkit/schematics';
 import { updateWorkspace } from '@schematics/angular/utility/workspace';
-
 import { Schema as AddOptions } from './schema';
+
 
 // function installNgxBuildPlus(mustApplyInstall: boolean): Rule {
 //     return (host: Tree, context: SchematicContext) => {
@@ -86,7 +86,7 @@ function updateScripts(): Rule {
     };
 }
 
-export default function(options: AddOptions): Rule {
+export default function (options: AddOptions): Rule {
     return async (host: Tree) => {
         // const workspace = await getWorkspace(host);
         // const project = workspace.projects.get(options.project);
@@ -97,8 +97,8 @@ export default function(options: AddOptions): Rule {
 
         const templateSource = apply(url('./files'), [
             template({
-              ...strings,
-              ...options,
+                ...strings,
+                ...options,
             }),
             move('/'),
         ]);
@@ -112,8 +112,8 @@ export default function(options: AddOptions): Rule {
         return chain([
             branchAndMerge(
                 chain([
-                    mergeWith(templateSource),
                     mergeWith(templateConfigSource),
+                    mergeWith(templateSource, MergeStrategy.Overwrite),
                     // installNgxBuildPlus(!uiKitToInstall),
                     updateConfig(),
                     updateScripts(),

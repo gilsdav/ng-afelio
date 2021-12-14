@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////
 //
-//              1. Grid
+//              Grid
 //
 ////////////////////////////////////////////////////
 
@@ -63,7 +63,7 @@
 .col-lg-auto, .col-xl-1, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl,
 .col-xl-auto
 {
-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 @if $external-gutters and $external-gutters != 0
@@ -91,9 +91,10 @@ box-sizing: border-box;
 
 ////////////////////////////////////////////////////
 //
-//              2. Flex
+//              Flex
 //
 ////////////////////////////////////////////////////
+
 $root: ".flex";
 .flex
 {
@@ -207,10 +208,3 @@ $root: ".flex";
   #{$root}-2{ flex: 2; }
   #{$root}-3{ flex: 3; }
   #{$root}-auto{ flex: 1 0 auto; }
-
-
-////////////////////////////////////////////////////
-//
-//              3. Responsive
-//
-////////////////////////////////////////////////////
