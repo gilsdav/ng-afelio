@@ -57,6 +57,14 @@
             "description": "Generate OIDC system.",
             "schema": "./schematics/install-oidc/schema.json"
         },
+        "install-formly": {
+            "aliases": [
+                "i-formly"
+            ],
+            "factory": "./schematics/install-formly",
+            "description": "Generate formly librairy.",
+            "schema": "./schematics/install-formly/schema.json"
+        },
         "module": {
             "aliases": [
                 "m"

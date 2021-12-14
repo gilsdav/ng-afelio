@@ -51,6 +51,7 @@ program
   .alias('n')
   .description('Generate new Angular project')
   .option('--ui-kit <uiKit>', 'Ui-kit type (' + Object.values(uiKitTypes).slice(1).join(', ') + ').', uiKitTypes.DEFAULT)
+  .option('--formly <uiKit>', 'Install formly base into current project')
   .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--commit=false --directory=."')
   .action((name, options) => {
     createNewProject(name, options.uiKit || false, options.ng).then(() => {
