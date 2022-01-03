@@ -248,6 +248,9 @@ function buildStyleFromUIKit(needInit = true) {
             checkAssetsConfiguration(currentConfig);
             checkStyleShortcut(currentConfig);
         }
+        console.info(`${colors.green('STYLE BUILT')} All styles was build successfuly.`);
+    }, () => {
+        console.info(`${colors.red('STYLE BUILT')} Some styles get errors on build.`);
     });
   }
   
