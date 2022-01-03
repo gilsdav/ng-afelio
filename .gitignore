@@ -76,6 +76,7 @@ package-lock.json
 
 node_modules
 schematics/**/*.js
+schematics/**/*.js.map
 schematics/**/*.d.ts
 builders/**/*.js
 builders/**/*.d.ts
