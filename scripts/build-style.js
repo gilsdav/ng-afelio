@@ -17,6 +17,7 @@ const configPath = 'ng-afelio.json';
 
 let outputDirectory = '../../styles';
 let inputDirectory = './projects/ui-kit';
+let inputPrefix = './src/';
 let angularConfigPath = '../../angular.json';
 
 function enforceDirectoryExistance(currentPath) {
@@ -39,13 +40,15 @@ function writeConfig(jsonContent) {
 }
 
 function initFolder(config) {
-    inputDirectory = config.style.baseInputDirectory || inputDirectory;
+    inputDirectory = typeof config.style.baseInputDirectory !== undefined ? config.style.baseInputDirectory : inputDirectory;
     process.chdir(inputDirectory);
 
-    outputDirectory = config.style.baseOutputDirectory || outputDirectory;
+    outputDirectory = typeof config.style.baseOutputDirectory !== undefined ? config.style.baseOutputDirectory : outputDirectory;
     if (!fs.existsSync(outputDirectory)){
         fs.mkdirSync(outputDirectory);
     }
+
+    inputPrefix = typeof config.style.inputPrefix !== undefined ? config.style.inputPrefix : inputPrefix;
 
     // Angular config
     const countSlashes = inputDirectory.replace('./', '').split('/').reduce((result) => {
@@ -54,13 +57,27 @@ function initFolder(config) {
     angularConfigPath = `${countSlashes}angular.json`;
 }
 
-function buildUtils(config, bundlerBasePath) {
+async function asyncForEach(array, callback) {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array);
+    }
+}
+
+async function buildUtils(config, bundlerBasePath) {
     const bundler = new Bundler(undefined, bundlerBasePath);
-    const enabled = (config && config.style && config.style.styleUtils && config.style.styleUtils.enable);
-    if (enabled) {
-        const input = (config && config.style && config.style.styleUtils && config.style.styleUtils.input) || 'styles.scss';
-        const output = (config && config.style && config.style.styleUtils && config.style.styleUtils.output) || 'style-utils.scss';
-        return bundler.bundle(path.join('./src/', input)).then(result => {
+
+    if (!config.style.styleUtils) {
+        return false;
+    }
+
+    const isNewArrayVersion = Array.isArray(config.style.styleUtils);
+
+    function bundling(input, output) {
+        return bundler.bundle(path.join(inputPrefix, input)).then(result => {
+            if (!result.found) {
+                console.error(colors.red(`BUILD ERROR file "${input}" not found`));
+                return Promise.resolve(false);
+            }
             const toWrite = decomment.text(result.bundledContent/*, {safe: true}*/);
             const options = {
                 css: toWrite,
@@ -74,7 +91,7 @@ function buildUtils(config, bundlerBasePath) {
                     fs.writeFile(outputPath, extractedCss, function(err){
                         if(!err){
                             console.info(`${colors.green('BUILD style utils')} was saved in "${outputPath}"`);
-                            resolve();
+                            resolve(true);
                         } else {
                             console.error(colors.red(`WRITE FILE ERROR ${output}`), err);
                             error(err);
@@ -85,27 +102,53 @@ function buildUtils(config, bundlerBasePath) {
                 console.error(colors.red(`BUILD ERROR ${output}`), err);
             });
         });
-    } else {
-        return Promise.resolve(false);
     }
+
+    if (isNewArrayVersion) {
+        // New Version
+        const enabled = config.style.styleUtils.length > 0;
+        if (enabled) {
+            let allGenerated = true;
+            await asyncForEach(config.style.styleUtils, async styleUtilConfig => {
+                allGenerated = allGenerated && await bundling(styleUtilConfig.input, styleUtilConfig.output);
+            });
+            return allGenerated;
+        } else {
+            return false;
+        }
+
+    } else {
+        // Old Version
+        const enabled = config.style.styleUtils.enable;
+        if (enabled) {
+            const input = (config && config.style && config.style.styleUtils && config.style.styleUtils.input) || 'styles.scss';
+            const output = (config && config.style && config.style.styleUtils && config.style.styleUtils.output) || 'style-utils.scss';
+            return await bundling(input, output);
+        } else {
+            return false;
+        }
+    }
+
 }
 
 function buildStyleFiles(config, bundlerBasePath) {
+    const bundler = new Bundler(undefined, bundlerBasePath);
+
     const files = (config && config.style && config.style.files) || [{ "input": "styles.scss", "output": "main.scss" }];
 
-    return files.map(file => {
-        const input = file.input;
-        const output = file.output || file.input;
-        const isGlobal = file.global;
-        const bundler = new Bundler(undefined, bundlerBasePath);
+    function bundling(input, output, isGlobal) {
+        return bundler.bundle(path.join(inputPrefix, input)).then(async result => {
+            if (!result.found) {
+                console.error(colors.red(`BUILD ERROR file "${input}" not found`));
+                return Promise.resolve(false);
+            }
 
-        return bundler.bundle(path.join('./src/', input)).then(async result => {
             const toWrite = decomment.text(result.bundledContent/*, {safe: true}*/);
             const outputPath = path.join(outputDirectory, output);
             enforceDirectoryExistance(outputPath);
 
             // const cwd = process.cwd();
-            // process.chdir(path.dirname(path.join(process.cwd(), './src/', input)));
+            // process.chdir(path.dirname(path.join(process.cwd(), inputPrefix, input)));
 
             await new Promise((resolve, error) => {
                 sass.render({
@@ -141,9 +184,15 @@ function buildStyleFiles(config, bundlerBasePath) {
                     console.info(`${colors.green('ADDED')} "${toAddToStyleScss}" added into "/src/styles.scss"`);
                 }
             }
-
         });
-    });
+    }
+
+    return asyncForEach(files, async file => {
+        const input = file.input;
+        const output = file.output || file.input;
+        const isGlobal = file.global;
+        await bundling(input, output, isGlobal);
+    })
 }
 
 function checkAssetsConfiguration(config) {
@@ -191,7 +240,7 @@ function buildStyleFromUIKit() {
 
     return Promise.all([
         buildUtils(config, currentPath),
-        ...buildStyleFiles(config, currentPath)
+        buildStyleFiles(config, currentPath)
     ]).then(() => {
         checkAssetsConfiguration(config);
         checkStyleShortcut(config);

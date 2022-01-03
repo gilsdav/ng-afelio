@@ -1,13 +1,16 @@
 {
     "style": {
-        "styleUtils": {
-            "enable": true,
-            "input": "styles.scss",
-            "output": "style-utils.scss"
-        },
+        "styleUtils": [
+            { "input": "styles.scss", "output": "style-utils.scss" }
+        ],
         "files": [
             { "input": "styles.scss", "output": "main.scss", "global": true }
-        ]
+        ],
+        "baseInputDirectory": "./projects/ui-kit",
+        "baseOutputDirectory": "../../styles",
+        "inputPrefix": "./src/",
+        "addUiKitAssets": true,
+        "addAngularStyleShortcut": true
     },
     "i18n": {
         "mainFile": "fr.json"
