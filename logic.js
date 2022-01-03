@@ -4,6 +4,7 @@ const colors = require('colors');
 const fs = require('fs');
 const fse = require('fs-extra');
 const { join } = require('path');
+const { watchTree } = require('watch');
 
 const cli = require('@angular/cli');
 
@@ -161,10 +162,39 @@ const build = async (environment, ssr, baseHref, ngOptionsString) => {
     }
 }
 
-const buildStyle = async () => {
+const buildStyle = async (watchPath) => {
     try {
-        const buildStyleFromUIKit = require('./scripts/build-style');
-        return await buildStyleFromUIKit();
+        const { buildStyleFromUIKit } = require('./scripts/build-style');
+        if (watchPath) {
+            await new Promise(function () {
+                let first = true;
+                let locked = false;
+                watchTree(
+                    join(currentPath, watchPath),
+                    {
+                        ignoreDotFiles: true,
+                        ignoreNotPermitted: true,
+                        ignoreUnreadableDir: true,
+                        filter(path) { return !path.includes('.') || path.endsWith('.scss') },
+                        ignoreDirectoryPattern: /node_modules/
+                    },
+                    async function() {
+                        if (!locked) {
+                            locked = true;
+                            try {
+                                await buildStyleFromUIKit(first);
+                                first = false;
+                            } catch(e){
+                                console.error(e);
+                            }
+                            locked = false;
+                        }
+                    }
+                );
+            });
+        } else {
+            await buildStyleFromUIKit();
+        }
     } catch (e) {
         console.error(e);
         console.warn(colors.red('You must be in base folder of the application and have a "ui-kit" project to use this command.'));

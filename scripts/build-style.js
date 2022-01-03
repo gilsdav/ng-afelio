@@ -231,20 +231,26 @@ function checkStyleShortcut(config) {
     }
 }
 
-function buildStyleFromUIKit() {
-    const config = readConfig();
-
-    initFolder(config);
+let currentConfig;
+function buildStyleFromUIKit(needInit = true) {
+    if (needInit) {
+        currentConfig = readConfig();
+        initFolder(currentConfig);
+    }
 
     const currentPath = process.cwd();
 
     return Promise.all([
-        buildUtils(config, currentPath),
-        buildStyleFiles(config, currentPath)
+        buildUtils(currentConfig, currentPath),
+        buildStyleFiles(currentConfig, currentPath)
     ]).then(() => {
-        checkAssetsConfiguration(config);
-        checkStyleShortcut(config);
+        if (needInit) {
+            checkAssetsConfiguration(currentConfig);
+            checkStyleShortcut(currentConfig);
+        }
     });
   }
   
-module.exports = buildStyleFromUIKit;
+module.exports = {
+    buildStyleFromUIKit
+};
