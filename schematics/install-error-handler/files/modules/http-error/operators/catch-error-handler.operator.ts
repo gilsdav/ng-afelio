@@ -3,7 +3,7 @@ import { catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { ObjectHelper } from '../../../helpers/object.helper';
 
-export const ERROR_MESSAGE_CHANNEL = `__duf_httpError__${ObjectHelper.generateUUIDv4()}`;
+export const ERROR_MESSAGE_CHANNEL = `__httpError__${ObjectHelper.generateUUIDv4()}`;
 
 const messageChannel = new BroadcastChannel(ERROR_MESSAGE_CHANNEL);
 type CustomHandlerType = (error: HttpErrorResponse) => boolean;
