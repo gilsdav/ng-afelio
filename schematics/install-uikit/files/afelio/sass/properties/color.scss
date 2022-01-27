@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////
 //
-//              1. primary
+//              Primary
 //
 ////////////////////////////////////////////////////
 
@@ -22,12 +22,10 @@ $primary: ('primary01', $primary01),
 
 ////////////////////////////////////////////////////
 //
-//              2. grey
+//              Grey
 //
 ////////////////////////////////////////////////////
 
-$transparent: transparent;
-$current: currentColor;
 $grey00: #fff;
 $grey01: #EFEFEF;
 $grey02: #BDC0C1;
@@ -50,20 +48,23 @@ $grey:('grey00', $grey00),
 
 ////////////////////////////////////////////////////
 //
-//              3. accent
+//              Accent
 //
 ////////////////////////////////////////////////////
 
 $accent01: #D91E15;
 
-$accent: ('accent01', $accent01),
-         ('accent02', $accent01);
+$accent:  ('accent01', $accent01),
+          ('accent02', $accent01);
 
 ////////////////////////////////////////////////////
 //
-//              5. Utility
+//              Utility
 //
 ////////////////////////////////////////////////////
+
+$transparent: transparent;
+$current: currentColor;
 
 $palettes: join($primary, join($grey, $accent));
 

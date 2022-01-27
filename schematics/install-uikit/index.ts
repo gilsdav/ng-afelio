@@ -61,6 +61,7 @@ function updateScripts(): Rule {
                 const jsonContent = JSON.parse(sourceText);
                 jsonContent.scripts['start'] = 'ng-afelio start';
                 jsonContent.scripts['style'] = 'ng-afelio style';
+                jsonContent.scripts['style-watch'] = 'ng-afelio style --watch projects/ui-kit';
                 host.overwrite(packageFile, JSON.stringify(jsonContent, null, 2));
             }
         }

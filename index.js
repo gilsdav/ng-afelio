@@ -150,8 +150,9 @@ program
 program
   .command('style')
   .description('Build style from UI Kit')
-  .action(() => {
-    buildStyle().then(() => {
+  .option('-w, --watch <watch>', 'Folder path to watch. Example: "projects/ui-kit"')
+  .action((options) => {
+    buildStyle(options.watch).then(() => {
       process.exit();
     });
   });
