@@ -24,14 +24,15 @@ $f-icons: 'icons';
 //
 ////////////////////////////////////////////////////
 
-@include font-utility('xxs',  $font-xxs);
-@include font-utility('xs',   $font-xs);
-@include font-utility('s',    $font-s);
-@include font-utility('m',    $font-m);
-@include font-utility('l',    $font-l);
-@include font-utility('xl',   $font-xl);
-@include font-utility('xxl',  $font-xxl);
+@each $size, $qty in $all-font-size
+{
+  @include font-utility(#{$size}, $qty);
+}
 
+@each $size, $qty in $all-grid-size
+{
+  @include line-height-size(#{$size}, $qty);
+}
 
 ////////////////////////////////////////////////////
 //
@@ -86,7 +87,6 @@ $f-icons: 'icons';
 .underline{ text-decoration: underline; }
 .overline{ text-decoration: overline; }
 .strikethrough{ text-decoration: line-through; }
-
 
 ////////////////////////////////////////////////////
 //

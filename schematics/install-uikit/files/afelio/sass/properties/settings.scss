@@ -43,6 +43,15 @@ $font-l:    18px / $font-size-base;
 $font-xl:   20px / $font-size-base;
 $font-xxl:  35px / $font-size-base;
 
+$all-font-size:
+    ('xxs', $font-xxs),
+    ('xs', $font-xs),
+    ('s', $font-s),
+    ('m', $font-m),
+    ('l', $font-l),
+    ('xl', $font-xl),
+    ('xxl', $font-xxl);
+
 ////////////////////////////////////////////////////
 //
 //              Grid
@@ -113,6 +122,14 @@ $grid-l:    24px / $grid-base;
 $grid-xl:   32px / $grid-base;
 $grid-xxl:  64px / $grid-base;
 
+$all-grid-size:
+    ('xxs', $grid-xxs),
+    ('xs', $grid-xs),
+    ('s', $grid-s),
+    ('m', $grid-m),
+    ('l', $grid-l),
+    ('xl', $grid-xl),
+    ('xxl', $grid-xxl);
 //
 //  Responsive steps
 //  Steps defined in the responsive utility
@@ -161,6 +178,7 @@ $box-shadow-color: transparentize($grey08, .8);
 //  Theses ratio are used to compute the border sizes and radius based on the border-base
 //  @see https://www.dropbox.com/s/m3707qgpebnl91e/css-grid-ratio.xlsx?dl=0
 //
+$border-none:  0;
 $border-xxs:  .5;
 $border-xs:   .75;
 $border-s:    .875;
@@ -169,3 +187,13 @@ $border-l:    2;
 $border-xl:   3;
 $border-xxl:  5;
 $border-xxxl: 6;
+
+$all-border-size:
+    ('none', $border-none),
+    ('xxs', $border-xxs),
+    ('xs', $border-xs),
+    ('s', $border-s),
+    ('m', $border-m),
+    ('l', $border-l),
+    ('xl', $border-xl),
+    ('xxl', $border-xxl);

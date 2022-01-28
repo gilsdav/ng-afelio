@@ -19,26 +19,6 @@ h3 {
     font-size: 20px;
     @extend .my-none;
     @extend .c-primary05;
-
-    &.-header {
-        @extend .mx-none;
-        @extend .mt-none;
-        @extend .mb-l;
-        padding-top: compute-grid($grid-xl + $grid-xs + $grid-xxs/2); // 42px
-        @extend .pb-xs;
-
-        border-bottom: 1px solid $grey03;
-
-        @extend .f-regular;
-
-        &.-no-mb {
-            @extend .mb-none;
-        }
-
-        &.-no-pt {
-            @extend .pt-none;
-        }
-    }
 }
 
 h4 {
