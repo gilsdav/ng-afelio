@@ -1,0 +1,25 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "SchematicsNgAfelioDesignSystem",
+    "title": "ng-afelio Generate Design sytem library",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "The name of the library.",
+            "pattern": "^(?:@[a-zA-Z0-9-*~][a-zA-Z0-9-*._~]*/)?[a-zA-Z0-9-~][a-zA-Z0-9-._~]*$",
+            "$default": {
+                "$source": "argv",
+                "index": 0
+            },
+            "x-prompt": "What name would you like to use for the design-system library?"
+        },
+        "prefix": {
+            "type": "string",
+            "format": "html-selector",
+            "description": "A prefix to apply to generated selectors.",
+            "default": "ds",
+            "alias": "p"
+        }
+    }
+}

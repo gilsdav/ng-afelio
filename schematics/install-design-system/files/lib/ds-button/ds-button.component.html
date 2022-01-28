@@ -1,0 +1,11 @@
+<button
+  class="button"
+  type="button"
+  [ngClass]="classes"
+  (click)="buttonClicked()"
+  >
+  <span *ngIf="!!label" class="button__label">
+    {{ label.label| translate: label.param }}
+  </span>
+  <span *ngIf="!!icon" class="button__icon" [ngClass]="iconClass"></span>
+</button>

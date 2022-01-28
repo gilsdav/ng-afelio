@@ -41,6 +41,14 @@
             "description": "Add UI Kit.",
             "schema": "./schematics/install-uikit/schema.json"
         },
+        "install-design-system": {
+            "aliases": [
+                "i-ds"
+            ],
+            "factory": "./schematics/install-design-system",
+            "description": "Add design system library.",
+            "schema": "./schematics/install-design-system/schema.json"
+        },
         "install-docker": {
             "aliases": [
                 "i-docker"
