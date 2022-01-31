@@ -20,7 +20,7 @@ let inputDirectory = './projects/ui-kit';
 let inputPrefix = './src/';
 let angularConfigPath = '../../angular.json';
 
-function reorganiseScss(scssSrc) {
+function reorganiseScssUse(scssSrc) {
     let toReplace = [];
     let result = '';
 
@@ -36,6 +36,15 @@ function reorganiseScss(scssSrc) {
     })
 
     return result + scssSrc;
+}
+
+function logSameLine(textToLog, isEnd) {
+    process.stdout.clearLine(0);
+    process.stdout.cursorTo(0);
+    process.stdout.write(textToLog);
+    if (isEnd) {
+        process.stdout.write("\n");
+    }
 }
 
 function enforceDirectoryExistance(currentPath) {
@@ -155,14 +164,18 @@ function buildStyleFiles(config, bundlerBasePath) {
     const files = (config && config.style && config.style.files) || [{ "input": "styles.scss", "output": "main.scss" }];
 
     function bundling(input, output, isGlobal) {
+        logSameLine(`${colors.blue(`PROCESS bundling...`)} "${input}"`);
         return bundler.bundle(path.join(inputPrefix, input)).then(async result => {
             if (!result.found) {
                 console.error(colors.red(`BUILD ERROR file "${input}" not found`));
                 return Promise.resolve(false);
             }
+            logSameLine(`${colors.blue(`PROCESS uncommenting...`)} "${input}"`);
 
             let toWrite = decomment.text(result.bundledContent/*, {safe: true}*/);
-            toWrite = reorganiseScss(toWrite);
+            logSameLine(`${colors.blue(`PROCESS reorganising...`)} "${input}"`);
+            toWrite = reorganiseScssUse(toWrite);
+            logSameLine(`${colors.blue(`PROCESS compiling...`)} "${input}"`, true);
             const outputPath = path.join(outputDirectory, output);
             enforceDirectoryExistance(outputPath);
 

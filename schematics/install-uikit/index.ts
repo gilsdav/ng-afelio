@@ -6,10 +6,16 @@ import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@s
 import { Schema as UIKitOptions } from './schema';
 
 function installDependencies(options: UIKitOptions): Rule {
-    const isAfelioUikit = !!options && options.type === 'afelio';
+    const needBootstrap = !!options && options.type === 'bootstrap';
     return (host: Tree, context: SchematicContext) => {
         const toInstall: NodeDependency[] = [];
-        if (!isAfelioUikit) {
+        if (needBootstrap) {
+            toInstall.push({
+                type: NodeDependencyType.Default,
+                name: 'bootstrap',
+                version: '4.1.3',
+                overwrite: true,
+            });
             toInstall.push({
                 type: NodeDependencyType.Default,
                 name: 'font-awesome',
@@ -17,7 +23,6 @@ function installDependencies(options: UIKitOptions): Rule {
                 overwrite: true,
             });
         }
-
         toInstall.push({
             type: NodeDependencyType.Default,
             name: 'ngx-highlight-js',
