@@ -1,4 +1,6 @@
- $root: ".textfield";
+@use 'sass:math';
+
+$root: ".textfield";
 
 #{$root}
 {
@@ -38,8 +40,8 @@
         @extend .m-none;
         @extend .mb-xs;
 
-        padding-top: compute-grid($grid-xs + $grid-xxs/2);
-        padding-bottom: compute-grid($grid-xs + $grid-xxs/2);
+        padding-top: compute-grid($grid-xs + math.div($grid-xxs, 2));
+        padding-bottom: compute-grid($grid-xs + math.div($grid-xxs, 2));
         @extend .px-xs;
 
         @extend .bw-none;

@@ -5,7 +5,7 @@ const decomment = require('decomment');
 const colors = require('colors');
 
 const sass = require('sass');
-const magicImporter = require('node-sass-magic-importer');
+// const magicImporter = require('node-sass-magic-importer');
 
 const cssNodeExtract = require('css-node-extract');
 const postcssScssSyntax = require('postcss-scss');
@@ -20,15 +20,33 @@ let inputDirectory = './projects/ui-kit';
 let inputPrefix = './src/';
 let angularConfigPath = '../../angular.json';
 
+function reorganiseScss(scssSrc) {
+    let toReplace = [];
+    let result = '';
+
+    scssSrc = scssSrc.replace(/@use .+;/gi, replacer => {
+        if (!toReplace.includes(replacer)) {
+            toReplace.push(replacer)
+        }
+        return '';
+    });
+
+    toReplace.forEach(toAdd => {
+        result += `${toAdd} `;
+    })
+
+    return result + scssSrc;
+}
+
 function enforceDirectoryExistance(currentPath) {
     const directory = path.dirname(currentPath);
-    if (!fs.existsSync(directory)){
+    if (!fs.existsSync(directory)) {
         fs.mkdirSync(directory);
     }
 }
 
 function readConfig() {
-    if(!fs.existsSync(configPath)) {
+    if (!fs.existsSync(configPath)) {
         writeConfig(baseConfig);
     }
     const fileContent = fs.readFileSync(configPath, 'utf8');
@@ -44,7 +62,7 @@ function initFolder(config) {
     process.chdir(inputDirectory);
 
     outputDirectory = typeof config.style.baseOutputDirectory !== undefined ? config.style.baseOutputDirectory : outputDirectory;
-    if (!fs.existsSync(outputDirectory)){
+    if (!fs.existsSync(outputDirectory)) {
         fs.mkdirSync(outputDirectory);
     }
 
@@ -59,7 +77,7 @@ function initFolder(config) {
 
 async function asyncForEach(array, callback) {
     for (let index = 0; index < array.length; index++) {
-      await callback(array[index], index, array);
+        await callback(array[index], index, array);
     }
 }
 
@@ -88,8 +106,8 @@ async function buildUtils(config, bundlerBasePath) {
                 const outputPath = path.join(outputDirectory, output);
                 enforceDirectoryExistance(outputPath);
                 return new Promise((resolve, error) => {
-                    fs.writeFile(outputPath, extractedCss, function(err){
-                        if(!err){
+                    fs.writeFile(outputPath, extractedCss, function (err) {
+                        if (!err) {
                             console.info(`${colors.green('BUILD style utils')} was saved in "${outputPath}"`);
                             resolve(true);
                         } else {
@@ -143,7 +161,8 @@ function buildStyleFiles(config, bundlerBasePath) {
                 return Promise.resolve(false);
             }
 
-            const toWrite = decomment.text(result.bundledContent/*, {safe: true}*/);
+            let toWrite = decomment.text(result.bundledContent/*, {safe: true}*/);
+            toWrite = reorganiseScss(toWrite);
             const outputPath = path.join(outputDirectory, output);
             enforceDirectoryExistance(outputPath);
 
@@ -151,29 +170,23 @@ function buildStyleFiles(config, bundlerBasePath) {
             // process.chdir(path.dirname(path.join(process.cwd(), inputPrefix, input)));
 
             await new Promise((resolve, error) => {
-                sass.render({
-                    importer: magicImporter(),
-                    data: toWrite, // [silent] from  
-                    outFile: outputPath,
-                }, (err, result) => {
-                    if(!err) {
-                        fs.writeFile(outputPath, result.css, function(err){
-                            if(!err){
-                                console.info(`${colors.green(`BUILD ${isGlobal ? 'global ' : ''}style`)} was saved in "${outputPath}"`);
-                                resolve();
-                            } else {
-                                console.error(colors.red(`WRITE FILE ERROR ${outputPath}`), err);
-                                error(err);
-                            }
-                        });
-                    } else {
-                        console.error(colors.red(`BUILD ERROR ${outputPath}`), err);
-                        error(err);
-                    }
-                });
-            })
-
-            // process.chdir(cwd);
+                try {
+                    // const compiledFile = sass.compileString(toWrite, { importer: magicImporter() });
+                    const compiledFile = sass.compileString(toWrite);
+                    fs.writeFile(outputPath, compiledFile.css, (err) => {
+                        if (!err) {
+                            console.info(`${colors.green(`BUILD ${isGlobal ? 'global ' : ''}style`)} was saved in "${outputPath}"`);
+                            resolve();
+                        } else {
+                            console.error(colors.red(`WRITE FILE ERROR ${outputPath}`), err);
+                            error(err);
+                        }
+                    });
+                } catch (error) {
+                    console.error(colors.red(`BUILD ERROR ${outputPath}`), err);
+                    error(err);
+                }
+            });
 
             if (isGlobal) {
                 const toAddToStyleScss = `@import '../styles/${output}';`;
@@ -252,8 +265,8 @@ function buildStyleFromUIKit(needInit = true) {
     }, () => {
         console.info(`${colors.red('STYLE BUILT')} Some styles get errors on build.`);
     });
-  }
-  
+}
+
 module.exports = {
     buildStyleFromUIKit
 };

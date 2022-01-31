@@ -12,12 +12,6 @@ function installDependencies(options: UIKitOptions): Rule {
         if (!isAfelioUikit) {
             toInstall.push({
                 type: NodeDependencyType.Default,
-                name: 'bootstrap',
-                version: '4.1.3',
-                overwrite: true,
-            });
-            toInstall.push({
-                type: NodeDependencyType.Default,
                 name: 'font-awesome',
                 version: '4.7.0',
                 overwrite: true,
