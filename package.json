@@ -29,7 +29,7 @@
     "url": "https://github.com/gilsdav/ng-afelio.git"
   },
   "dependencies": {
-    "@angular/cli": "^12.0.2",
+    "@angular/cli": "^12.2.16",
     "colors": "1.4.0",
     "commander": "7.2.0",
     "css-node-extract": "3.0.2",
@@ -43,10 +43,10 @@
     "watch": "^1.0.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^12.0.2",
-    "@angular-devkit/core": "^12.0.2",
-    "@angular-devkit/schematics": "^12.0.2",
-    "@schematics/angular": "^12.0.2",
+    "@angular-devkit/build-angular": "^12.2.16",
+    "@angular-devkit/core": "^12.2.16",
+    "@angular-devkit/schematics": "^12.2.16",
+    "@schematics/angular": "^12.2.16",
     "@types/webpack": "^5.0.0",
     "tslint": "^5.12.0",
     "tslint-ionic-rules": "0.0.21",
