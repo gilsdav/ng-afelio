@@ -165,18 +165,6 @@ $border-base: 2;
 $border-radius-multiplier: 2;
 
 //
-// Shadow multiplier
-// A multiplier is applied on top of the ratio to compute the size of the shadow
-//
-$box-shadow-multiplier: 2.45;
-
-//
-// Shadow color
-// The shadow color that will be used
-//
-$box-shadow-color: transparentize($grey08, .8);
-
-//
 //  Border ratio
 //  Theses ratio are used to compute the border sizes and radius based on the border-base
 //  @see https://www.dropbox.com/s/m3707qgpebnl91e/css-grid-ratio.xlsx?dl=0
