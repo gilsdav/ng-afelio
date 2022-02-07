@@ -195,7 +195,7 @@ function buildStyleFiles(config, bundlerBasePath) {
                             error(err);
                         }
                     });
-                } catch (error) {
+                } catch (err) {
                     console.error(colors.red(`BUILD ERROR ${outputPath}`), err);
                     error(err);
                 }
