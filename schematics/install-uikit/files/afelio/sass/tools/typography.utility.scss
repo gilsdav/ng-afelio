@@ -1,0 +1,19 @@
+//
+// Line-height
+// Create a utility class for the line-height
+// .lh-[$size]
+//
+// @param $size String  The name of the size
+// @param $qty Int      The quantity of the size
+//
+@mixin line-height-size($size, $qty)
+{
+  .lh-#{$size}
+  {
+    line-height: $qty;
+  }
+}
+
+@import "./typography.font-size";
+@import "./typography.typeface";
+@import "./typography.unicode";

@@ -1,17 +1,15 @@
+@use 'sass:math';
+
 ////////////////////////////////////////////////////
 //
 //              Grid
 //
 ////////////////////////////////////////////////////
 
-@include grid-utility('xxs',  $grid-xxs);
-@include grid-utility('xs',   $grid-xs);
-@include grid-utility('s',    $grid-s);
-@include grid-utility('m',    $grid-m);
-@include grid-utility('l',    $grid-l);
-@include grid-utility('xl',   $grid-xl);
-@include grid-utility('xxl',  $grid-xxl);
-
+@each $size, $qty in $all-grid-size
+{
+  @include grid-utility(#{$size}, $qty);
+}
 
 .p-none { padding: 0; }
 .px-none{ padding-left: 0; padding-right: 0; }
@@ -83,8 +81,8 @@
   {
     > *
     {
-      margin-left: #{$internal-gutters / 2};
-      margin-right: #{$internal-gutters / 2};
+      margin-left: math.div($internal-gutters, 2);
+      margin-right: math.div($internal-gutters, 2);
     }
   }
 }

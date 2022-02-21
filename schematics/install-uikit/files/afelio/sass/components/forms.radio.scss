@@ -88,26 +88,4 @@ $root: '.radio';
     #{$root}__input:checked ~ #{$root}__checker:after {
         opacity: 1;
     }
-
-    /* Create the indicator (the dot/circle - hidden when not checked) */
-    // #{$root}__checker:after {
-    //     content: "";
-    //     position: absolute;
-    //     display: none;
-    // }
-
-    /* Show the indicator (dot/circle) when checked */
-    // #{$root}__input:checked~#{$root}__checker:after {
-    //     display: block;
-    // }
-
-    // /* Style the indicator (dot/circle) */
-    // #{$root}__checker:after {
-    //     top: 9px;
-    //     left: 9px;
-    //     width: 8px;
-    //     height: 8px;
-    //     border-radius: 50%;
-    //     background: white;
-    // }
 }

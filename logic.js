@@ -3,7 +3,7 @@ const exec = require('child_process').exec;
 const colors = require('colors');
 const fs = require('fs');
 const fse = require('fs-extra');
-const { join } = require('path');
+const { join, basename } = require('path');
 const { watchTree } = require('watch');
 
 const cli = require('@angular/cli');
@@ -175,7 +175,10 @@ const buildStyle = async (watchPath) => {
                         ignoreDotFiles: true,
                         ignoreNotPermitted: true,
                         ignoreUnreadableDir: true,
-                        filter(path) { return !path.includes('.') || path.endsWith('.scss') },
+                        filter(path) {
+                            const fileName = basename(path);
+                            return !fileName.includes('.') || fileName.endsWith('.scss') 
+                        },
                         ignoreDirectoryPattern: /node_modules/
                     },
                     async function() {
