@@ -22,7 +22,6 @@ let angularConfigPath = '../../angular.json';
 
 function reorganiseScssUse(scssSrc) {
     let toReplace = [];
-    let result = '';
 
     scssSrc = scssSrc.replace(/@use .+;/gi, replacer => {
         if (!toReplace.includes(replacer)) {
@@ -31,11 +30,9 @@ function reorganiseScssUse(scssSrc) {
         return '';
     });
 
-    toReplace.forEach(toAdd => {
-        result += `${toAdd} `;
-    })
+    const usesLine = toReplace.join(' ');
 
-    return result + scssSrc;
+    return usesLine + scssSrc;
 }
 
 function logSameLine(textToLog, isEnd) {
