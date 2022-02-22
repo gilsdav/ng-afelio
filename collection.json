@@ -121,7 +121,9 @@
             "aliases": [
                 "g"
             ],
-            "extends": "@schematics/angular:guard"
+            "factory": "./schematics/guard",
+            "description": "Create an Angular guard.",
+            "schema": "./schematics/guard/schema.json"
         },
         "interface": {
             "aliases": [
