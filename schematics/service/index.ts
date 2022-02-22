@@ -1,9 +1,9 @@
 import { Rule, SchematicsException, Tree, chain, externalSchematic } from '@angular-devkit/schematics';
 import { parseName } from '@schematics/angular/utility/parse-name';
-import { validateName } from '@schematics/angular/utility/validation';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 
 import { addIntoIndex } from '../util/barrel';
+import { validateName } from '../util/validation';
 
 import { Schema as ServiceOptions } from './schema';
 
