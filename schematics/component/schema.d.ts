@@ -16,4 +16,5 @@ export interface Schema {
     selector?: string;
     skipSelector: boolean;
     module?: string;
+    barrel?: boolean;
 }

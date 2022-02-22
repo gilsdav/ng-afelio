@@ -1,6 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema",
-  "$id": "SchematicsAngularComponent",
+  "$schema": "http://json-schema.org/schema",
+  "$id": "SchematicsNgAfelioComponent",
   "title": "Angular Component Options Schema",
   "type": "object",
   "description": "Creates a new, generic component definition in the given or default project.",
@@ -138,6 +138,11 @@
       "default": false,
       "description": "The declaring NgModule exports this component.",
       "x-user-analytics": 19
+    },
+    "barrel": {
+      "type": "boolean",
+      "description": "Flag to indicate if must be added into barrel",
+      "default": true
     }
   },
   "required": [
