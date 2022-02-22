@@ -46,7 +46,7 @@ Thumbs.db
 /documentation
 .dockerignore
 
-/nginx/dockerfile
+/docker/dockerfile
 /node
 /deploy
 /jenkins
