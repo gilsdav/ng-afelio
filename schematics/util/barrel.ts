@@ -17,7 +17,7 @@ function getListNode(source: ts.SourceFile, type: string): ts.Node | undefined {
             if (
                 ts.isVariableDeclaration(declaration) &&
                 declaration.initializer &&
-                declaration.name.getText() === `${type}s`
+                declaration.name.getText() === type
             ) {
                 return declaration.initializer.getChildAt(1);
             }
@@ -28,7 +28,7 @@ function getListNode(source: ts.SourceFile, type: string): ts.Node | undefined {
 /**
  * @param type something like 'component'
  */
-export function addIntoIndex(path: string, options: { barrel?: boolean, name: string }, type: string): Rule {
+export function addIntoIndex(path: string, options: { barrel?: boolean, name: string }, type: string, barrelType?: string): Rule {
     return host => {
         if (options.barrel) {
             const changes: Change[] = [];
@@ -51,7 +51,7 @@ export function addIntoIndex(path: string, options: { barrel?: boolean, name: st
             changes.push(insertImport(source, indexPath, className, relativeFilePath));
             changes.push(insertExport(source, indexPath, className, relativeFilePath));
             // Add Store to Barrel array
-            const node = getListNode(source, type);
+            const node = getListNode(source, barrelType || `${type}s`);
             if (node) {
                 const commat = node.getChildCount() > 0 ? ',' : '';
                 changes.push(

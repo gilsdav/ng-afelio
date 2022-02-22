@@ -28,10 +28,11 @@ export default function(options: ComponentOptions): Rule {
 
         const angularOptions = { ...options };
         delete angularOptions.barrel;
+        delete angularOptions.barrelName;
 
         return chain([
             externalSchematic('@schematics/angular', 'component', angularOptions),
-            addIntoIndex(options.path, options, 'component'),
+            addIntoIndex(options.path, options, 'component', options.barrelName),
         ]);
     };
 }
