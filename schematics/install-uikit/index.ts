@@ -24,7 +24,7 @@ function installDependencies(options: UIKitOptions): Rule {
             });
         }
         toInstall.push({
-            type: NodeDependencyType.Default,
+            type: NodeDependencyType.Dev,
             name: 'ngx-highlight-js',
             version: '10.0.3',
             overwrite: true,
