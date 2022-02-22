@@ -28,6 +28,7 @@ export default function(options: ModuleOptions): Rule {
             options.guards ? noop() : filter(p => !p.includes('/guards/')),
             options.pipes ? noop() : filter(p => !p.includes('/pipes/')),
             options.stores ? noop() : filter(p => !p.includes('/stores/')),
+            options.directives ? noop() : filter(p => !p.includes('/directives/')),
             template({
               ...strings,
               'if-flat': (s: string) => (options.flat ? '' : s),

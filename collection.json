@@ -107,7 +107,9 @@
             "aliases": [
                 "d"
             ],
-            "extends": "@schematics/angular:directive"
+            "factory": "./schematics/directive",
+            "description": "Create an Angular directive.",
+            "schema": "./schematics/directive/schema.json"
         },
         "enum": {
             "aliases": [
