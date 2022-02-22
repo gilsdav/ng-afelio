@@ -131,7 +131,9 @@
             "aliases": [
                 "p"
             ],
-            "extends": "@schematics/angular:pipe"
+            "factory": "./schematics/pipe",
+            "description": "Create an Angular pipe.",
+            "schema": "./schematics/pipe/schema.json"
         },
         "service": {
             "aliases": [
