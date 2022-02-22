@@ -137,7 +137,9 @@
             "aliases": [
                 "s"
             ],
-            "extends": "@schematics/angular:service"
+            "factory": "./schematics/service",
+            "description": "Create an Angular service.",
+            "schema": "./schematics/service/schema.json"
         },
         "application": {
             "aliases": [
