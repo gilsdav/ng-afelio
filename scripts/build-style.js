@@ -64,15 +64,15 @@ function writeConfig(jsonContent) {
 }
 
 function initFolder(config) {
-    inputDirectory = typeof config.style.baseInputDirectory !== undefined ? config.style.baseInputDirectory : inputDirectory;
+    inputDirectory = typeof config.style.baseInputDirectory !== 'undefined' ? config.style.baseInputDirectory : inputDirectory;
     process.chdir(inputDirectory);
 
-    outputDirectory = typeof config.style.baseOutputDirectory !== undefined ? config.style.baseOutputDirectory : outputDirectory;
+    outputDirectory = typeof config.style.baseOutputDirectory !== 'undefined' ? config.style.baseOutputDirectory : outputDirectory;
     if (!fs.existsSync(outputDirectory)) {
         fs.mkdirSync(outputDirectory);
     }
 
-    inputPrefix = typeof config.style.inputPrefix !== undefined ? config.style.inputPrefix : inputPrefix;
+    inputPrefix = typeof config.style.inputPrefix !== 'undefined' ? config.style.inputPrefix : inputPrefix;
 
     // Angular config
     const countSlashes = inputDirectory.replace('./', '').split('/').reduce((result) => {
