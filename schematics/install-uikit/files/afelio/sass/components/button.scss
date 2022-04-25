@@ -138,55 +138,9 @@
         width: auto;
         width: fit-content;
 
-        &.-ghost {
-            background-color: inherit;
-            background-color: transparent;
-
-            @extend .c-primary03;
-
-            &.-grey {
-                @extend .c-grey06;
-
-                #{$root}__icon {
-                    @extend .c-grey06;
-                }
-            }
-
-            #{$root}__icon {
-                @extend .c-primary03;
-
-                @extend .m-none;
-
-                top: 50%;
-                left: 50%;
-                transform: translateX(-50%) translateY(-50%);
-            }
-
-            &:hover {
-                background-color: transparent;
-            }
-        }
-
         &.-no-hover {
             @extend .p-xxs;
             background-color: transparent;
-
-            &:hover {
-                background-color: transparent;
-            }
-        }
-
-        &.-sort {
-            background-color: inherit;
-            background-color: transparent;
-            width: auto;
-
-            @extend .py-none;
-            @extend .pr-none;
-
-            @extend .c-primary03;
-
-            font-size: 16px;
 
             &:hover {
                 background-color: transparent;
@@ -221,28 +175,6 @@
         height: 32px;
     }
 
-    &.-xs
-    {
-        @extend .py-xxs;
-        height: auto;
-    }
-
-    &.-inline-text
-    {
-        #{$root}__label
-        {
-            white-space: nowrap;
-        }
-    }
-
-    &.-circle
-    {
-        height: auto;
-        @extend .br-circle;
-        padding: compute-grid($grid-xxs);
-
-    }
-
     ////////////////////////////////////////////////////
     //
     //                  Icons
@@ -271,10 +203,6 @@
         #{$root}__icon {
             right: compute-grid($grid-m);
         }
-    }
-
-    &.text-left {
-        @extend .text-left;
     }
 
     ////////////////////////////////////////////////////
@@ -307,33 +235,7 @@
             #{$root}__label {
                 cursor: default;
             }
-
-            &.-ghost {
-                background-color: transparent;
-            }
         }
     }
 
-}
-
-////////////////////////////////////////////////////
-//
-//                  Separator
-//
-////////////////////////////////////////////////////
-
-.button-separator
-{
-    @extend .relative;
-
-    &:after
-    {
-        content: '';
-        width: 1px;
-        height: 18px;
-        @extend .absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        @extend .bg-grey03;
-    }
 }

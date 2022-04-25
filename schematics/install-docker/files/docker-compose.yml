@@ -1,0 +1,12 @@
+version: "3.3"
+services:
+  front:
+    build:
+      context: .
+      dockerfile: ./docker/dockerfile
+    ports:
+      - "8080:80"
+    environment:
+      - BASE_URL=http://url.to.your.api
+      - ISSUER_URL=http://url.to.your.issuer
+      - ENVIRONMENT_NAME=development

@@ -9,7 +9,7 @@
 {
   @if $family != null
   {
-    $filepath: '/assets/fonts/' + $family + '/' + $filename;
+    $filepath: '^/assets/fonts/' + $family + '/' + $filename;
 
     @font-face
     {

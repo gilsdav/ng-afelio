@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 ////////////////////////////////////////////////////
 //
 //                  Variables
@@ -15,8 +17,8 @@ $root: '.dropdown';
 
     @extend .textfield;
 
-    padding-top: compute-grid($grid-xxs/2);
-    padding-bottom: compute-grid($grid-xxs/2);
+    padding-top: compute-grid(math.div($grid-xxs, 2));
+    padding-bottom: compute-grid(math.div($grid-xxs, 2));
 
     @extend .c-pointer;
 
@@ -104,9 +106,6 @@ $root: '.dropdown';
                 .ng-placeholder {
                     @extend .c-grey03;
                     font-weight: 400;
-
-                    // @extend .pl-none;
-                    // @extend .pb-none;
                 }
             }
         }
@@ -194,10 +193,10 @@ $root: '.dropdown';
             min-height: 38px;
             height: auto !important;
             @extend .pt-none;
-            padding-bottom: compute-grid($grid-xxs/2);
+            padding-bottom: compute-grid(math.div($grid-xxs, 2));
 
             .ng-value-container {
-                padding-top: compute-grid($grid-xxs/2 + $grid-xxs);
+                padding-top: compute-grid(math.div($grid-xxs, 2) + $grid-xxs);
 
                 .ng-input {
                     @extend .pl-none;

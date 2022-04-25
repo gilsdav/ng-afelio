@@ -4,18 +4,9 @@
 //
 ////////////////////////////////////////////////////
 
-@include border-width('xxs', $border-xxs);
-@include border-width('xs', $border-xs);
-@include border-width('s', $border-s);
-@include border-width('m', $border-m);
-@include border-width('l', $border-l);
-@include border-width('xl', $border-xl);
-@include border-width('xxl', $border-xxl);
-@include border-width('xxxl', $border-xxxl);
-
-.bw-none
+@each $size, $qty in $all-border-size
 {
-  border: 0;
+  @include border-width(#{$size}, $qty);
 }
 
 ////////////////////////////////////////////////////
@@ -24,16 +15,11 @@
 //
 ////////////////////////////////////////////////////
 
-@include border-radius('xxs', $border-xxs);
-@include border-radius('xs', $border-xs);
-@include border-radius('s', $border-s);
-@include border-radius('m', $border-m);
-@include border-radius('l', $border-l);
-@include border-radius('xl', $border-xl);
-@include border-radius('xxl', $border-xxl);
-@include border-radius('xxxl', $border-xxxl);
+@each $size, $qty in $all-border-size
+{
+  @include border-radius(#{$size}, $qty);
+}
 
-.br-none { border-radius: 0; }
 .br-circle { border-radius: 50%; }
 
 ////////////////////////////////////////////////////
@@ -42,45 +28,25 @@
 //
 ////////////////////////////////////////////////////
 
-@include border-radius-top-left('xxs', $border-xxs);
-@include border-radius-top-left('xs', $border-xs);
-@include border-radius-top-left('s', $border-s);
-@include border-radius-top-left('m', $border-m);
-@include border-radius-top-left('l', $border-l);
-@include border-radius-top-left('xl', $border-xl);
-@include border-radius-top-left('xxl', $border-xxl);
-@include border-radius-top-left('xxxl', $border-xxxl);
-.brtl-none { border-top-left-radius: 0; }
+@each $size, $qty in $all-border-size
+{
+  @include border-radius-top-left(#{$size}, $qty);
+}
 
-@include border-radius-top-right('xxs', $border-xxs);
-@include border-radius-top-right('xs', $border-xs);
-@include border-radius-top-right('s', $border-s);
-@include border-radius-top-right('m', $border-m);
-@include border-radius-top-right('l', $border-l);
-@include border-radius-top-right('xl', $border-xl);
-@include border-radius-top-right('xxl', $border-xxl);
-@include border-radius-top-right('xxxl', $border-xxxl);
-.brtr-none { border-top-right-radius: 0; }
+@each $size, $qty in $all-border-size
+{
+  @include border-radius-top-right(#{$size}, $qty);
+}
 
-@include border-radius-bottom-left('xxs', $border-xxs);
-@include border-radius-bottom-left('xs', $border-xs);
-@include border-radius-bottom-left('s', $border-s);
-@include border-radius-bottom-left('m', $border-m);
-@include border-radius-bottom-left('l', $border-l);
-@include border-radius-bottom-left('xl', $border-xl);
-@include border-radius-bottom-left('xxl', $border-xxl);
-@include border-radius-bottom-left('xxxl', $border-xxxl);
-.brbl-none { border-bottom-left-radius: 0; }
+@each $size, $qty in $all-border-size
+{
+  @include border-radius-bottom-left(#{$size}, $qty);
+}
 
-@include border-radius-bottom-right('xxs', $border-xxs);
-@include border-radius-bottom-right('xs', $border-xs);
-@include border-radius-bottom-right('s', $border-s);
-@include border-radius-bottom-right('m', $border-m);
-@include border-radius-bottom-right('l', $border-l);
-@include border-radius-bottom-right('xl', $border-xl);
-@include border-radius-bottom-right('xxl', $border-xxl);
-@include border-radius-bottom-right('xxxl', $border-xxxl);
-.brbr-none { border-bottom-right-radius: 0; }
+@each $size, $qty in $all-border-size
+{
+  @include border-radius-bottom-right(#{$size}, $qty);
+}
 
 ////////////////////////////////////////////////////
 //
@@ -97,13 +63,3 @@
 {
   border-style: dotted;
 }
-
-
-////////////////////////////////////////////////////
-//
-//              5. Colors
-//
-////////////////////////////////////////////////////
-//
-//  @see properties/colors.scss
-//

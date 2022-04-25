@@ -115,7 +115,9 @@
             "aliases": [
                 "d"
             ],
-            "extends": "@schematics/angular:directive"
+            "factory": "./schematics/directive",
+            "description": "Create an Angular directive.",
+            "schema": "./schematics/directive/schema.json"
         },
         "enum": {
             "aliases": [
@@ -127,7 +129,9 @@
             "aliases": [
                 "g"
             ],
-            "extends": "@schematics/angular:guard"
+            "factory": "./schematics/guard",
+            "description": "Create an Angular guard.",
+            "schema": "./schematics/guard/schema.json"
         },
         "interface": {
             "aliases": [
@@ -139,13 +143,17 @@
             "aliases": [
                 "p"
             ],
-            "extends": "@schematics/angular:pipe"
+            "factory": "./schematics/pipe",
+            "description": "Create an Angular pipe.",
+            "schema": "./schematics/pipe/schema.json"
         },
         "service": {
             "aliases": [
                 "s"
             ],
-            "extends": "@schematics/angular:service"
+            "factory": "./schematics/service",
+            "description": "Create an Angular service.",
+            "schema": "./schematics/service/schema.json"
         },
         "application": {
             "aliases": [

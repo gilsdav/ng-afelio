@@ -16,13 +16,13 @@ export class MenuComponent implements OnInit {
 
   ngOnInit() {
     this.router.config.forEach(route => {
-      if (route.data && route.data.category && route.data.name) {
-        const currentCategory = this.menu.find(category => category.name === route.data?.category);
-        const newCategory = new MenuItem(route.data.name, `/${route.path}`);
+      if (route.data && route.data['category'] && route.data['name']) {
+        const currentCategory = this.menu.find(category => category.name === route.data?.['category']);
+        const newCategory = new MenuItem(route.data['name'], `/${route.path}`);
         if (currentCategory) {
           currentCategory.items.push(newCategory);
         } else {
-          this.menu.push(new MenuCategory(route.data.category, [newCategory]));
+          this.menu.push(new MenuCategory(route.data['category'], [newCategory]));
         }
       }
     });

@@ -5,29 +5,26 @@ import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@s
 
 import { Schema as UIKitOptions } from './schema';
 
-function installDependencies(): Rule {
+function installDependencies(options: UIKitOptions): Rule {
+    const needBootstrap = !!options && options.type === 'bootstrap';
     return (host: Tree, context: SchematicContext) => {
         const toInstall: NodeDependency[] = [];
+        if (needBootstrap) {
+            toInstall.push({
+                type: NodeDependencyType.Default,
+                name: 'bootstrap',
+                version: '4.1.3',
+                overwrite: true,
+            });
+            toInstall.push({
+                type: NodeDependencyType.Default,
+                name: 'font-awesome',
+                version: '4.7.0',
+                overwrite: true,
+            });
+        }
         toInstall.push({
-            type: NodeDependencyType.Default,
-            name: 'bootstrap',
-            version: '4.1.3',
-            overwrite: true,
-        });
-        toInstall.push({
-            type: NodeDependencyType.Default,
-            name: 'font-awesome',
-            version: '4.7.0',
-            overwrite: true,
-        });
-        toInstall.push({
-            type: NodeDependencyType.Default,
-            name: 'font-awesome',
-            version: '4.7.0',
-            overwrite: true,
-        });
-        toInstall.push({
-            type: NodeDependencyType.Default,
+            type: NodeDependencyType.Dev,
             name: 'ngx-highlight-js',
             version: '10.0.3',
             overwrite: true,
@@ -35,7 +32,7 @@ function installDependencies(): Rule {
         toInstall.push({
             type: NodeDependencyType.Default,
             name: '@ng-select/ng-select',
-            version: '4.0.4',
+            version: '7.3.0',
             overwrite: true,
         });
         toInstall.forEach(dep => {
@@ -94,7 +91,7 @@ export default function(options: UIKitOptions): Rule {
             }),
             await applyUiKitTemplate(options),
             updateScripts(),
-            installDependencies(),
+            installDependencies(options),
         ]);
     };
 }

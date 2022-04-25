@@ -45,6 +45,11 @@
         "type": "boolean",
         "description": "Add stores folder",
         "default": false
+      },
+      "directives": {
+        "type": "boolean",
+        "description": "Add directives folder",
+        "default": false
       }
     },
     "required": [

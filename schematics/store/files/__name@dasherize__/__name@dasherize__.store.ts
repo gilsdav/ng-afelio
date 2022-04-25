@@ -1,20 +1,29 @@
 import { Injectable } from '@angular/core';
-import { State } from '@ngxs/store';
+import { Action, State, StateContext } from '@ngxs/store';
+
+import { ClearState } from './<%= dasherize(name) %>.actions'
 
 export interface <%= classify(name) %>StateModel {<% if(example) { %>
     // data: string<% } %>
 }
 
+const defaultStateModel: <%= classify(name) %>StateModel = {<% if(example) { %>
+    // data: ''<% } %>
+}
+
 @State<<%= classify(name) %>StateModel>({
     name: 'globalConfig',
-    defaults: {<% if(example) { %>
-        // data: ''<% } %>
-    }
+    defaults: { ...defaultStateModel }
 })
 @Injectable()
 export class <%= classify(name) %>State {
 
     constructor() {}
+
+    @Action(ClearState)
+    ClearState(ctx: StateContext<BobiStateModel>) {
+        ctx.setState({ ...defaultStateModel });
+    }
 <% if(example) { %>
     // @Selector()
     // static data(currentState: <%= classify(name) %>StateModel): string {

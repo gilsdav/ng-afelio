@@ -1,10 +1,10 @@
 {
     "style": {
         "styleUtils": [
-            { "input": "styles.scss", "output": "style-utils.scss" }
+            { "input": "ui-kit-styles.scss", "output": "style-utils.scss" }
         ],
         "files": [
-            { "input": "styles.scss", "output": "main.scss", "global": true }
+            { "input": "ui-kit-styles.scss", "output": "main.scss", "global": true }
         ],
         "baseInputDirectory": "./projects/ui-kit",
         "baseOutputDirectory": "../../styles",

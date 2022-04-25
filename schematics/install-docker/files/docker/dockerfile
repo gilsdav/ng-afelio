@@ -11,7 +11,7 @@ RUN echo "BuildId: $BUILD_ID"
 
 WORKDIR /ng-app
 
-COPY package.json package-lock.json .npmrc postinstall.js ./
+COPY package.json package-lock.json .npmrc* ./
 
 ## Storing node modules on a separate layer will prevent unnecessary npm installs at each build
 RUN npm ci
@@ -45,7 +45,7 @@ LABEL stage=runtime
 LABEL build=$BUILD_ID
 
 ## Copy our default nginx config
-COPY nginx/default.conf /etc/nginx/conf.d/
+COPY docker/default.conf /etc/nginx/conf.d/
 
 ## Remove default nginx website
 RUN rm -rf /usr/share/nginx/html/*
@@ -53,7 +53,7 @@ RUN rm -rf /usr/share/nginx/html/*
 ## From 'builder' stage copy over the artifacts in dist folder to default nginx public folder
 COPY --from=builder /ng-app/dist/<%= project %> /usr/share/nginx/html
 
-COPY nginx/run.sh .
+COPY docker/run.sh .
 # Fix when file comes from Windows
 RUN cat run.sh | tr -d '\r' >> run.sh.tmp
 RUN mv run.sh.tmp run.sh;

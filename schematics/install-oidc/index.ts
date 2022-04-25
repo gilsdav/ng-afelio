@@ -1,5 +1,5 @@
 import { Path, join, strings } from '@angular-devkit/core';
-import { Rule, SchematicContext, SchematicsException, Tree, branchAndMerge, chain, apply, url, template, move, mergeWith } from '@angular-devkit/schematics';
+import { Rule, SchematicContext, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, template, url } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
@@ -7,7 +7,7 @@ import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/work
 import ts = require('typescript');
 
 import { addImportToModule, findNodes, insertImport } from '../util/ast-util';
-import { Change, applyChangesToHost, InsertChange } from '../util/change';
+import { Change, InsertChange, applyChangesToHost } from '../util/change';
 
 import { Schema as OIDCOptions } from './schema';
 

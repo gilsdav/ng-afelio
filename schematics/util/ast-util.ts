@@ -72,6 +72,57 @@ export function insertImport(source: ts.SourceFile, fileToEdit: string, symbolNa
     );
 }
 
+/* tslint:disable */
+export function insertExport(source: ts.SourceFile, fileToEdit: string, symbolName: string,
+    fileName: string): Change {
+    const rootNode = source;
+    const allExports = findNodes(rootNode, ts.SyntaxKind.ExportDeclaration);
+
+    // get nodes that map to import statements from the file fileName
+    const relevantExports = allExports.filter(node => {
+        // StringLiteral of the ImportDeclaration is the import file (fileName in this case).
+        const importFiles = node.getChildren()
+            .filter(child => child.kind === ts.SyntaxKind.StringLiteral)
+            .map(n => (n as ts.StringLiteral).text);
+
+        return importFiles.filter(file => file === fileName).length === 1;
+    });
+
+    if (relevantExports.length > 0) {
+        let importsAsterisk = false;
+        // exports from import file
+        const imports: ts.Node[] = [];
+        relevantExports.forEach(n => {
+            Array.prototype.push.apply(imports, findNodes(n, ts.SyntaxKind.Identifier));
+            if (findNodes(n, ts.SyntaxKind.AsteriskToken).length > 0) {
+                importsAsterisk = true;
+            }
+        });
+
+        // if imports * from fileName, don't add symbolName
+        if (importsAsterisk) {
+            return new NoopChange();
+        }
+    }
+
+    // no such import declaration exists
+
+    let fallbackPos = rootNode.end;
+
+    let toInsert = `\nexport * from '${fileName}';\n`;
+    if (allExports.length > 0) {
+        toInsert = `;\nexport * from '${fileName}'`;
+    }
+
+    return insertAfterLastOccurrence(
+        allExports,
+        toInsert,
+        fileToEdit,
+        fallbackPos,
+        ts.SyntaxKind.StringLiteral
+    );
+}
+
 //Safe
 export function findNodes(node: any, kind: ts.SyntaxKind, max = Infinity, recursive = false): ts.Node[] {
     if (!node || max == 0) {
