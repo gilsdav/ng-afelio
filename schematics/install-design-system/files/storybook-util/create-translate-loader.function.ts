@@ -4,7 +4,7 @@ import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
 export function createTranslateLoader(http: HttpClient): MultiTranslateHttpLoader {
   return new MultiTranslateHttpLoader(http, [
       {
-          prefix: './', suffix: '.json',
+          prefix: 'assets/locales/', suffix: '.json',
       },
   ]);
 }

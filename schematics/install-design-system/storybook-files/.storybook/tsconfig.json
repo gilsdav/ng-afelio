@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "skipLibCheck": true
+  },
+  "exclude": [
+    "../projects/<%= name %>/**/*.spec.ts"
+  ],
+  "include": [
+    "../projects/<%= name %>/**/*"
+  ]
+}
