@@ -131,6 +131,31 @@ function updateScripts(): Rule {
     };
 }
 
+function updateTsconfigAlias(optionName: string): Rule {
+    return (host: Tree) => {
+        const tsconfigFile = '/tsconfig.json';
+        const text = host.read(tsconfigFile);
+        if (!text) {
+            throw new SchematicsException(`Can not find "tsconfig.json" file in your project.`);
+        }
+        let sourceText = text.toString('utf8');
+        sourceText = sourceText.replace(/\/\*.*\*\//gm, '');
+
+        const jsonContent = JSON.parse(sourceText);
+        const pathExist = !!jsonContent.compilerOptions.paths;
+        if (pathExist) {
+            jsonContent.compilerOptions.paths[`${optionName}`] = [`projects/${optionName}/src/public-api.ts`];
+        } else {
+            jsonContent.compilerOptions.paths = {};
+            jsonContent.compilerOptions.paths[`${optionName}`] = [`projects/${optionName}/src/public-api.ts`];
+        }
+
+        host.overwrite(tsconfigFile, JSON.stringify(jsonContent, null, 2));
+
+        return host;
+    };
+}
+
 function addStorybookConfigToAngularJSON(): Rule {
     const storybookConfig = {
         'architect': {
@@ -196,11 +221,16 @@ async function applyDesignSystemDocumentationTemplate(options: DesignSystemOptio
 }
 
 export default function(options: DesignSystemOptions): Rule {
+    const name = options.name ? options.name : 'design-system';
+    options.name = name;
+    const prefix = options.prefix ? options.prefix : 'ds';
+    options.prefix = prefix;
+
     return async () => {
         return chain([
             externalSchematic('@schematics/angular', 'library', {
-                name: options.name ? options.name : 'design-system',
-                prefix: options.prefix ? options.prefix : 'ds',
+                name,
+                prefix,
                 skipInstall: true,
             }),
             schematic('install-translate', {}),
@@ -208,6 +238,7 @@ export default function(options: DesignSystemOptions): Rule {
             await applyDesignSystemDocumentationTemplate(options),
             addStorybookConfigToAngularJSON(),
             updateScripts(),
+            updateTsconfigAlias(name),
             installDependencies(),
         ]);
     };

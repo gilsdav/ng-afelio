@@ -1,0 +1,10 @@
+<label class="checkbox" [ngClass]="(classes$ | async)!" [for]="id">
+  <div class="checkbox__check">
+      <input class="checkbox__input" type="checkbox" [id]="id" [formControl]="control">
+      <span class="checkbox__checker"></span>
+  </div>
+  <span class="checkbox__label" *ngIf="!!label">
+      {{ label.label | translate:label.param }}
+  </span>
+</label>
+

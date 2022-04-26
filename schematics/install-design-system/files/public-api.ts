@@ -2,10 +2,14 @@
  * Public API Surface of DS
  */
 
+// MODULES
+
+export * from './lib/ds-button/public-api';
+
+export * from './lib/ds-checkbox/public-api';
+
 // ENUMS
-export * from './lib/enums/index';
+export * from './lib/enums/public-api';
 
 // INTERFACES
-export * from './lib/interfaces/index';
-
-export * from './lib/ds-button/index';
+export * from './lib/interfaces/public-api';

@@ -121,75 +121,10 @@ $root: ".checkbox";
         opacity: .3;
     }
 
-    // MODIFIER PLUS & MINUS
-
-    &.-plus, &.-minus
+    &.-error
     {
-        $size: 16px;
-
-        height: $size;
-        min-height: $size;
-
-        width: $size;
-
-        @extend .f-s;
-
-        &:hover {
-            #{$root}__check {
-                @extend .bw-none;
-            }
-        }
-
-        #{$root}__check
-        {
-            height: $size;
-            width: $size;
-
-        @extend .bw-none;
-
-        }
-
-        #{$root}__checker
-        {
-            @extend .flex;
-            @extend .flex-middle;
-            @extend .flex-center;
-
-            @extend .br-xs;
-            @extend .bs-solid;
-            @extend .bw-xxs;
-            @extend .bc-grey03;
-
-            @extend .icon;
-        }
-
-        #{$root}__input:checked~#{$root}__checker
-        {
-            @extend .c-primary04;
-            @extend .bg-primary01;
-
-            @extend .bc-primary04;
-
-            &:after
-            {
-                @extend .d-none;
-            }
-        }
-
-    }
-
-
-    &.-plus
-    {
-        #{$root}__checker {
-            @extend .icon-plus;
-        }
-    }
-
-    &.-minus
-    {
-        #{$root}__checker {
-            @extend .icon-minus;
+        #{$root}__check {
+            border: 1px solid $accent01;
         }
     }
 }

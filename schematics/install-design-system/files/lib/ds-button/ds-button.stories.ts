@@ -3,7 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { Meta, moduleMetadata, Story } from '@storybook/angular';
-import { DS_IconsEnum, DS_icon_placement_Enum, DS_size_Enum, DS_ButtonTypeEnum } from '../enums';
+import { DS_IconsEnum, DS_icon_placement_Enum, DS_size_Enum, DS_ButtonTypeEnum } from '../enums/public-api';
 import { createTranslateLoader } from '../../storybook-util/create-translate-loader.function';
 import { DS_ButtonComponent } from './ds-button.component';
 import { DS_ButtonModule } from './ds-button.module';
@@ -87,6 +87,13 @@ export const Secondary: Story<DS_ButtonComponent> = Template.bind({});
 Secondary.args = {
   label: { label: 'Secondary' },
   type: DS_ButtonTypeEnum.SECONDARY,
+  disabled: false,
+  iconPlacement: undefined,
+  icon: undefined,
+  isFullWidth: true,
+  minimumwidth: true,
+  size: DS_size_Enum.normal,
+  customClasses: [],
 };
 
 export const Ternary: Story<DS_ButtonComponent> = Template.bind({});
