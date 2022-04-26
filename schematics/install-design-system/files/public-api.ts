@@ -8,6 +8,8 @@ export * from './lib/ds-button/public-api';
 
 export * from './lib/ds-checkbox/public-api';
 
+export * from './lib/ds-radio/public-api';
+
 // ENUMS
 export * from './lib/enums/public-api';
 

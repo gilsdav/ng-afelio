@@ -1,0 +1,12 @@
+<label class="radio" [ngClass]="(classes$ | async)!" [for]="id">
+  <input class="radio__input"
+        type="radio"
+        [formControl]="control"
+        [id]="id"
+        [name]="name"
+        [value]="value">
+  <span class="radio__checker"></span>
+  <span class="radio__label" *ngIf="!!label">
+    {{ label.label| translate:label.param }}
+  </span>
+</label>
