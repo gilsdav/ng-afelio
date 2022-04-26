@@ -18,7 +18,6 @@ import { LabelWithParam } from '../interfaces/public-api';
 ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-// tslint:disable-next-line: class-name
 export class RadioComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
 
   /**

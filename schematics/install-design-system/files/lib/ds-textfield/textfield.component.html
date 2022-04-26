@@ -1,0 +1,10 @@
+
+<div class="textfield" [ngClass]="(classes$ | async)!">
+  <input
+    class="textfield__field"
+    [type]="type"
+    [placeholder]="placeholder ? (placeholder.label | translate:placeholder.param ): ''"
+    [formControl]="control"
+  >
+  <span *ngIf="!!icon" class="textfield__icon" [ngClass]="(iconClasses$ | async)!"></span>
+</div>
