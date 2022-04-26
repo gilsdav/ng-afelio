@@ -1,0 +1,13 @@
+<div class="textfield" [ngClass]="(classes$ | async)!">
+  <textarea
+    class="textfield__field"
+    [placeholder]="placeholder ? (placeholder.label | translate:placeholder.param ): ''"
+    [maxlength]="maxlength ? maxlength : ''"
+    [formControl]="control"
+  ></textarea>
+</div>
+<div class="w-100 flex flex-end mt-xxs" *ngIf="maxlength">
+  <span class="c-grey f-xxs f-regular c-grey06">
+    {{(valueSize$ | async) + '/' + maxlength}}
+  </span>
+</div>

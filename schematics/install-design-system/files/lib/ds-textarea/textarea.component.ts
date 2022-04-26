@@ -1,82 +1,57 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  forwardRef,
-  SimpleChanges
-} from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, Input, forwardRef, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LabelWithParam } from '../interfaces/public-api';
-import { DS_Textfield_type_Enum, DS_icon_placement_Enum, DS_IconsEnum } from '../enums/public-api';
 
-/**
- * Doc on the textfield
- */
 @Component({
-  selector: 'ds-textfield',
-  templateUrl: './textfield.component.html',
+  selector: 'ds-textarea',
+  templateUrl: './textarea.component.html',
   providers: [
     {
         provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => TextfieldComponent),
+        useExisting: forwardRef(() => TextareaComponent),
         multi: true
     }
 ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextfieldComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
+export class TextareaComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
 
   /**
-   * Textfield placeholder
+   * Textarea placeholder
    *
    */
   @Input()
   public placeholder?: LabelWithParam;
 
   /**
-   * Textfield is disabled
+   * Textarea is disabled
    */
   @Input()
   public isDisabled = false;
 
   /**
-   * Textfield type (number, text, submit…)
+   * Textarea value maximum length
    */
   @Input()
-  public type = DS_Textfield_type_Enum.text;
+  public maxlength?: string;
 
   /**
-   * Does the icon before or after the label ?
-   */
-  @Input()
-  public iconPlacement: DS_icon_placement_Enum = DS_icon_placement_Enum.before;
-
-  /**
-   * What icon do you want to show ?
-   */
-  @Input()
-  public icon?: DS_IconsEnum;
-
-  /**
-   * Textfield is invalid
+   * Textarea is invalid
    */
   @Input()
   public isOnError = false;
 
   /**
-   * Textfield custom HTML classes
+   * Textarea custom HTML classes
    *
    */
   @Input()
   public customClasses: string[] = [];
 
   classes$ = new BehaviorSubject<string[]>(['']);
-  iconClasses$ = new BehaviorSubject<string[]>(['']);
+  public valueSize$ = new BehaviorSubject(0);
 
   public control: FormControl;
   public destroyer$: Subject<any>;
@@ -91,6 +66,7 @@ export class TextfieldComponent implements OnInit, OnChanges, OnDestroy, Control
       takeUntil(this.destroyer$)
     ).subscribe({
       next: (value) => {
+        this.valueSize$.next((value) ? value.length : 0);
         this.onChange(value);
       }
     });
@@ -98,13 +74,13 @@ export class TextfieldComponent implements OnInit, OnChanges, OnDestroy, Control
 
   public ngOnChanges(changes: SimpleChanges): void {
     this.classes$.next(this.getClasses());
-    this.iconClasses$.next(this.getIconClass());
     if (changes && changes['isDisabled']) {
       this.isDisabled ? this.control.disable() : this.control.enable();
     }
   }
 
   public ngOnDestroy(): void {
+    this.valueSize$.complete();
     this.destroyer$.next(null);
     this.destroyer$.complete();
   }
@@ -120,10 +96,6 @@ export class TextfieldComponent implements OnInit, OnChanges, OnDestroy, Control
       classes.push('-error');
     }
 
-    if (!!this.iconPlacement) {
-      classes.push(this.iconPlacement.toString());
-    }
-
     if (this.customClasses && this.customClasses.length > 0) {
       classes.push(...this.customClasses);
     }
@@ -131,18 +103,9 @@ export class TextfieldComponent implements OnInit, OnChanges, OnDestroy, Control
     return classes;
   }
 
-  getIconClass(): string[] {
-    const iconClass: string[] = [];
+  public onChange = (data: string) => {}
 
-    if (!!this.icon) {
-      iconClass.push(this.icon.toString());
-    }
-
-    return iconClass;
-  }
-
-  public onChange = (data: string) => {};
-  public onTouched = () => {};
+  public onTouched = () => {}
 
   // ---------- ControlValueAccessor IMPLEMENTATION ----------
 
@@ -164,5 +127,4 @@ export class TextfieldComponent implements OnInit, OnChanges, OnDestroy, Control
     isDisabled ? this.control.disable() : this.control.enable();
     this.isDisabled = isDisabled;
   }
-
 }

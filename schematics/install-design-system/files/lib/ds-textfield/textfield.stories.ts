@@ -73,10 +73,7 @@ export const Example: Story<TextfieldComponent> = Template.bind({});
 Example.args = {
   placeholder: { label: 'Placeholder' },
   isDisabled: false,
-  transparent: false,
   type: DS_Textfield_type_Enum.text,
-  maxlength: '',
-  minlength: '',
   iconPlacement: undefined,
   icon: undefined,
   customClasses: [],
@@ -86,10 +83,7 @@ export const Disabled: Story<TextfieldComponent> = Template.bind({});
 Disabled.args = {
   isDisabled: true,
   placeholder: { label: 'Disabled' },
-  transparent: false,
   type: DS_Textfield_type_Enum.text,
-  maxlength: '',
-  minlength: '',
   iconPlacement: undefined,
   icon: undefined,
   customClasses: []
@@ -99,12 +93,9 @@ export const IconBefore: Story<TextfieldComponent> = Template.bind({});
 IconBefore.args = {
   icon: DS_IconsEnum.esigna,
   iconPlacement: DS_icon_placement_Enum.before,
-  transparent: false,
   isDisabled: false,
   placeholder: { label: 'Icon before' },
   type: DS_Textfield_type_Enum.text,
-  maxlength: '',
-  minlength: '',
   customClasses: []
 };
 
@@ -114,9 +105,6 @@ IconAfter.args = {
   iconPlacement: DS_icon_placement_Enum.after,
   placeholder: { label: 'Icon after' },
   isDisabled: false,
-  transparent: false,
   type: DS_Textfield_type_Enum.text,
-  maxlength: '',
-  minlength: '',
   customClasses: []
 };

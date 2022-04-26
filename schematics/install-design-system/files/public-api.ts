@@ -12,6 +12,8 @@ export * from './lib/ds-radio/public-api';
 
 export * from './lib/ds-textfield/public-api';
 
+export * from './lib/ds-textarea/public-api';
+
 // ENUMS
 export * from './lib/enums/public-api';
 
