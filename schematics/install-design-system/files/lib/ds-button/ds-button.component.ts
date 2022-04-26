@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { DS_IconsEnum, DS_icon_placement_Enum, DS_size_Enum, DS_TypeEnum } from '../enums/index';
+import { DS_IconsEnum, DS_icon_placement_Enum, DS_size_Enum, DS_ButtonTypeEnum } from '../enums/index';
 import { LabelWithParam } from '../interfaces/index';
 
 
@@ -26,7 +26,7 @@ export class DS_ButtonComponent implements OnInit {
    * What kind of button it is? Default is primary
    */
   @Input()
-  public type: DS_TypeEnum = DS_TypeEnum.PRIMARY;
+  public type: DS_ButtonTypeEnum = DS_ButtonTypeEnum.PRIMARY;
 
   /**
    * Disable button

@@ -3,7 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { Meta, moduleMetadata, Story } from '@storybook/angular';
-import { DS_IconsEnum, DS_icon_placement_Enum, DS_size_Enum, DS_TypeEnum } from '../enums';
+import { DS_IconsEnum, DS_icon_placement_Enum, DS_size_Enum, DS_ButtonTypeEnum } from '../enums';
 import { createTranslateLoader } from '../../storybook-util/create-translate-loader.function';
 import { DS_ButtonComponent } from './ds-button.component';
 import { DS_ButtonModule } from './ds-button.module';
@@ -39,7 +39,7 @@ export default {
       control: {
         type: 'select',
       },
-      options: Object.values(DS_TypeEnum),
+      options: Object.values(DS_ButtonTypeEnum),
     },
     size: {
       control: {
@@ -73,7 +73,7 @@ const Template: Story<DS_ButtonComponent> = (args: DS_ButtonComponent) => ({
 export const Primary: Story<DS_ButtonComponent> = Template.bind({});
 Primary.args = {
   label: { label: 'Primary' },
-  type: DS_TypeEnum.PRIMARY,
+  type: DS_ButtonTypeEnum.PRIMARY,
   disabled: false,
   iconPlacement: undefined,
   icon: undefined,
@@ -86,26 +86,13 @@ Primary.args = {
 export const Secondary: Story<DS_ButtonComponent> = Template.bind({});
 Secondary.args = {
   label: { label: 'Secondary' },
-  type: DS_TypeEnum.SECONDARY,
+  type: DS_ButtonTypeEnum.SECONDARY,
 };
 
 export const Ternary: Story<DS_ButtonComponent> = Template.bind({});
 Ternary.args = {
   label: { label: 'Ternary' },
-  type: DS_TypeEnum.TERNARY,
-  disabled: false,
-  iconPlacement: undefined,
-  icon: undefined,
-  isFullWidth: true,
-  minimumwidth: true,
-  size: DS_size_Enum.normal,
-  customClasses: [],
-};
-
-export const Quaternary: Story<DS_ButtonComponent> = Template.bind({});
-Quaternary.args = {
-  label: { label: 'Quaternary' },
-  type: DS_TypeEnum.QUATERNARY,
+  type: DS_ButtonTypeEnum.TERNARY,
   disabled: false,
   iconPlacement: undefined,
   icon: undefined,
@@ -118,7 +105,7 @@ Quaternary.args = {
 export const Link: Story<DS_ButtonComponent> = Template.bind({});
 Link.args = {
   label: { label: 'Link' },
-  type: DS_TypeEnum.LINK,
+  type: DS_ButtonTypeEnum.LINK,
   disabled: false,
   icon: DS_IconsEnum.admin,
   iconPlacement: DS_icon_placement_Enum.after,
@@ -131,7 +118,7 @@ Link.args = {
 export const Disabled: Story<DS_ButtonComponent> = Template.bind({});
 Disabled.args = {
   label: { label: 'Disabled' },
-  type: DS_TypeEnum.PRIMARY,
+  type: DS_ButtonTypeEnum.PRIMARY,
   disabled: true,
   iconPlacement: undefined,
   icon: undefined,
@@ -144,7 +131,7 @@ Disabled.args = {
 export const NotFullWidth: Story<DS_ButtonComponent> = Template.bind({});
 NotFullWidth.args = {
   label: { label: 'Not full width' },
-  type: DS_TypeEnum.PRIMARY,
+  type: DS_ButtonTypeEnum.PRIMARY,
   isFullWidth: false,
   disabled: false,
   iconPlacement: undefined,
@@ -157,7 +144,7 @@ NotFullWidth.args = {
 export const WidthAuto: Story<DS_ButtonComponent> = Template.bind({});
 WidthAuto.args = {
   label: { label: 'Width Auto' },
-  type: DS_TypeEnum.PRIMARY,
+  type: DS_ButtonTypeEnum.PRIMARY,
   isFullWidth: false,
   minimumwidth: false,
   disabled: false,
@@ -170,7 +157,7 @@ WidthAuto.args = {
 export const Small: Story<DS_ButtonComponent> = Template.bind({});
 Small.args = {
   label: { label: 'Small' },
-  type: DS_TypeEnum.PRIMARY,
+  type: DS_ButtonTypeEnum.PRIMARY,
   isFullWidth: false,
   size: DS_size_Enum.small,
   disabled: false,
@@ -183,7 +170,7 @@ Small.args = {
 export const ExtraSmall: Story<DS_ButtonComponent> = Template.bind({});
 ExtraSmall.args = {
   label: { label: 'Extra Small' },
-  type: DS_TypeEnum.PRIMARY,
+  type: DS_ButtonTypeEnum.PRIMARY,
   isFullWidth: false,
   size: DS_size_Enum.extraSmall,
   disabled: false,
@@ -195,7 +182,7 @@ ExtraSmall.args = {
 export const IconBefore: Story<DS_ButtonComponent> = Template.bind({});
 IconBefore.args = {
   label: { label: 'Width Auto' },
-  type: DS_TypeEnum.PRIMARY,
+  type: DS_ButtonTypeEnum.PRIMARY,
   isFullWidth: false,
   icon: DS_IconsEnum.admin,
   iconPlacement: DS_icon_placement_Enum.before,
@@ -208,7 +195,7 @@ IconBefore.args = {
 export const IconAfter: Story<DS_ButtonComponent> = Template.bind({});
 IconAfter.args = {
   label: { label: 'Width Auto' },
-  type: DS_TypeEnum.PRIMARY,
+  type: DS_ButtonTypeEnum.PRIMARY,
   isFullWidth: false,
   icon: DS_IconsEnum.admin,
   iconPlacement: DS_icon_placement_Enum.after,

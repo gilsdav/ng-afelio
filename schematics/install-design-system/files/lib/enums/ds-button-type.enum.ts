@@ -1,7 +1,6 @@
-export enum DS_TypeEnum {
+export enum DS_ButtonTypeEnum {
   PRIMARY = '-primary',
   SECONDARY = '-secondary',
   TERNARY = '-ternary',
-  QUATERNARY = '-quaternary',
   LINK = '-link',
 }

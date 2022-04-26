@@ -125,9 +125,25 @@
         height: auto;
     }
 
-    &.-transparent {
-        background-color: transparent;
+    &.-link {
+        min-width: auto;
+        width: fit-content;
+        height: auto;
+        appearance: none;
+
+        @extend .p-none;
+
+        @extend .bg-transparent;
+
+        @extend .no-decoration;
+        @extend .text-center;
         @extend .c-primary03;
+        transition: color 0.25 ease-in-out;
+
+        &:hover {
+          @extend .bg-transparent;
+          color: $primary05;
+        }
     }
 
     &.-icon {
@@ -172,7 +188,12 @@
 
     &.-s {
         @extend .py-xs;
-        height: 32px;
+        height: compute-grid($grid-xl);
+    }
+
+    &.-xs {
+        @extend .py-xxs;
+        height: compute-grid($grid-l);
     }
 
     ////////////////////////////////////////////////////
