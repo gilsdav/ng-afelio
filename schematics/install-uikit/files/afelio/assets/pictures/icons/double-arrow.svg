@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    <g id="font/double-arrow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M18.46338,7 L31,19.5 L18.46338,32 L16.4814815,29.8483195 L25.8148148,20.5416667 L3,20.5416667 L3,17.4166667 L24.7705185,17.4166667 L16.4814815,9.1516805 L18.46338,7 Z M24.9111165,7 L37,19.5 L24.9111165,32 L23,29.8483195 L33.0079703,19.5 L23,9.1516805 L24.9111165,7 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

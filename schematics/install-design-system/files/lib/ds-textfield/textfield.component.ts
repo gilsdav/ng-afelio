@@ -11,7 +11,7 @@ import {
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { LabelWithParam } from '../interfaces/public-api';
+import { DS_LabelWithParam } from '../interfaces/public-api';
 import { DS_Textfield_type_Enum, DS_icon_placement_Enum, DS_IconsEnum } from '../enums/public-api';
 
 /**
@@ -23,20 +23,20 @@ import { DS_Textfield_type_Enum, DS_icon_placement_Enum, DS_IconsEnum } from '..
   providers: [
     {
         provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => TextfieldComponent),
+        useExisting: forwardRef(() => DS_TextfieldComponent),
         multi: true
     }
 ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextfieldComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
+export class DS_TextfieldComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
 
   /**
    * Textfield placeholder
    *
    */
   @Input()
-  public placeholder?: LabelWithParam;
+  public placeholder?: DS_LabelWithParam;
 
   /**
    * Textfield is disabled

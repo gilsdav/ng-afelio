@@ -6,8 +6,8 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { Meta, moduleMetadata, Story } from '@storybook/angular';
 import { createTranslateLoader } from '../../storybook-util/create-translate-loader.function';
 import { DS_IconsEnum, DS_icon_placement_Enum, DS_Textfield_type_Enum } from '../enums/public-api';
-import { TextfieldComponent } from './textfield.component';
-import { TextfieldModule } from './textfield.module';
+import { DS_TextfieldComponent } from './textfield.component';
+import { DS_TextfieldModule } from './textfield.module';
 // @ts-ignore
 import markdown from './textfield.stories.md';
 
@@ -34,7 +34,7 @@ const defaultArgTypes = {
 
 export default {
   title: 'DS/angular-components/Textfield',
-  component: TextfieldComponent,
+  component: DS_TextfieldComponent,
   decorators: [
     moduleMetadata({
       imports: [
@@ -49,7 +49,7 @@ export default {
             deps: [HttpClient]
           }
         }),
-        TextfieldModule
+        DS_TextfieldModule
       ],
       providers: [
         {
@@ -64,12 +64,12 @@ export default {
   }
 } as Meta;
 
-const Template: Story<TextfieldComponent> = (args: TextfieldComponent) => ({
-  component: TextfieldComponent,
+const Template: Story<DS_TextfieldComponent> = (args: DS_TextfieldComponent) => ({
+  component: DS_TextfieldComponent,
   props: args,
 });
 
-export const Example: Story<TextfieldComponent> = Template.bind({});
+export const Example: Story<DS_TextfieldComponent> = Template.bind({});
 Example.args = {
   placeholder: { label: 'Placeholder' },
   isDisabled: false,
@@ -79,7 +79,7 @@ Example.args = {
   customClasses: [],
 };
 
-export const Disabled: Story<TextfieldComponent> = Template.bind({});
+export const Disabled: Story<DS_TextfieldComponent> = Template.bind({});
 Disabled.args = {
   isDisabled: true,
   placeholder: { label: 'Disabled' },
@@ -89,7 +89,7 @@ Disabled.args = {
   customClasses: []
 };
 
-export const IconBefore: Story<TextfieldComponent> = Template.bind({});
+export const IconBefore: Story<DS_TextfieldComponent> = Template.bind({});
 IconBefore.args = {
   icon: DS_IconsEnum.esigna,
   iconPlacement: DS_icon_placement_Enum.before,
@@ -99,7 +99,7 @@ IconBefore.args = {
   customClasses: []
 };
 
-export const IconAfter: Story<TextfieldComponent> = Template.bind({});
+export const IconAfter: Story<DS_TextfieldComponent> = Template.bind({});
 IconAfter.args = {
   icon: DS_IconsEnum.esigna,
   iconPlacement: DS_icon_placement_Enum.after,

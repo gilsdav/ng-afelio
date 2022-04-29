@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { CheckboxComponent } from './checkbox.component';
+import { DS_CheckboxComponent } from './checkbox.component';
 
 @NgModule({
   imports: [
@@ -11,7 +11,7 @@ import { CheckboxComponent } from './checkbox.component';
     ReactiveFormsModule,
     TranslateModule
   ],
-  declarations: [CheckboxComponent],
-  exports: [CheckboxComponent],
+  declarations: [DS_CheckboxComponent],
+  exports: [DS_CheckboxComponent],
 })
-export class CheckboxModule { }
+export class DS_CheckboxModule { }

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, forwardRef, Input, OnChanges, OnDes
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { LabelWithParam } from '../interfaces/public-api';
+import { DS_LabelWithParam } from '../interfaces/public-api';
 /**
  * Doc on the radio
  */
@@ -12,20 +12,20 @@ import { LabelWithParam } from '../interfaces/public-api';
   providers: [
     {
         provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => RadioComponent),
+        useExisting: forwardRef(() => DS_RadioComponent),
         multi: true
     }
 ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RadioComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
+export class DS_RadioComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
 
   /**
    * Radio label
    *
    */
   @Input()
-  public label?: LabelWithParam;
+  public label?: DS_LabelWithParam;
 
   /**
    * Radio id

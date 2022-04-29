@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, forwardRef, Input, OnChanges, OnDes
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { LabelWithParam } from '../interfaces/public-api';
+import { DS_LabelWithParam } from '../interfaces/public-api';
 /**
  * Doc on the checkbox component
  */
@@ -12,20 +12,20 @@ import { LabelWithParam } from '../interfaces/public-api';
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => CheckboxComponent),
+            useExisting: forwardRef(() => DS_CheckboxComponent),
             multi: true
         }
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CheckboxComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
+export class DS_CheckboxComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
 
     /**
      * Checkbox label
      *
      */
     @Input()
-    public label?: LabelWithParam;
+    public label?: DS_LabelWithParam;
 
     /**
      * Checkbox id

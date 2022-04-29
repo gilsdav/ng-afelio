@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, forwardRef, OnChanges, OnDes
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { LabelWithParam } from '../interfaces/public-api';
+import { DS_LabelWithParam } from '../interfaces/public-api';
 
 @Component({
   selector: 'ds-textarea',
@@ -10,20 +10,20 @@ import { LabelWithParam } from '../interfaces/public-api';
   providers: [
     {
         provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => TextareaComponent),
+        useExisting: forwardRef(() => DS_TextareaComponent),
         multi: true
     }
 ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextareaComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
+export class DS_TextareaComponent implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
 
   /**
    * Textarea placeholder
    *
    */
   @Input()
-  public placeholder?: LabelWithParam;
+  public placeholder?: DS_LabelWithParam;
 
   /**
    * Textarea is disabled

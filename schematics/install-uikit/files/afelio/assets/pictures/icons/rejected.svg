@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    <g id="font/rejected" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M20,1 C30.4934102,1 39,9.50658975 39,20 C39,30.4934102 30.4934102,39 20,39 C9.50658975,39 1,30.4934102 1,20 C1,9.50658975 9.50658975,1 20,1 Z M20,4 C11.163444,4 4,11.163444 4,20 C4,28.836556 11.163444,36 20,36 C28.836556,36 36,28.836556 36,20 C36,11.163444 28.836556,4 20,4 Z M30.3125,18.5 L30.3125,21.5 L10.6875,21.5 L10.6875,18.5 L30.3125,18.5 Z" id="Shape" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

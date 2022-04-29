@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import {TextareaComponent} from './textarea.component';
+import {DS_TextareaComponent} from './textarea.component';
 
 @NgModule({
   imports: [
@@ -11,7 +11,7 @@ import {TextareaComponent} from './textarea.component';
     ReactiveFormsModule,
     TranslateModule
   ],
-  declarations: [TextareaComponent],
-  exports: [TextareaComponent],
+  declarations: [DS_TextareaComponent],
+  exports: [DS_TextareaComponent],
 })
-export class TextareaModule { }
+export class DS_TextareaModule { }

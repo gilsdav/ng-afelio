@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DS_IconsEnum, DS_icon_placement_Enum, DS_size_Enum, DS_ButtonTypeEnum } from '../enums/public-api';
-import { LabelWithParam } from '../interfaces/public-api';
+import { DS_LabelWithParam } from '../interfaces/public-api';
 
 /**
  * Doc on the button
@@ -19,7 +19,7 @@ export class DS_ButtonComponent implements OnInit {
    * @required
    */
   @Input()
-  public label!: LabelWithParam;
+  public label!: DS_LabelWithParam;
 
   /**
    * What kind of button it is? Default is primary

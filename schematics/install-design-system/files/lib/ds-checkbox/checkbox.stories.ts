@@ -6,14 +6,14 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { moduleMetadata, Meta, Story } from '@storybook/angular';
 import { createTranslateLoader } from '../../storybook-util/create-translate-loader.function';
 
-import { CheckboxComponent } from './checkbox.component';
-import { CheckboxModule } from './checkbox.module';
+import { DS_CheckboxComponent } from './checkbox.component';
+import { DS_CheckboxModule } from './checkbox.module';
 // @ts-ignore
 import markdown from './checkbox.stories.md';
 
 export default {
   title: 'DS/angular-components/Checkbox',
-  component: CheckboxComponent,
+  component: DS_CheckboxComponent,
   decorators: [
     moduleMetadata({
       imports: [
@@ -28,7 +28,7 @@ export default {
             deps: [HttpClient]
           }
         }),
-        CheckboxModule
+        DS_CheckboxModule
       ],
       providers: [
         {
@@ -42,12 +42,12 @@ export default {
   }
 } as Meta;
 
-const Template: Story<CheckboxComponent> = (args: CheckboxComponent) => ({
-  component: CheckboxComponent,
+const Template: Story<DS_CheckboxComponent> = (args: DS_CheckboxComponent) => ({
+  component: DS_CheckboxComponent,
   props: args,
 });
 
-export const ExampleWithLabel: Story<CheckboxComponent> = Template.bind({});
+export const ExampleWithLabel: Story<DS_CheckboxComponent> = Template.bind({});
 ExampleWithLabel.args = {
   label: {label: 'Checkbox with label'},
   id: 'checkBoxId',
@@ -56,7 +56,7 @@ ExampleWithLabel.args = {
   customClasses: []
 };
 
-export const ExampleWithoutLabel: Story<CheckboxComponent> = Template.bind({});
+export const ExampleWithoutLabel: Story<DS_CheckboxComponent> = Template.bind({});
 ExampleWithoutLabel.args = {
   label: undefined,
   id: 'checkBoxId',
@@ -65,7 +65,7 @@ ExampleWithoutLabel.args = {
   customClasses: []
 };
 
-export const ExampleNotfullWidth: Story<CheckboxComponent> = Template.bind({});
+export const ExampleNotfullWidth: Story<DS_CheckboxComponent> = Template.bind({});
 ExampleNotfullWidth.args = {
   isFullWidth: false,
   label: undefined,

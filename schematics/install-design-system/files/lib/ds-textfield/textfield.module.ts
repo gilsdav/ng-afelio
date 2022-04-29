@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { TextfieldComponent } from './textfield.component';
+import { DS_TextfieldComponent } from './textfield.component';
 
 @NgModule({
   imports: [
@@ -11,7 +11,7 @@ import { TextfieldComponent } from './textfield.component';
     ReactiveFormsModule,
     TranslateModule,
   ],
-  declarations: [TextfieldComponent],
-  exports: [TextfieldComponent],
+  declarations: [DS_TextfieldComponent],
+  exports: [DS_TextfieldComponent],
 })
-export class TextfieldModule { }
+export class DS_TextfieldModule { }

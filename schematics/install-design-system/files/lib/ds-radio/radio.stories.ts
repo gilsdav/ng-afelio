@@ -5,14 +5,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { Meta, moduleMetadata, Story } from '@storybook/angular';
 import { createTranslateLoader } from '../../storybook-util/create-translate-loader.function';
-import { RadioComponent } from './radio.component';
-import { RadioModule } from './radio.module';
+import { DS_RadioComponent } from './radio.component';
+import { DS_RadioModule } from './radio.module';
 // @ts-ignore
 import markdown from './radio.stories.md';
 
 export default {
   title: 'DS/angular-components/Radio',
-  component: RadioComponent,
+  component: DS_RadioComponent,
   decorators: [
     moduleMetadata({
       imports: [
@@ -27,7 +27,7 @@ export default {
             deps: [HttpClient]
           }
         }),
-        RadioModule
+        DS_RadioModule
       ],
       providers: [
         {
@@ -41,12 +41,12 @@ export default {
   }
 } as Meta;
 
-const Template: Story<RadioComponent> = (args: RadioComponent) => ({
-  component: RadioComponent,
+const Template: Story<DS_RadioComponent> = (args: DS_RadioComponent) => ({
+  component: DS_RadioComponent,
   props: args,
 });
 
-export const Default: Story<RadioComponent> = Template.bind({});
+export const Default: Story<DS_RadioComponent> = Template.bind({});
 Default.args = {
   label: undefined,
   id: 'id',
@@ -56,7 +56,7 @@ Default.args = {
   customClasses: []
 };
 
-export const Labelized: Story<RadioComponent> = Template.bind({});
+export const Labelized: Story<DS_RadioComponent> = Template.bind({});
 Labelized.args = {
   label: {label: 'With label'},
   id: 'id',
@@ -66,7 +66,7 @@ Labelized.args = {
   customClasses: []
 };
 
-export const isDisabled: Story<RadioComponent> = Template.bind({});
+export const isDisabled: Story<DS_RadioComponent> = Template.bind({});
 isDisabled.args = {
   isDisabled: true,
   label: {label: 'With label'},
