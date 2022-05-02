@@ -1,36 +1,38 @@
-const fs = require('fs').promises;
-const fsSync = require('fs');
-
+const fs = require('fs');
+const colors = require('colors');
 const mustache = require('mustache');
 const readline = require('readline');
 
-async function generateModelsFromGeneratedApi(folderSource, outputFolder, apiName) {
+function generateModelsFromGeneratedApi(folderSource, outputFolder, apiName) {
 
     const modelsToConvertPath = folderSource;
     const modelsConvertedPath = outputFolder;
     const apiPath = apiName;
 
-    // fs.stat(modelsToConvertPath, ).then(() => {
-        
-    //     console.log(`*** The path ${modelsToConvertPath} could not be found ! ***`)
-    //     process.exit(-1);
-    // })
-  
-    // createDirectory(modelsConvertedPath);
-    const files = await fs.readdir(modelsToConvertPath);
-    for(const file in files){
-        const fileName = files[file];
-        const filePath = `${modelsToConvertPath}\\${fileName}`;
-        const data = await fs.readFile(filePath, 'utf8');
-        if (data.includes('export interface')) {
-            convertInterfaceToClass(filePath, modelsConvertedPath, fileName.replace('-dto.d.ts', '.model.ts'), apiPath)
-        } else if (data.includes('export declare enum')) {
-            convertEnum(filePath, modelsConvertedPath, fileName.replace('-dto.d.ts', '.enum.ts'), apiPath)
+    return new Promise((resolve, reject) => {
+        if(!fs.existsSync(modelsToConvertPath)) {
+            reject();
         }
-    };
-    
-    console.log('*** FINISHED ***');
-    console.log(` You can find the converted models/enums at: ${modelsConvertedPath} `);
+        createDirectory(modelsConvertedPath);
+        const files = fs.readdirSync(modelsToConvertPath);
+        for(const file in files){
+            const fileName = files[file];
+            const filePath = `${modelsToConvertPath}\\${fileName}`;
+            if(!isDir(filePath)) {
+                const data = fs.readFileSync(filePath, 'utf8');
+                if (data.includes('export interface')) {
+                    convertInterfaceToClass(filePath, modelsConvertedPath, fileName.replace('-dto.d.ts', '.model.ts'), apiPath)
+                } else if (data.includes('export declare enum')) {
+                    convertEnum(filePath, modelsConvertedPath, fileName.replace('-dto.d.ts', '.enum.ts'), apiPath)
+                }
+            }
+        };
+        console.info(colors.green('==== FINISHED ===='));
+        console.info(` You can find the converted models/enums at: ${modelsConvertedPath} `);
+        resolve();
+    })
+
+   
 }
 
 /**
@@ -39,10 +41,10 @@ async function generateModelsFromGeneratedApi(folderSource, outputFolder, apiNam
  * @param {*} outputFile the path of the file which will contains the model
  */
 function convertInterfaceToClass(filePath, outputFolder, outputFile, apiPath) {
-    const templatesPath = 'D:\\Projects\\Afelio\\ng-afelio\\scripts\\api-models-converter\\templates';
+    const templatesPath = '.\\scripts\\api-models-converter\\templates';
 
     const rl = readline.createInterface({
-        input: fsSync.createReadStream(filePath),
+        input: fs.createReadStream(filePath),
         crlfDelay: Infinity
     });
     let lineExport = '';
@@ -70,7 +72,7 @@ function convertInterfaceToClass(filePath, outputFolder, outputFile, apiPath) {
             properties,
             imports
         });
-        fsSync.writeFileSync(`${outputFolder}/${outputFile}`, renderedClass);
+        fs.writeFileSync(`${outputFolder}/${outputFile}`, renderedClass);
         rl.close();
     });
 
@@ -82,10 +84,10 @@ function convertInterfaceToClass(filePath, outputFolder, outputFile, apiPath) {
  * @param {*} outputFile the path of the file which will contains the enum
  */
 function convertEnum(filePath, outputFolder, outputFile, apiPath) {
-    const templatesPath = 'D:\\Projects\\Afelio\\ng-afelio\\scripts\\api-models-converter\\templates';
+    const templatesPath = '.\\scripts\\api-models-converter\\templates';
 
     const rl = readline.createInterface({
-        input: fsSync.createReadStream(filePath),
+        input: fs.createReadStream(filePath),
         crlfDelay: Infinity
     });
     let lineExport = '';
@@ -112,7 +114,7 @@ function convertEnum(filePath, outputFolder, outputFile, apiPath) {
             imports
         });
 
-        fsSync.writeFileSync(`${outputFolder}/${outputFile}`, renderedClass);
+        fs.writeFileSync(`${outputFolder}/${outputFile}`, renderedClass);
         rl.close();
     });
 
@@ -205,7 +207,7 @@ function enumPropertiesHandler(linesProp) {
  * @returns the rendered mustache template
  */
 function renderTemplate(filePath, variables) {
-    const template = fsSync.readFileSync(filePath, 'latin1');
+    const template = fs.readFileSync(filePath, 'latin1');
     template.replace(/\{\{([^\}]*)\}\}/g, '{{{$1}}}');
     const rendered = mustache.render(template, variables);
     return rendered;
@@ -216,10 +218,24 @@ function renderTemplate(filePath, variables) {
  * @param {*} path the path of the directory to create
  */
 function createDirectory(path) {
-    if (!fsSync.existsSync(path)) {
-        fsSync.mkdirSync(path);
+    if (!fs.existsSync(path)) {
+        fs.mkdirSync(path);
     }
 }
 
+/**
+ * Check if a path is a directory
+ * @param {*} the path 
+ * @returns true if it is a directory, false otherwise
+ */
+function isDir(path) {
+    try {
+        var stat = fs.lstatSync(path);
+        return stat.isDirectory();
+    } catch (e) {
+        // lstatSync throws an error if path doesn't exist
+        return false;
+    }
+}
 
 module.exports = generateModelsFromGeneratedApi;

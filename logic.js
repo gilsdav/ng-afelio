@@ -137,11 +137,9 @@ function produceNgOptions(ngOptionsString) {
     return ngOptions;
 }
 
-
-
 const generateModelsFromGeneratedApi = async (folderSource, outputFolder, apiName ) => {
-    const generateModelsFromGeneratedApi = require('./scripts/api-models-converter/model-converter');
-    return await generateModelsFromGeneratedApi(folderSource, outputFolder, apiName); 
+    const generateModelsFromApi = require('./scripts/api-models-converter/model-converter');
+    return generateModelsFromApi(folderSource, outputFolder, apiName); 
 }
 
 // Export all methods

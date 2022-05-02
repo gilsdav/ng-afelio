@@ -211,9 +211,7 @@ program
   .option('-o, --output <output>', 'The folder which will hold the generated models')
   .option('-a, --api <apiName>', 'The api name used in the imports')
   .action((options) => {
-      generateModelsFromGeneratedApi(options.folder, options.output, options.api).then(() => {
-        process.exit();
-      });
+      generateModelsFromGeneratedApi(options.folder, options.output, options.api);
   });
 
 program.on('command:*', () => {
