@@ -127,15 +127,6 @@
         }
     }
 
-     .-up
-    {
-        #{$root}__icon
-        {
-            transform:  translateY(-12px)
-                        rotate(180deg);
-        }
-    }
-
     &.-l
     {
         #{$root}__label

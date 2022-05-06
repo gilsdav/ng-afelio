@@ -1,69 +1,120 @@
-////////////////////////////////////////////////////
-//
-//              1. primary
-//
-////////////////////////////////////////////////////
+// This is just an example, I'll need to change these variables to fit you design & necessities 
 
-$primary01: #F6F8FB;
-$primary02: #E2E8F3;
-$primary03: #4DA9D6;
-$primary04: #0A90D0;
-$primary05: #007CB4;
-$primary06: #004171;
-$primary07: #002F51;
+
+
+////////////////////////////////////////////////////
+//
+//              Primary
+//
+////////////////////////////////////////////////////
+:root {
+  --primary01: #F6F8FB;
+  --primary02: #E2E8F3;
+  --primary03: #4DA9D6;
+  --primary04: #0A90D0;
+  --primary05: #007CB4;
+  --primary06: #004171;
+  --primary07: #002F51;
+
+  --grey00: #fff;
+  --grey01: #EFEFEF;
+  --grey02: #BDC0C1;
+  --grey03: #B2B4B9;
+  --grey04: #909296;
+  --grey05: #69767C;
+  --grey06: #5E616E;
+  --grey07: #445055;
+  --grey08: #262929;
+
+  --accent01: #D91E15;
+  --accent02: #8f0b05;
+}
+
+.invert {
+  --primary07: #F6F8FB;
+  --primary06: #E2E8F3;
+  --primary05: #4DA9D6;
+  --primary04: #0A90D0;
+  --primary03: #007CB4;
+  --primary02: #004171;
+  --primary01: #002F51;
+
+  --grey08: #fff;
+  --grey07: #EFEFEF;
+  --grey06: #BDC0C1;
+  --grey05: #B2B4B9;
+  --grey04: #909296;
+  --grey03: #69767C;
+  --grey02: #5E616E;
+  --grey01: #445055;
+  --grey00: #262929;
+
+  --accent01: #15d960;
+  --accent02: #057731;
+}
+
+$primary01: var(--primary01);
+$primary02: var(--primary02);
+$primary03: var(--primary03);
+$primary04: var(--primary04);
+$primary05: var(--primary05);
+$primary06: var(--primary06);
+$primary07: var(--primary07);
 
 $primary: ('primary01', $primary01),
-          ('primary02', $primary02),
-          ('primary03', $primary03),
-          ('primary04', $primary04),
-          ('primary05', $primary05),
-          ('primary06', $primary06),
-          ('primary07', $primary07);
+        ('primary02', $primary02),
+        ('primary03', $primary03),
+        ('primary04', $primary04),
+        ('primary05', $primary05),
+        ('primary06', $primary06),
+        ('primary07', $primary07);
 
 ////////////////////////////////////////////////////
 //
-//              2. grey
+//              Grey
+//
+////////////////////////////////////////////////////
+
+$grey00: var(--grey00);
+$grey01: var(--grey01);
+$grey02: var(--grey02);
+$grey03: var(--grey03);
+$grey04: var(--grey04);
+$grey05: var(--grey05);
+$grey06: var(--grey06);
+$grey07: var(--grey07);
+$grey08: var(--grey08);
+
+$grey:('grey00', $grey00),
+    ('grey01', $grey01),
+    ('grey02', $grey02),
+    ('grey03', $grey03),
+    ('grey04', $grey04),
+    ('grey05', $grey05),
+    ('grey06', $grey06),
+    ('grey07', $grey07),
+    ('grey08', $grey08);
+
+////////////////////////////////////////////////////
+//
+//              Accent
+//
+////////////////////////////////////////////////////
+
+$accent01: var(--accent01);
+$accent02: var(--accent02);
+
+$accent:  ('accent01', $accent01),
+        ('accent02', $accent02);
+
+////////////////////////////////////////////////////
+//
+//              Utility
 //
 ////////////////////////////////////////////////////
 
 $transparent: transparent;
 $current: currentColor;
-$grey00: #fff;
-$grey01: #EFEFEF;
-$grey02: #BDC0C1;
-$grey03: #B2B4B9;
-$grey04: #909296;
-$grey05: #69767C;
-$grey06: #5E616E;
-$grey07: #445055;
-$grey08: #262929;
-
-$grey:('grey00', $grey00),
-      ('grey01', $grey01),
-      ('grey02', $grey02),
-      ('grey03', $grey03),
-      ('grey04', $grey04),
-      ('grey05', $grey05),
-      ('grey06', $grey06),
-      ('grey07', $grey07),
-      ('grey08', $grey08);
-
-////////////////////////////////////////////////////
-//
-//              3. accent
-//
-////////////////////////////////////////////////////
-
-$accent01: #D91E15;
-
-$accent: ('accent01', $accent01),
-         ('accent02', $accent01);
-
-////////////////////////////////////////////////////
-//
-//              5. Utility
-//
-////////////////////////////////////////////////////
 
 $palettes: join($primary, join($grey, $accent));
 
@@ -71,5 +122,5 @@ $palettes: join($primary, join($grey, $accent));
 @include color-utility('current', $current);
 @each $name, $property in $palettes
 {
-  @include color-utility(#{$name}, $property);
+@include color-utility(#{$name}, $property);
 }

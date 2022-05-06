@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 /// Select all children from the first to `$num`.
 /// @group with-arguments
 /// @content [Write the style you want to apply to the children, and it will be added within the @content directive]
@@ -131,7 +133,7 @@
 /// @content [Write the style you want to apply to the children, and it will be added within the @content directive]
 /// @param {number} $num - id of the child
 @mixin middle($num) {
-  &:nth-child(#{round($num / 2)}){
+  &:nth-child(#{round(math.div($num, 2))}){
     @content;
   }
 }
@@ -239,7 +241,7 @@
   }
 }
 
-/// Will only select the child if it’s unique.
+/// Will only select the child if it's unique.
 /// @group no-arguments
 /// @content [Write the style you want to apply to the children, and it will be added within the @content directive]
 /// @alias only
@@ -249,7 +251,7 @@
   }
 }
 
-/// Will only select the child if it’s unique.
+/// Will only select the child if it's unique.
 /// @group no-arguments
 /// @content [Write the style you want to apply to the children, and it will be added within the @content directive]
 @mixin only() {

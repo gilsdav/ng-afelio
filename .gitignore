@@ -69,6 +69,10 @@ typings/
 !.vscode/extensions.json
 .history
 
+# System Files
+.DS_Store
+Thumbs.db
+
 
 # End of https://www.gitignore.io/api/node,visualstudiocode
 
@@ -76,6 +80,7 @@ package-lock.json
 
 node_modules
 schematics/**/*.js
+schematics/**/*.js.map
 schematics/**/*.d.ts
 builders/**/*.js
 builders/**/*.d.ts

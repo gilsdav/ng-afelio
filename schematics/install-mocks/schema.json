@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/schema",
-    "id": "SchematicsNgAfelioMocksSystem",
+    "$id": "SchematicsNgAfelioMocksSystem",
     "title": "ng-afelio Generate mocks system",
     "type": "object",
     "properties": {

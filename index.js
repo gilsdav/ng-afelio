@@ -6,7 +6,7 @@ const packageJson = require('./package.json');
 
 const { schematics } = require('./collection.json');
 
-const { 
+const {
   createNewProject,
   // getAngularVersion,
   serveUIKit,
@@ -18,7 +18,8 @@ const {
   generateApi,
   regenerateApi,
   checkFiles,
-  generateModelsFromGeneratedApi
+  generateModelsFromGeneratedApi,
+  generateI18n
 } = require('./logic');
 
 const { getAllArgs } = require('./remainer-args');
@@ -52,9 +53,10 @@ program
   .alias('n')
   .description('Generate new Angular project')
   .option('--ui-kit <uiKit>', 'Ui-kit type (' + Object.values(uiKitTypes).slice(1).join(', ') + ').', uiKitTypes.DEFAULT)
+  .option('--open-api', 'Is OpenApi project', false)
   .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--commit=false --directory=."')
   .action((name, options) => {
-    createNewProject(name, options.uiKit || false, options.ng).then(() => {
+    createNewProject(name, options.uiKit || false, options.openApi || false, options.ng).then(() => {
       console.info(`Please go to new directory "cd ./${name}"`);
       process.exit();
     });
@@ -149,8 +151,9 @@ program
 program
   .command('style')
   .description('Build style from UI Kit')
-  .action(() => {
-    buildStyle().then(() => {
+  .option('-w, --watch <watch>', 'Folder path to watch. Example: "projects/ui-kit"')
+  .action((options) => {
+    buildStyle(options.watch).then(() => {
       process.exit();
     });
   });
@@ -193,8 +196,11 @@ program
   .command('check <type>')
   .description('Check alignement between files (type: environment or i18n)')
   .option('-m, --mainFile <mainFile>', 'Automaticaly align all files with the main.')
+  .option('--fix', 'Generate i18n labels based on main file (default is fr.json).')
   .action((type, options) => {
-    if (type === 'environment' || type === 'i18n') {
+    if (type === 'i18n' && options.fix) {
+      generateI18n(options.mainFile);
+    } else if (type === 'environment' || type === 'i18n') {
       checkFiles(type, options.mainFile).then(() => {
         process.exit();
       });
@@ -219,7 +225,7 @@ program.on('command:*', () => {
   program.outputHelp(((text) => `Here is how to use this CLI:\n\n${text}`));
   process.exit(1);
 });
-  
+
 program.parse(process.argv);
 
 // const options = program.opts();

@@ -4,15 +4,7 @@
 //
 ////////////////////////////////////////////////////
 
-@import "sass/tools/animation.utility";
-@import "sass/tools/border.utility";
-@import "sass/tools/color.utility";
-@import "sass/tools/grid.utility";
-@import "sass/tools/shadow.utility";
-
-@import "sass/tools/typography.font-size";
-@import "sass/tools/typography.typeface";
-@import "sass/tools/typography.unicode";
+@import "sass/tools/tools";
 
 ////////////////////////////////////////////////////
 //
@@ -37,9 +29,7 @@
 
 @import "sass/properties/border";
 @import "sass/properties/layout";
-@import "sass/properties/shadow";
 @import "sass/properties/typography";
-@import "sass/properties/animation";
 
 ////////////////////////////////////////////////////
 //
@@ -74,7 +64,6 @@
 @import "sass/components/forms.switch";
 @import "sass/components/link";
 @import "sass/components/table";
-@import "sass/components/table-header";
 @import "sass/components/typography.styles";
 
 ////////////////////////////////////////////////////

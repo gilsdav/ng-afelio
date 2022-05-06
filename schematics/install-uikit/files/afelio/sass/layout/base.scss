@@ -1,11 +1,7 @@
-html
-{
-    overflow-x: hidden;
-}
 html,
-body
-{
+body {
     height: 100%;
+    overflow-x: hidden;
     margin: 0;
     padding: 0;
     @extend .f-regular;
@@ -15,94 +11,6 @@ body
     @extend .bg-grey00;
 }
 
-////////////////////////////////////////////////////
-//
-//                  Typography
-//
-////////////////////////////////////////////////////
-
-h1
-{
-    @extend .f-medium;
-    line-height: 40px;
-    font-size: 32px;
-    @extend .my-none;
-}
-
-h2
-{
-    @extend .f-medium;
-    line-height: 32px;
-    font-size: 24px;
-    @extend .my-none;
-}
-
-h3
-{
-    @extend .f-regular;
-    line-height: 32px;
-    font-size: 20px;
-    @extend .my-none;
-    @extend .c-primary05;
-
-    &.-header
-    {
-        @extend .mx-none;
-        @extend .mt-none;
-        @extend .mb-l;
-        padding-top: compute-grid($grid-xl + $grid-xs + $grid-xxs/2); // 42px
-        @extend .pb-xs;
-
-        border-bottom: 1px solid $grey03;
-
-        @extend .f-regular;
-
-        &.-no-mb
-        {
-            @extend .mb-none;
-        }
-
-        &.-no-pt
-        {
-            @extend .pt-none;
-        }
-    }
-}
-
-h4
-{
-    @extend .f-bold;
-    line-height: 24px;
-    font-size: 16px;
-    @extend .c-grey08;
-    @extend .my-none;
-    @extend .pb-xxs;
-}
-
-h5
-{
-    @extend .f-medium;
-    line-height: 20px;
-    font-size: 14px;
-    @extend .uppercase;
-    @extend .c-grey08;
-    @extend .my-none;
-}
-
-p
-{
-    line-height: 20px;
-    font-size: 14px;
-    @extend .my-none;
-    @extend .c-grey08;
-}
-
-small
-{
-    @extend .f-regular;
-    line-height: 20px;
-    font-size: 14px;
-}
 
 ////////////////////////////////////////////////////
 //
@@ -110,25 +18,23 @@ small
 //
 ////////////////////////////////////////////////////
 
-*:focus
-{
+*:focus {
     outline-style: none;
     outline: none !important;
 }
 
 ////////////////////////////////////////////////////
 //
-//                  Main
+//                  Utilities
 //
 ////////////////////////////////////////////////////
 
-a
-{
+a {
     text-decoration: none;
+
     &:hover,
     &:focus,
-    &:active
-    {
+    &:active {
         text-decoration: none;
     }
 }
@@ -139,25 +45,21 @@ a
     white-space: nowrap;
 }
 
-.clean-list
-{
+.clean-list {
     @extend .p-none;
     @extend .m-none;
 
     list-style: none;
 }
 
-.bullet-list
-{
+.bullet-list {
     @extend .clean-list;
 
-    >li
-    {
+    >li {
         @extend .pl-l;
         @extend .relative;
 
-        &:before
-        {
+        &:before {
             content: '';
             @extend .absolute;
             left: 4px;
@@ -171,19 +73,16 @@ a
     }
 }
 
-.nowrap
-{
+.nowrap {
     white-space: nowrap;
 }
 
 *, :after, :before {
     box-sizing: border-box;
 }
-.c-pointer
-{
+.c-pointer {
     cursor: pointer;
 }
-.c-help
-{
+.c-help {
     cursor: help;
 }

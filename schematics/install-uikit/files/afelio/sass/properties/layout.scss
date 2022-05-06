@@ -1,17 +1,15 @@
+@use 'sass:math';
+
 ////////////////////////////////////////////////////
 //
-//              1. Grid
+//              Grid
 //
 ////////////////////////////////////////////////////
 
-@include grid-utility('xxs',  $grid-xxs);
-@include grid-utility('xs',   $grid-xs);
-@include grid-utility('s',    $grid-s);
-@include grid-utility('m',    $grid-m);
-@include grid-utility('l',    $grid-l);
-@include grid-utility('xl',   $grid-xl);
-@include grid-utility('xxl',  $grid-xxl);
-
+@each $size, $qty in $all-grid-size
+{
+  @include grid-utility(#{$size}, $qty);
+}
 
 .p-none { padding: 0; }
 .px-none{ padding-left: 0; padding-right: 0; }
@@ -63,7 +61,7 @@
 .col-lg-auto, .col-xl-1, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl,
 .col-xl-auto
 {
-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 @if $external-gutters and $external-gutters != 0
@@ -83,17 +81,18 @@ box-sizing: border-box;
   {
     > *
     {
-      margin-left: #{$internal-gutters / 2};
-      margin-right: #{$internal-gutters / 2};
+      margin-left: math.div($internal-gutters, 2);
+      margin-right: math.div($internal-gutters, 2);
     }
   }
 }
 
 ////////////////////////////////////////////////////
 //
-//              2. Flex
+//              Flex
 //
 ////////////////////////////////////////////////////
+
 $root: ".flex";
 .flex
 {
@@ -207,10 +206,3 @@ $root: ".flex";
   #{$root}-2{ flex: 2; }
   #{$root}-3{ flex: 3; }
   #{$root}-auto{ flex: 1 0 auto; }
-
-
-////////////////////////////////////////////////////
-//
-//              3. Responsive
-//
-////////////////////////////////////////////////////

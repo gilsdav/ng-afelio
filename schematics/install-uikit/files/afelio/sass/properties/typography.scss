@@ -1,7 +1,8 @@
 @charset 'utf-8';
+
 ////////////////////////////////////////////////////
 //
-//              1. Typefaces
+//              Typefaces
 //
 ////////////////////////////////////////////////////
 
@@ -10,70 +11,89 @@ $f-icons: 'icons';
 @include typeface('icons', 'icons', 'icons', 'icon', 400);
 
 // Texts fonts
- @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap');
 
- @include typeface(null, 'Roboto', 'Roboto', 'regular', 400);
- @include typeface(null, 'Roboto', 'Roboto', 'medium', 500);
- @include typeface(null, 'Roboto', 'Roboto', 'bold', 700);
+@include typeface(null, 'Roboto', 'Roboto', 'regular', 400);
+@include typeface(null, 'Roboto', 'Roboto', 'medium', 500);
+@include typeface(null, 'Roboto', 'Roboto', 'bold', 700);
 
 
 ////////////////////////////////////////////////////
 //
-//              2. Sizes
+//              Sizes
 //
 ////////////////////////////////////////////////////
-@include font-utility('xxs',  $font-xxs);
-@include font-utility('xs',   $font-xs);
-@include font-utility('s',    $font-s);
-@include font-utility('m',    $font-m);
-@include font-utility('l',    $font-l);
-@include font-utility('xl',   $font-xl);
-@include font-utility('xxl',  $font-xxl);
+
+@each $size, $qty in $all-font-size
+{
+  @include font-utility(#{$size}, $qty);
+}
+
+@each $size, $qty in $all-grid-size
+{
+  @include line-height-size(#{$size}, $qty);
+}
+
 ////////////////////////////////////////////////////
 //
-//              3. Alignement
+//              Alignement
 //
 ////////////////////////////////////////////////////
+
 .text-left { text-align: left; }
 .text-center { text-align: center; }
 .text-right { text-align: right; }
 .text-justify { text-align: justify; }
+
+
 ////////////////////////////////////////////////////
 //
-//              4. Case
+//              Case
 //
 ////////////////////////////////////////////////////
+
 .capitalize{ text-transform: capitalize; }
 .uppercase{ text-transform: uppercase; }
 .lowercase{ text-transform: lowercase; }
+
+
 ////////////////////////////////////////////////////
 //
-//              5. Styles
+//              Styles
 //
 ////////////////////////////////////////////////////
+
 .italic{ font-style: italic; }
 .oblique{ font-style: oblique; }
+
+
 ////////////////////////////////////////////////////
 //
-//              5. Wrap
+//              Wrap
 //
 ////////////////////////////////////////////////////
+
 .break-all{ word-break: break-all; }
 .break-word{ word-wrap: break-word; }
+
+
 ////////////////////////////////////////////////////
 //
-//              5. Decoration
+//              Decoration
 //
 ////////////////////////////////////////////////////
+
 .no-decoration{ text-decoration: none; }
 .underline{ text-decoration: underline; }
 .overline{ text-decoration: overline; }
 .strikethrough{ text-decoration: line-through; }
+
 ////////////////////////////////////////////////////
 //
-//              6. Icons
+//              Icons
 //
 ////////////////////////////////////////////////////
+
 [class^="icon-"],
 [class*=" icon-"],
 .icon {

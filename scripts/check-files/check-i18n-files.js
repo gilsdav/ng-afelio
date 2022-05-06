@@ -1,7 +1,9 @@
 const path = require('path');
 const fs = require('fs');
 const colors = require('colors');
-const { flatten, diff } = require('./util');
+const { flatten, diff, getConfig } = require('./util');
+
+const defaultFile = 'fr.json';
 
 function checkIfFilesExists(currentPath, file) {
     return fs.existsSync(path.join(currentPath, file));
@@ -46,6 +48,10 @@ function toConsoleText(diffs) {
 }
 
 function checkFiles(mainFile) {
+    if (!mainFile) {
+        const config = getConfig('i18n');
+        mainFile = config && config.mainFile || defaultFile;
+    }
     const currentPath = process.cwd();
     return new Promise((resolve, reject) => {
         const diffs = {};
@@ -63,5 +69,33 @@ function checkFiles(mainFile) {
         }
     });
 }
-  
-module.exports = checkFiles;
+
+function alignWith(base, target, suffix) {
+    let result = {};
+    Object.keys(base).forEach((baseKey) => {
+        const targetValue = target ? target[baseKey] : null;
+        if (typeof base[baseKey] === 'object') {
+            result[baseKey] = alignWith(base[baseKey], targetValue, suffix);
+        } else {
+            const isPresentInTarget = !!targetValue;
+            result[baseKey] = isPresentInTarget ? targetValue : base[baseKey] + suffix;
+        }
+    });
+    return result;
+}
+
+function fixI18n(mainFile) {
+    if (!mainFile) {
+        const config = getConfig('i18n');
+        mainFile = config && config.mainFile || defaultFile;
+    }
+    const mainFileContent = JSON.parse(fs.readFileSync(mainFile).toString());
+    const otherFiles = getListOfLocalFiles(process.cwd()).filter((f) => f !== mainFile);
+    otherFiles.forEach((otherFile) => {
+        const otherFileContent = JSON.parse(fs.readFileSync(otherFile).toString() || '{}');
+        const result = alignWith(mainFileContent, otherFileContent, '_' + otherFile.substring(0, otherFile.indexOf('.')));
+        fs.writeFileSync(otherFile, JSON.stringify(result, undefined, 4));
+    });
+}
+
+module.exports = { checkFiles, fixI18n };

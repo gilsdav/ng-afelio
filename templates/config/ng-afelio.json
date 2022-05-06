@@ -1,13 +1,21 @@
 {
     "style": {
-        "styleUtils": {
-            "enable": true,
-            "input": "styles.scss",
-            "output": "style-utils.scss"
-        },
+        "styleUtils": [
+            { "input": "ui-kit-styles.scss", "output": "style-utils.scss" }
+        ],
         "files": [
-            { "input": "styles.scss", "output": "main.scss", "global": true }
-        ]
+            { "input": "ui-kit-styles.scss", "output": "main.scss", "global": true }
+        ],
+        "baseInputDirectory": "./projects/ui-kit",
+        "baseOutputDirectory": "../../styles",
+        "inputPrefix": "./src/",
+        "addUiKitAssets": true,
+        "addAngularStyleShortcut": true
     },
-    "ng-swagger-gen" : "version"
+    "i18n": {
+        "mainFile": "fr.json"
+    },
+    "environment": {
+        "mainFile": "environment.ts"
+    }
 }

@@ -6,4 +6,5 @@ export interface Schema {
     guards?: boolean;
     pipes?: boolean;
     stores?: boolean;
+    directives?: boolean;
 }
