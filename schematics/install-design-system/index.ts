@@ -24,61 +24,61 @@ function installDependencies(): Rule {
         toInstall.push({
             type: NodeDependencyType.Default,
             name: '@storybook/addon-actions',
-            version: '6.4.22',
+            version: '6.5.9',
             overwrite: true,
         });
         toInstall.push({
             type: NodeDependencyType.Default,
             name: '@storybook/addon-essentials',
-            version: '6.4.22',
+            version: '6.5.9',
             overwrite: true,
         });
         toInstall.push({
             type: NodeDependencyType.Default,
             name: '@storybook/addon-links',
-            version: '6.4.22',
+            version: '6.5.9',
             overwrite: true,
         });
         toInstall.push({
             type: NodeDependencyType.Default,
             name: '@storybook/angular',
-            version: '6.4.22',
+            version: '6.5.9',
             overwrite: true,
         });
         toInstall.push({
             type: NodeDependencyType.Default,
             name: '@storybook/builder-webpack5',
-            version: '6.4.22',
+            version: '6.5.9',
             overwrite: true,
         });
         toInstall.push({
             type: NodeDependencyType.Default,
             name: '@storybook/manager-webpack5',
-            version: '6.4.22',
+            version: '6.5.9',
             overwrite: true,
         });
         toInstall.push({
             type: NodeDependencyType.Default,
             name: '@storybook/addons',
-            version: '6.4.22',
+            version: '6.5.9',
             overwrite: true,
         });
         toInstall.push({
             type: NodeDependencyType.Default,
             name: '@storybook/addon-controls',
-            version: '6.4.22',
+            version: '6.5.9',
             overwrite: true,
         });
         toInstall.push({
             type: NodeDependencyType.Default,
             name: '@storybook/theming',
-            version: '6.4.22',
+            version: '6.5.9',
             overwrite: true,
         });
         toInstall.push({
             type: NodeDependencyType.Default,
             name: '@compodoc/compodoc',
-            version: '1.1.11',
+            version: '1.1.19',
             overwrite: true,
         });
         toInstall.push({
@@ -86,12 +86,6 @@ function installDependencies(): Rule {
             name: 'ngx-translate-multi-http-loader',
             version: '7.0.5',
             overwrite: false,
-        });
-        toInstall.push({
-            type: NodeDependencyType.Default,
-            name: '@storybook/manager-webpack5',
-            version: '6.4.22',
-            overwrite: true,
         });
         toInstall.forEach(dep => {
             addPackageJsonDependency(host, dep);
@@ -158,6 +152,8 @@ function updateTsconfigAlias(optionName: string): Rule {
 
 function addStorybookConfigToAngularJSON(): Rule {
     const storybookConfig = {
+        'root': '',
+        'projectType': 'library',
         'architect': {
             'build': {
                 'builder': '@angular-devkit/build-angular:browser',
