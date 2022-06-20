@@ -85,7 +85,7 @@ function installDependencies(): Rule {
             type: NodeDependencyType.Default,
             name: 'ngx-translate-multi-http-loader',
             version: '7.0.5',
-            overwrite: true,
+            overwrite: false,
         });
         toInstall.push({
             type: NodeDependencyType.Default,
@@ -196,6 +196,22 @@ function addStorybookConfigToAngularJSON(): Rule {
     };
 }
 
+function installNgxTranslate(): Rule {
+    return (host: Tree, context: SchematicContext) => {
+        const packageFile = '/package.json';
+        const text = host.read(packageFile);
+        if (!text) {
+            throw new SchematicsException(`Can not find "package.json" file in your project.`);
+        }
+        const sourceText = text.toString('utf8');
+        const alreadyInstalled = sourceText.indexOf(`"@ngx-translate/core"`) !== -1;
+        if (!alreadyInstalled) {
+            return schematic('install-translate', {})(host, context);
+        }
+        return host;
+    };
+}
+
 async function applyDesignSytemTemplate(options: DesignSystemOptions): Promise<Rule> {
     const projectDesignSytemPath = `/projects/${options.name}/src`;
     const templateSource = apply(url('./files' as Path), [
@@ -233,7 +249,7 @@ export default function(options: DesignSystemOptions): Rule {
                 prefix,
                 skipInstall: true,
             }),
-            schematic('install-translate', {}),
+            installNgxTranslate(),
             await applyDesignSytemTemplate(options),
             await applyDesignSystemDocumentationTemplate(options),
             addStorybookConfigToAngularJSON(),
