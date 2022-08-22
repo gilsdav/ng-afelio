@@ -89,9 +89,10 @@ program
   .option('-e, --env <environment>', 'Change default environment')
   .option('-p, --port <port>', 'Change default port', 4200)
   .option('-u, --ui-port <uiPort>', 'Change default port of ui-kit', 5200)
-  .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
+  .option('--ng <ng>', 'Standard Angular CLI options for dev server (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
+  .option('--ui-ng <uiNg>', 'Standard Angular CLI options for ui-kit server (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
   .action((options) => {
-    Promise.all([serveMain(options.env, options.port, options.ng), serveUIKit(options.uiPort, options.ng)]);
+    Promise.all([serveMain(options.env, options.port, options.ng), serveUIKit(options.uiPort, options.uiNg)]);
   });
 
 const generateCommand = program.command('generate [type] [name]')

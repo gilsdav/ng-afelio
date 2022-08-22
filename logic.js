@@ -157,7 +157,7 @@ const build = async (environment, ssr, baseHref, ngOptionsString) => {
     if (ssr) {
         console.warn(colors.underline(colors.yellow('Not implemented yet.')));
     } else {
-        return await pexec(`npx ng build --prod --configuration=${environment} ${baseHref ? `--base-href=${baseHref}` : ''} ${produceNgOptions(ngOptionsString).join('')}`, { cwd: currentPath });
+        return await pexec(`npx ng build --configuration=${environment} ${baseHref ? `--base-href=${baseHref}` : ''} ${produceNgOptions(ngOptionsString).join('')}`, { cwd: currentPath });
         // return await cli.default({cliArgs: baseArgs});
     }
 }
