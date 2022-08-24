@@ -112,6 +112,7 @@ async function buildUtils(config, bundlerBasePath) {
                 const outputPath = path.join(outputDirectory, output);
                 enforceDirectoryExistance(outputPath);
                 return new Promise((resolve, error) => {
+                    extractedCss = '@use "sass:math";\n' + extractedCss;
                     fs.writeFile(outputPath, extractedCss, function (err) {
                         if (!err) {
                             console.info(`${colors.green('BUILD style utils')} was saved in "${outputPath}"`);
