@@ -7,7 +7,7 @@ import { AuthenticationService } from '../services/authentication.service';
 /**
  * NgIf that take a list of permissions to compare with user token.
  *
- * Usage: `<ng-container [canAccess]="[...]" >...</ng-container>"`
+ * Usage: `<ng-container *canAccess="[...]" >...</ng-container>"`
  */
 @Directive({
     // tslint:disable-next-line: directive-selector

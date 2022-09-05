@@ -1,0 +1,119 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "ng-afelio://schema.json",
+    "title": "Ng Afelio Configuration",
+    "type": "object",
+    "properties": {
+        "$schema": {
+            "type": "string"
+        },
+        "style": {
+            "type": "object",
+            "properties": {
+                "styleUtils": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "input": {
+                                "type": "string"
+                            },
+                            "output": {
+                                "type": "string"
+                            }
+                        },
+                        "required": ["input", "output"]
+                    }
+                },
+                "files": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "input": {
+                                "type": "string"
+                            },
+                            "output": {
+                                "type": "string"
+                            },
+                            "global": {
+                                "type": "boolean"
+                            }
+                        },
+                        "required": ["input", "output"]
+                    }
+                },
+                "baseInputDirectory": {
+                    "type": "string"
+                },
+                "baseOutputDirectory": {
+                    "type": "string"
+                },
+                "inputPrefix": {
+                    "type": "string"
+                },
+                "addUiKitAssets": {
+                    "type": "boolean"
+                },
+                "addAngularStyleShortcut": {
+                    "type": "boolean"
+                }
+            },
+            "additionalProperties": false
+        },
+        "i18n": {
+            "type": "object",
+            "properties": {
+                "mainFile": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "environment": {
+            "type": "object",
+            "properties": {
+                "mainFile": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "plugins": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "gitlab",
+                                    "github"
+                                ]
+                            },
+                            "url": {
+                                "type": "string"
+                            },
+                            "token": {
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": false,
+                        "required": ["name", "url", "type"]
+                    }
+                }
+            },
+            "additionalProperties": false,
+            "required": ["list"]
+        }
+    },
+    "additionalProperties": false,
+    "required": [],
+    "definitions": {}
+}
