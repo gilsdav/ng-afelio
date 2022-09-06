@@ -31,8 +31,6 @@ export default function(options: PluginOptions): Rule {
             throw new SchematicsException(`Project "${options.project}" not found.`);
         }
 
-        const parsedPath = join(projectAppPath as Path, options.path);
-
         const pluginsConfig: {
             list: {
                 name: string,
@@ -47,6 +45,8 @@ export default function(options: PluginOptions): Rule {
         if (!pluginConfig) {
             throw new SchematicsException(`Plugin "${options.pluginName}" not found into your "ng-afelio.json" file.`);
         }
+
+        const parsedPath = join(projectAppPath as Path, options.path, pluginConfig.name);
 
         let connector: PluginConnector;
         if (pluginConfig.type === 'gitlab') {

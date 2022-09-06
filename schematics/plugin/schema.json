@@ -15,7 +15,7 @@
             "type": "string",
             "format": "path",
             "description": "The path to create the module, relative to project directory",
-            "default": "./shared/modules/search"
+            "default": "./shared/modules"
           },
         "pluginName": {
             "type": "string",
