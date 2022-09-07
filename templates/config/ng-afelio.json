@@ -1,4 +1,5 @@
 {
+    "$schema": "./node_modules/ng-afelio/schema.json",
     "style": {
         "styleUtils": [
             { "input": "ui-kit-styles.scss", "output": "style-utils.scss" }

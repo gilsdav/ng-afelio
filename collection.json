@@ -180,6 +180,14 @@
             ],
             "extends": "@schematics/angular:webWorker"
         },
+        "private-plugin": {
+            "aliases": [
+                "plugin"
+            ],
+            "factory": "./schematics/plugin",
+            "description": "Use ng-afelio plugin generator",
+            "schema": "./schematics/plugin/schema.json"
+        },
         "ng-new": {
             "aliases": [
                 "new"
