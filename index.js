@@ -134,6 +134,25 @@ installCommand
     }
   });
 
+const pluginCommand = program.command('plugin [name]');
+pluginCommand
+  .alias('p')
+  .description(`Add plugin from ng-afelio schematics`, {
+    name: `One name from ${colors.cyan('plugins.list')} into your ${colors.cyan('ng-afelio.json')} file`
+  })
+  .option('-h, --help', 'output help message')
+  .allowUnknownOption()
+  // .parse(process.argv)
+  .action((name, options, command) => {
+    if (name) {
+      generate(`private-plugin`, name, getAllArgs(command, options.help)).then(() => {
+        process.exit();
+      });
+    } else {
+      return pluginCommand.outputHelp();
+    }
+  });
+
 program
   .command('build')
   .alias('b')
