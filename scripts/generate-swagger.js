@@ -40,8 +40,13 @@ function installSwaggerGen(scriptName, configFileName) {
     }
 
     fs.writeFileSync(filePath, JSON.stringify(jsonContent, null, 2), 'utf8');
-    console.info('Installing NgSwaggerGen');
-    return pexec('npm install ng-swagger-gen@1.6.1 --save-dev');
+    if (jsonContent.devDependencies['ng-swagger-gen']) {
+        console.info(`NgSwaggerGen found in your project (${jsonContent.devDependencies['ng-swagger-gen']}). We are using your current version.`);
+        return Promise.resolve();
+    } else {
+        console.info('Installing NgSwaggerGen');
+        return pexec('npm install ng-swagger-gen@1.6.1 --save-dev');
+    }
 }
 
 function installOpenapiGen(scriptName, configFileName) {
@@ -56,8 +61,13 @@ function installOpenapiGen(scriptName, configFileName) {
     }
 
     fs.writeFileSync(filePath, JSON.stringify(jsonContent, null, 2), 'utf8');
-    console.info('Installing NgOpenapiGen');
-    return pexec('npm install ng-openapi-gen@0.2.3 --save-dev');
+    if (jsonContent.devDependencies['ng-openapi-gen']) {
+        console.info(`NgOpenapiGen found in your project (${jsonContent.devDependencies['ng-openapi-gen']}). We are using your current version.`);
+        return Promise.resolve();
+    } else {
+        console.info('Installing NgOpenapiGen');
+        return pexec('npm install ng-openapi-gen@0.2.3 --save-dev');
+    }
 }
 
 /**
