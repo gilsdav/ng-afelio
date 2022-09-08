@@ -186,7 +186,19 @@ function generateProtectedConfigOpenApi(source, destination, fileName, moduleNam
 }
 
 function generateApiFiles(source) {
-    return pexec(`npm run ng-swagger-gen -- -c ${source}`);
+    return new Promise((resolve, reject) => {
+        pexec(`npm run ng-swagger-gen -- -c ${source}`).then(({ stdout, stderr }) => {
+            if (stdout) {
+                console.info(`${colors.cyan(stdout)}`);
+            }
+            if (stderr) {
+                console.error(`${colors.red(stderr)}`);
+                reject('Error during API generation. Look at previous logs to understand the error.');
+            } else {
+                resolve();
+            }
+        });
+    })
 }
 
 const installations = {
