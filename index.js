@@ -138,12 +138,12 @@ installCommand
     }
   });
 
-const pluginCommand = program.command('plugin <repo> [name]');
+const pluginCommand = program.command('plugin [repo] [name]');
 pluginCommand
   .alias('p')
   .description(`Add plugin from ng-afelio schematics`, {
-    repo: `One repo name from ${colors.cyan('plugins.list')} into your ${colors.cyan('ng-afelio.json')} file`,
-    name: `The name of one plugin available into this choosen repo`,
+    repo: `One repo name from ${colors.cyan('plugins.repos')} into your ${colors.cyan('ng-afelio.json')} file`,
+    name: `The name of one plugin available into this chosen repo`,
   })
   .option('-h, --help', 'output help message')
   .option('-l, --list', 'get the list of plugins from specific repo')
