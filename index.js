@@ -21,6 +21,10 @@ const {
   generateI18n
 } = require('./logic');
 
+const { ConnectorBuilder } = require('./schematics/plugin/connector.builder');
+
+const { version: ngAfelioVersion } = require('./package.json');
+
 const { getAllArgs } = require('./remainer-args');
 
 const uiKitTypes = require('./models/ui-kit-types.enum');
@@ -134,18 +138,27 @@ installCommand
     }
   });
 
-const pluginCommand = program.command('plugin [name]');
+const pluginCommand = program.command('plugin <repo> [name]');
 pluginCommand
   .alias('p')
   .description(`Add plugin from ng-afelio schematics`, {
-    name: `One name from ${colors.cyan('plugins.list')} into your ${colors.cyan('ng-afelio.json')} file`
+    repo: `One repo name from ${colors.cyan('plugins.list')} into your ${colors.cyan('ng-afelio.json')} file`,
+    name: `The name of one plugin available into this choosen repo`,
   })
   .option('-h, --help', 'output help message')
+  .option('-l, --list', 'get the list of plugins from specific repo')
   .allowUnknownOption()
   // .parse(process.argv)
-  .action((name, options, command) => {
-    if (name) {
-      generate(`private-plugin`, name, getAllArgs(command, options.help)).then(() => {
+  .action((repo, name, options, command) => {
+    if (repo && name) {
+      generate(`private-plugin`, repo, [name, ...getAllArgs(command, options.help)]).then(() => {
+        process.exit();
+      });
+    } else if (repo && options.list) {
+      const connector = ConnectorBuilder.build(repo);
+      connector.getCompatiblePlugins(ngAfelioVersion).then(pluginNames => {
+        console.info(`Available plugins:`);
+        console.info(`${pluginNames.map(pn => `- ${colors.blue(pn)}`).join('\n')}`);
         process.exit();
       });
     } else {

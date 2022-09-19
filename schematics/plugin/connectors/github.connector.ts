@@ -1,11 +1,11 @@
-import { Release } from '../release.model';
 import { PluginConnector } from './connector';
+import { Release } from '../release.model';
 
 export class GithubConnector extends PluginConnector {
-    public getReleases(url: string, token: string): Promise<Release[]> {
-        throw new Error('Github connecter not yet implemented.');
+    public getReleases(): Promise<Release[]> {
+        throw new Error('Method not implemented.');
     }
-    public download(url: string, token: string, release: Release, tempPath: string): Promise<void> {
-        throw new Error('Github connecter not yet implemented.');
+    public download(release: Release, tempPath: string): Promise<void> {
+        throw new Error('Method not implemented.');
     }
 }
