@@ -1,4 +1,5 @@
 export interface ReleaseConfigPart {
+    name: string;
     source: string;
     destination: string;
 }

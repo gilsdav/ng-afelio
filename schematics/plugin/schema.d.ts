@@ -3,4 +3,5 @@ export interface Schema {
     pluginRepo: string;
     pluginName: string;
     path: string;
+    ignoredParts?: string;
 }

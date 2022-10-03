@@ -32,6 +32,10 @@
                 "$source": "argv",
                 "index": 1
             }
+        },
+        "ignoredParts": {
+            "type": "string",
+            "description": "Comma separated list of part names to ignore. Example: search,pagniation"
         }
     },
     "required": ["pluginRepo", "pluginName"]

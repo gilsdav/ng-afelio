@@ -147,11 +147,13 @@ pluginCommand
   })
   .option('-h, --help', 'output help message')
   .option('-l, --list', 'get the list of plugins from specific repo')
+  .option('-i, --ignoredParts', 'comma separated list of part names to ignore. Example: search,pagniation')
   .allowUnknownOption()
   // .parse(process.argv)
   .action((repo, name, options, command) => {
     if (repo && name) {
-      generate(`private-plugin`, repo, [name, ...getAllArgs(command, options.help)]).then(() => {
+      const ignoredParts = options.ignoredParts ? [ 'ignoredParts=' + options.ignoredParts ] : [];
+      generate(`private-plugin`, repo, [name, ...ignoredParts, ...getAllArgs(command, options.help)]).then(() => {
         process.exit();
       });
     } else if (repo && options.list) {

@@ -1,5 +1,5 @@
 import { join, Path, strings } from '@angular-devkit/core';
-import { apply, branchAndMerge, chain, MergeStrategy, mergeWith, move, Rule, SchematicsException, template, Tree, url } from '@angular-devkit/schematics';
+import { apply, branchAndMerge, chain, MergeStrategy, mergeWith, move, Rule, SchematicsException, template, Tree, url, noop } from '@angular-devkit/schematics';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import { removeSync, existsSync, mkdirSync } from 'fs-extra';
 import { join as stringJoin } from 'path';
@@ -45,6 +45,8 @@ export default function(options: PluginOptions): Rule {
             throw new SchematicsException(`No compatible version of this plugin ("${options.pluginName}") into selected repo ("${options.pluginRepo}") for this ng-afelio version.`);
         }
 
+        const ignoredParts = options.ignoredParts ? options.ignoredParts.split(',') : [];
+
         // Download release
         if (existsSync(tempDirectoryPath)) {
             removeSync(tempDirectoryPath);
@@ -54,6 +56,9 @@ export default function(options: PluginOptions): Rule {
         await connector.download(release, tempDirectoryPath);
 
         const templates: Rule[] = release.config.parts.map(part => {
+            if (ignoredParts.includes(part.name)) {
+                return noop();
+            }
             const sourcePath = stringJoin(tempDirectoryPath, part.source);
             const destinationPath = join(projectAppPath as Path, options.path, part.destination);
             const templateSource = apply(url(sourcePath), [
