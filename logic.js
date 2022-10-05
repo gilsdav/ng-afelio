@@ -67,7 +67,7 @@ const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString) => 
         const packageJsonFileContent = JSON.parse(fs.readFileSync(subPackageJson, { encoding: 'utf8' }));
         packageJsonFileContent.name = `@${name}/\${apiName}`;
         packageJsonFileContent.version = '${apiVersion}';
-        packageJsonFileContent.publishConfig = { 'registry': '${apiVersion}' };
+        packageJsonFileContent.publishConfig = { 'registry': '${registry}' };
         fs.writeFileSync(subPackageJson, JSON.stringify(packageJsonFileContent, null, 2), { encoding: 'utf8' });
 
         const packageJsonPath = './package.json';
