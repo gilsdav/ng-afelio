@@ -1,6 +1,7 @@
 import { join, Path, strings } from '@angular-devkit/core';
-import { apply, branchAndMerge, chain, MergeStrategy, mergeWith, move, Rule, SchematicsException, template, Tree, url, noop, filter } from '@angular-devkit/schematics';
+import { apply, branchAndMerge, chain, MergeStrategy, mergeWith, move, Rule, SchematicsException, template, Tree, url, noop, filter, SchematicContext } from '@angular-devkit/schematics';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { addPackageJsonDependency, NodeDependency, NodeDependencyType } from '@schematics/angular/utility/dependencies';
 import { removeSync, existsSync, mkdirSync } from 'fs-extra';
 import { join as stringJoin } from 'path';
 
@@ -9,9 +10,34 @@ import { version as ngAfelioVersion } from '../../package.json';
 import { Schema as PluginOptions } from './schema';
 import { ConnectorBuilder } from './connector.builder';
 import { Release } from './release.model';
+import { parsePackageName } from '../util/name-parser';
 
 
 const tempDirectoryPath = stringJoin(__dirname, 'temp-files');
+
+
+function addDeps(dependencies?: string[], dependenciesType: NodeDependencyType = NodeDependencyType.Default): Rule {
+    if (dependencies && dependencies.length > 0) {
+        return (host: Tree, context: SchematicContext) => {
+            dependencies.forEach(dep => {
+                const dependency = parsePackageName(dep);
+                if (dependency.name) {
+                    const lib: NodeDependency = {
+                        type: dependenciesType,
+                        name: dependency.name,
+                        version: dependency.version,
+                        overwrite: false,
+                    };
+                    addPackageJsonDependency(host, lib);
+                }
+            });
+
+        };
+    } else {
+        return noop();
+    }
+}
+
 
 export default function(options: PluginOptions): Rule {
     return async (host: Tree) => {
@@ -76,7 +102,9 @@ export default function(options: PluginOptions): Rule {
         return chain([
             branchAndMerge(
                 chain([
-                    ...templates
+                    ...templates,
+                    addDeps(release.config.deps),
+                    addDeps(release.config.devDeps, NodeDependencyType.Dev)
                 ])
             ),
         ]);

@@ -10,6 +10,8 @@ export interface ReleaseConfig {
     name: string;
     version: string;
     parts: ReleaseConfigPart[];
+    deps?: string[];
+    devDeps?: string[];
 }
 
 export interface Release {
