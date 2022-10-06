@@ -1,16 +1,17 @@
-import fetch, { HeadersInit } from 'node-fetch';
+import fetch, { FetchError, HeadersInit } from 'node-fetch';
 import { copySync, readdirSync, removeSync } from 'fs-extra';
 import { join } from 'path';
 import { Extract } from 'unzipper';
+import * as colors from 'colors';
 
 import { Release } from '../release.model';
 import { PluginConnector } from './connector';
 
 export class GitlabConnector extends PluginConnector {
 
-    public getReleases(url: string, token: string): Promise<Release[]> {
-        return fetch(`${url}/repository/tags`, {
-            headers: this.buildHeader(token)
+    public getReleases(): Promise<Release[]> {
+        return fetch(`${this.url}/repository/tags`, {
+            headers: this.buildHeader(this.token)
         })
         .then(res => res.json())
         .then((res: any) => {
@@ -21,12 +22,20 @@ export class GitlabConnector extends PluginConnector {
                     config: JSON.parse(r.release.description)
                 } as Release;
             })
-        });
+        })
+        .catch(e => {
+            if (e instanceof FetchError && e.code === 'ENOTFOUND') {
+                console.error(`${ colors.red('Repo not accessible.')} ${colors.cyan('Check your VPN ;)')}`)
+            } else {
+                throw e;
+            }
+            return [];
+        }) ;
 
     }
-    public async download(url: string, token: string, release: Release, tempPath: string): Promise<void> {
-        const res = await fetch(`${url}/repository/archive.zip?sha=${release.commitId}`, {
-            headers: this.buildHeader(token)
+    public async download(release: Release, tempPath: string): Promise<void> {
+        const res = await fetch(`${this.url}/repository/archive.zip?sha=${release.commitId}`, {
+            headers: this.buildHeader(this.token)
         });
         const tmpPath = join(tempPath, 'tmp');
         await new Promise((resolve, reject) => {
@@ -42,7 +51,7 @@ export class GitlabConnector extends PluginConnector {
         const elements = readdirSync(tmpPath, { withFileTypes: true });
         const tempExtractName = elements[0].name;
 
-        copySync(join(tmpPath, tempExtractName, release.config.path), `${tempPath}`);
+        copySync(join(tmpPath, tempExtractName), `${tempPath}`);
 
         removeSync(tmpPath);
 

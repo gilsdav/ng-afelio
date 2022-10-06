@@ -82,7 +82,7 @@
         "plugins": {
             "type": "object",
             "properties": {
-                "list": {
+                "repos": {
                     "type": "array",
                     "items": {
                         "type": "object",
@@ -110,7 +110,7 @@
                 }
             },
             "additionalProperties": false,
-            "required": ["list"]
+            "required": ["repos"]
         }
     },
     "additionalProperties": false,

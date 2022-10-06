@@ -1,18 +1,43 @@
 import { join, Path, strings } from '@angular-devkit/core';
-import { apply, branchAndMerge, chain, MergeStrategy, mergeWith, move, Rule, SchematicsException, template, Tree, url } from '@angular-devkit/schematics';
+import { apply, branchAndMerge, chain, MergeStrategy, mergeWith, move, Rule, SchematicsException, template, Tree, url, noop, filter, SchematicContext } from '@angular-devkit/schematics';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { addPackageJsonDependency, NodeDependency, NodeDependencyType } from '@schematics/angular/utility/dependencies';
 import { removeSync, existsSync, mkdirSync } from 'fs-extra';
 import { join as stringJoin } from 'path';
 
-import { getConfig } from '../../scripts/check-files/util';
-import { PluginConnector, GitlabConnector, GithubConnector } from './connectors';
+import { version as ngAfelioVersion } from '../../package.json';
 
 import { Schema as PluginOptions } from './schema';
-
-import { version as ngAfelioVersion } from '../../package.json'
+import { ConnectorBuilder } from './connector.builder';
 import { Release } from './release.model';
+import { parsePackageName } from '../util/name-parser';
+
 
 const tempDirectoryPath = stringJoin(__dirname, 'temp-files');
+
+
+function addDeps(dependencies?: string[], dependenciesType: NodeDependencyType = NodeDependencyType.Default): Rule {
+    if (dependencies && dependencies.length > 0) {
+        return (host: Tree, context: SchematicContext) => {
+            dependencies.forEach(dep => {
+                const dependency = parsePackageName(dep);
+                if (dependency.name) {
+                    const lib: NodeDependency = {
+                        type: dependenciesType,
+                        name: dependency.name,
+                        version: dependency.version,
+                        overwrite: false,
+                    };
+                    addPackageJsonDependency(host, lib);
+                }
+            });
+
+        };
+    } else {
+        return noop();
+    }
+}
+
 
 export default function(options: PluginOptions): Rule {
     return async (host: Tree) => {
@@ -31,47 +56,22 @@ export default function(options: PluginOptions): Rule {
             throw new SchematicsException(`Project "${options.project}" not found.`);
         }
 
-        const pluginsConfig: {
-            list: {
-                name: string,
-                type: 'gitlab' | 'github',
-                url: string,
-                token: string
-            }[]
-        } = getConfig('plugins');
-
-        const pluginConfig = pluginsConfig?.list.find(p => p.name === options.pluginName);
-
-        if (!pluginConfig) {
-            throw new SchematicsException(`Plugin "${options.pluginName}" not found into your "ng-afelio.json" file.`);
-        }
-
-        const parsedPath = join(projectAppPath as Path, options.path, pluginConfig.name);
-
-        let connector: PluginConnector;
-        if (pluginConfig.type === 'gitlab') {
-            connector = new GitlabConnector();
-        } else if (pluginConfig.type === 'github') {
-            connector = new GithubConnector();
-        } else {
-            throw new SchematicsException(`Connector "${pluginConfig.type}" not found.`);
-        }
+        const connector = ConnectorBuilder.build(options.pluginRepo);
 
         // Get release
-        let releases = await connector.getReleases(pluginConfig.url, pluginConfig.token);
+        let releases = await connector.getReleases();
         // Filter releases
-        releases = releases.filter(r => {
-            const askedVersion = r.config.ngAfelioMin.split('.');
-            const currentVersion = ngAfelioVersion.split('.');
-            return +askedVersion[0] < +currentVersion[0] || (+askedVersion[0] === +currentVersion[0] && +askedVersion[1] <= +currentVersion[1]);
-        });
+        releases = connector.filterByNgAfelioVersion(releases, ngAfelioVersion);
+        releases = connector.filterByName(releases, options.pluginName);
 
         let release: Release;
         if (releases.length > 0) {
             release = releases[0];
         } else {
-            throw new SchematicsException(`No compatible version of this plugin ("${pluginConfig.name}") for this ng-afelio version.`);
+            throw new SchematicsException(`No compatible version of this plugin ("${options.pluginName}") into selected repo ("${options.pluginRepo}") for this ng-afelio version.`);
         }
+
+        const ignoredParts = options.ignoredParts ? options.ignoredParts.split(',') : [];
 
         // Download release
         if (existsSync(tempDirectoryPath)) {
@@ -79,20 +79,32 @@ export default function(options: PluginOptions): Rule {
         }
         mkdirSync(tempDirectoryPath);
 
-        await connector.download(pluginConfig.url, pluginConfig.token, release, tempDirectoryPath);
+        await connector.download(release, tempDirectoryPath);
 
-        const templateSource = apply(url(tempDirectoryPath), [
-            template({
-              ...strings,
-              ...options,
-            }),
-            move(parsedPath),
-        ]);
+        const templates: Rule[] = release.config.parts.map(part => {
+            if (ignoredParts.includes(part.name)) {
+                return noop();
+            }
+            const sourcePath = stringJoin(tempDirectoryPath, part.source);
+            const destinationPath = join(projectAppPath as Path, options.path, part.destination);
+            const templateSource = apply(url(sourcePath), [
+                filter(p => !p.endsWith('.stories.ts')),
+                template({
+                  ...strings,
+                  ...options,
+                }),
+                move(destinationPath),
+            ]);
+            return mergeWith(templateSource, MergeStrategy.Overwrite);
+        });
+
 
         return chain([
             branchAndMerge(
                 chain([
-                    mergeWith(templateSource, MergeStrategy.Overwrite)
+                    ...templates,
+                    addDeps(release.config.deps),
+                    addDeps(release.config.devDeps, NodeDependencyType.Dev)
                 ])
             ),
         ]);

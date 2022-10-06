@@ -17,14 +17,26 @@
             "description": "The path to create the module, relative to project directory",
             "default": "./shared/modules"
           },
-        "pluginName": {
+        "pluginRepo": {
             "type": "string",
-            "description": "The name of the plugin available into ng-afelio.json",
+            "description": "The name of the repo available into ng-afelio.json",
             "$default": {
                 "$source": "argv",
                 "index": 0
             }
+        },
+        "pluginName": {
+            "type": "string",
+            "description": "The name of the plugin available in specified repo.",
+            "$default": {
+                "$source": "argv",
+                "index": 1
+            }
+        },
+        "ignoredParts": {
+            "type": "string",
+            "description": "Comma separated list of part names to ignore. Example: search,pagniation"
         }
     },
-    "required": ["pluginName"]
+    "required": ["pluginRepo", "pluginName"]
 }
