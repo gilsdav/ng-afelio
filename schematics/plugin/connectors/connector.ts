@@ -15,7 +15,7 @@ export abstract class PluginConnector {
         let releases = await this.getReleases();
         releases = this.filterByNgAfelioVersion(releases, ngAfelioVersion);
         let pluginNames = releases.map(r => r.config.name);
-        return Array.from(new Set(pluginNames))
+        return Array.from(new Set(pluginNames));
     }
 
     public filterByNgAfelioVersion(releases: Release[], ngAfelioVersion: string): Release[] {

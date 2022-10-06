@@ -1,5 +1,5 @@
 import { join, Path, strings } from '@angular-devkit/core';
-import { apply, branchAndMerge, chain, MergeStrategy, mergeWith, move, Rule, SchematicsException, template, Tree, url, noop } from '@angular-devkit/schematics';
+import { apply, branchAndMerge, chain, MergeStrategy, mergeWith, move, Rule, SchematicsException, template, Tree, url, noop, filter } from '@angular-devkit/schematics';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import { removeSync, existsSync, mkdirSync } from 'fs-extra';
 import { join as stringJoin } from 'path';
@@ -62,6 +62,7 @@ export default function(options: PluginOptions): Rule {
             const sourcePath = stringJoin(tempDirectoryPath, part.source);
             const destinationPath = join(projectAppPath as Path, options.path, part.destination);
             const templateSource = apply(url(sourcePath), [
+                filter(p => !p.endsWith('.stories.ts')),
                 template({
                   ...strings,
                   ...options,
