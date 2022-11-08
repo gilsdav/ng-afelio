@@ -4,11 +4,11 @@ body {
     overflow-x: hidden;
     margin: 0;
     padding: 0;
-    @extend .f-regular;
+    @extend %f-regular;
     box-sizing: border-box;
     -webkit-overflow-scrolling: touch;
 
-    @extend .bg-grey00;
+    @extend %bg-grey00;
 }
 
 
@@ -39,29 +39,32 @@ a {
     }
 }
 
-.text-ellipsis {
+.text-ellipsis,
+%text-ellipsis {
     overflow: hidden !important;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.clean-list {
-    @extend .p-none;
-    @extend .m-none;
+.clean-list,
+%clean-list {
+    @extend %p-none;
+    @extend %m-none;
 
     list-style: none;
 }
 
-.bullet-list {
-    @extend .clean-list;
+.bullet-list,
+%bullet-list {
+    @extend %clean-list;
 
     >li {
-        @extend .pl-l;
-        @extend .relative;
+        @extend %pl-l;
+        @extend %relative;
 
         &:before {
             content: '';
-            @extend .absolute;
+            @extend %absolute;
             left: 4px;
             top: 50%;
             width: 3px;
@@ -73,16 +76,19 @@ a {
     }
 }
 
-.nowrap {
+.nowrap,
+%nowrap {
     white-space: nowrap;
 }
 
 *, :after, :before {
     box-sizing: border-box;
 }
-.c-pointer {
+.c-pointer,
+%c-pointer {
     cursor: pointer;
 }
-.c-help {
+.c-help,
+%c-help {
     cursor: help;
 }

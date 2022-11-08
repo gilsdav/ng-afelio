@@ -8,7 +8,8 @@
 //
 @mixin line-height-size($size, $qty)
 {
-  .lh-#{$size}
+  .lh-#{$size},
+  %lh-#{$size}
   {
     line-height: $qty;
   }

@@ -8,7 +8,8 @@
 //
 @mixin border-color($name, $color)
 {
-  .bc-#{$name}
+  .bc-#{$name},
+  %bc-#{$name}
   {
     border-color: $color;
   }
@@ -24,7 +25,8 @@
 //
 @mixin hover-border-color($name, $color)
 {
-  .hover-bc-#{$name}
+  .hover-bc-#{$name},
+  %hover-bc-#{$name}
   {
     &:hover
     {
@@ -43,7 +45,8 @@
 //
 @mixin background-color($name, $color)
 {
-  .bg-#{$name}
+  .bg-#{$name},
+  %bg-#{$name}
   {
     background-color: $color;
   }
@@ -59,7 +62,8 @@
 //
 @mixin hover-background-color($name, $color)
 {
-  .hover-bg-#{$name}
+  .hover-bg-#{$name},
+  %hover-bg-#{$name}
   {
     background-color: $color;
   }
@@ -75,7 +79,8 @@
 //
 @mixin color-color ($name, $color)
 {
-  .c-#{$name}
+  .c-#{$name},
+  %c-#{$name}
   {
     color: $color;
   }
@@ -91,7 +96,8 @@
 //
 @mixin hover-color-color ($name, $color)
 {
-  .hover-c-#{$name}
+  .hover-c-#{$name},
+  %hover-c-#{$name}
   {
     color: $color;
   }

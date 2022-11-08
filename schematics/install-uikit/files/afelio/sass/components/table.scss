@@ -1,9 +1,9 @@
 table.table {
-    @extend .bg-grey00;
-    @extend .w-100;
-    @extend .f-medium;
-    @extend .c-grey08;
-    @extend .f-s;
+    @extend %bg-grey00;
+    @extend %w-100;
+    @extend %f-medium;
+    @extend %c-grey08;
+    @extend %f-s;
     z-index: 1;
 
     border-spacing: 0;
@@ -17,7 +17,7 @@ table.table {
         border: $border;
 
         thead {
-            @extend .bg-grey01;
+            @extend %bg-grey01;
         }
 
         tbody tr {

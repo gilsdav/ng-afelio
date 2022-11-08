@@ -38,7 +38,8 @@
 //
 @mixin font-utility($name, $ratio)
 {
-  .f-#{$name}
+  .f-#{$name},
+  %f-#{$name}
   {
     @include font-size($ratio * $font-size-base);
   }

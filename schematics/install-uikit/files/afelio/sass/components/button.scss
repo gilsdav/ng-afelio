@@ -9,18 +9,18 @@
     ////////////////////////////////////////////////////
 
     appearance: none;
-    @extend .no-decoration;
+    @extend %no-decoration;
 
-    @extend .w-100;
-    @extend .text-center;
+    @extend %w-100;
+    @extend %text-center;
 
     // position
-    @extend .relative;
-    @extend .block;
+    @extend %relative;
+    @extend %block;
 
     // padding
-    @extend .px-xs;
-    @extend .py-s;
+    @extend %px-xs;
+    @extend %py-s;
 
     height: 40px;
 
@@ -32,7 +32,7 @@
     border-radius: 2px;
 
     // cursor
-    @extend .c-pointer;
+    @extend %c-pointer;
 
     // transitions & animations
     transition: box-shadow 250ms ease,
@@ -42,24 +42,24 @@
     box-shadow: 0;
 
     // typography
-    @extend .f-regular;
-    @extend .f-s;
+    @extend %f-regular;
+    @extend %f-s;
     line-height: 16px;
 
     // label
     #{$root}__label {
-        @extend .f-medium;
-        @extend .text-center;
-        @extend .f-s;
+        @extend %f-medium;
+        @extend %text-center;
+        @extend %f-s;
         line-height: 16px;
     }
 
     // icon
     #{$root}__icon {
         @extend .icon;
-        @extend .f-m;
+        @extend %f-m;
 
-        @extend .absolute;
+        @extend %absolute;
         top: 50%;
         transform: translateY(-50%);
     }
@@ -75,10 +75,10 @@
         &,
         #{$root}__label,
         #{$root}__icon {
-            @extend .c-grey00;
+            @extend %c-grey00;
         }
 
-        @extend .bg-primary03;
+        @extend %bg-primary03;
 
         &:hover {
             box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
@@ -89,13 +89,13 @@
         border-width: 1px;
         border-style: solid;
 
-        @extend .bg-primary01;
-        @extend .c-primary03;
+        @extend %bg-primary01;
+        @extend %c-primary03;
 
         &,
         #{$root}__label,
         #{$root}__icon {
-            @extend .c-primary03;
+            @extend %c-primary03;
         }
 
         &:hover {
@@ -107,12 +107,12 @@
         border-width: 1px;
         border-style: solid;
 
-        @extend .bg-grey01;
+        @extend %bg-grey01;
 
         &,
         #{$root}__label,
         #{$root}__icon {
-            @extend .c-grey07;
+            @extend %c-grey07;
         }
 
         &:hover {
@@ -121,25 +121,25 @@
     }
 
     &.-no-padding {
-        @extend .p-none;
+        @extend %p-none;
         height: auto;
     }
 
     &.-transparent {
         background-color: transparent;
-        @extend .c-primary03;
+        @extend %c-primary03;
     }
 
     &.-icon {
         box-shadow: none;
-        @extend .px-xs;
+        @extend %px-xs;
 
         min-width: auto;
         width: auto;
         width: fit-content;
 
         &.-no-hover {
-            @extend .p-xxs;
+            @extend %p-xxs;
             background-color: transparent;
 
             &:hover {
@@ -157,7 +157,7 @@
     &.-auto {
         width: auto;
         width: fit-content;
-        @extend .px-m;
+        @extend %px-m;
     }
 
     &.-h-auto
@@ -171,7 +171,7 @@
     }
 
     &.-s {
-        @extend .py-xs;
+        @extend %py-xs;
         height: 32px;
     }
 
@@ -184,9 +184,9 @@
     // Icon is before the label
     &.-pre {
         padding-left: 42px;
-        @extend .flex;
-        @extend .flex-end;
-        @extend .px-m;
+        @extend %flex;
+        @extend %flex-end;
+        @extend %px-m;
 
         #{$root}__icon {
             left: compute-grid($grid-m);
@@ -196,9 +196,9 @@
     // Icon is after the label
     &.-post {
         padding-right: 42px;
-        @extend .flex;
-        @extend .flex-start;
-        @extend .px-m;
+        @extend %flex;
+        @extend %flex-start;
+        @extend %px-m;
 
         #{$root}__icon {
             right: compute-grid($grid-m);

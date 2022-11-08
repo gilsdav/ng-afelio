@@ -40,10 +40,10 @@ $f-icons: 'icons';
 //
 ////////////////////////////////////////////////////
 
-.text-left { text-align: left; }
-.text-center { text-align: center; }
-.text-right { text-align: right; }
-.text-justify { text-align: justify; }
+.text-left,%text-left { text-align: left; }
+.text-center,%text-center { text-align: center; }
+.text-right,%text-right { text-align: right; }
+.text-justify,%text-justify { text-align: justify; }
 
 
 ////////////////////////////////////////////////////
@@ -52,9 +52,9 @@ $f-icons: 'icons';
 //
 ////////////////////////////////////////////////////
 
-.capitalize{ text-transform: capitalize; }
-.uppercase{ text-transform: uppercase; }
-.lowercase{ text-transform: lowercase; }
+.capitalize,%capitalize{ text-transform: capitalize; }
+.uppercase,%uppercase{ text-transform: uppercase; }
+.lowercase,%lowercase{ text-transform: lowercase; }
 
 
 ////////////////////////////////////////////////////
@@ -63,8 +63,8 @@ $f-icons: 'icons';
 //
 ////////////////////////////////////////////////////
 
-.italic{ font-style: italic; }
-.oblique{ font-style: oblique; }
+.italic,%italic{ font-style: italic; }
+.oblique,%oblique{ font-style: oblique; }
 
 
 ////////////////////////////////////////////////////
@@ -73,8 +73,8 @@ $f-icons: 'icons';
 //
 ////////////////////////////////////////////////////
 
-.break-all{ word-break: break-all; }
-.break-word{ word-wrap: break-word; }
+.break-all,%break-all{ word-break: break-all; }
+.break-word,%break-word{ word-wrap: break-word; }
 
 
 ////////////////////////////////////////////////////
@@ -83,10 +83,10 @@ $f-icons: 'icons';
 //
 ////////////////////////////////////////////////////
 
-.no-decoration{ text-decoration: none; }
-.underline{ text-decoration: underline; }
-.overline{ text-decoration: overline; }
-.strikethrough{ text-decoration: line-through; }
+.no-decoration,%no-decoration{ text-decoration: none; }
+.underline,%underline{ text-decoration: underline; }
+.overline,%overline{ text-decoration: overline; }
+.strikethrough,%strikethrough{ text-decoration: line-through; }
 
 ////////////////////////////////////////////////////
 //

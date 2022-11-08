@@ -16,7 +16,7 @@ $root: '.switch';
     //
     ////////////////////////////////////////////////////
 
-    @extend .relative;
+    @extend %relative;
     @extend .checkbox;
 
     #{$root}__label
@@ -33,9 +33,9 @@ $root: '.switch';
 
     #{$root}__check
     {
-        @extend .bg-grey03;
-        @extend .bw-none;
-        @extend .absolute;
+        @extend %bg-grey03;
+        @extend %bw-none;
+        @extend %absolute;
         height: 22px;
         width: 42px;
         top: 0;
@@ -50,8 +50,8 @@ $root: '.switch';
         &:after
         {
             content: '';
-            @extend .absolute;
-            @extend .bg-grey00;
+            @extend %absolute;
+            @extend %bg-grey00;
             display: block;
             top: 1px;
             left: 1px;
@@ -67,8 +67,8 @@ $root: '.switch';
 
     #{$root}__input:checked ~ #{$root}__check
     {
-        @extend .bg-primary04;
-        @extend .bc-primary04;
+        @extend %bg-primary04;
+        @extend %bc-primary04;
 
         &::after
         {
