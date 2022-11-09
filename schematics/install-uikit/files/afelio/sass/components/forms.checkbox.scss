@@ -172,7 +172,7 @@ $root: ".checkbox";
 
             &:after
             {
-                @extend %d-none;
+                @extend .d-none;
             }
         }
 

@@ -149,7 +149,7 @@
 
             #{$root}__item-label {
                 @extend %static;
-                @extend %d-block;
+                @extend .d-block;
                 transform: none;
             }
 
