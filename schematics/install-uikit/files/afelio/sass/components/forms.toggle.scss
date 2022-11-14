@@ -23,26 +23,26 @@
 
     #{$root}__item
     {
-        @extend .relative;
+        @extend %relative;
 
         cursor: pointer;
 
-        @extend .w-50;
+        @extend %w-50;
         height: 42px;
 
-        @extend .px-m;
-        @extend .bc-grey03;
-        @extend .bw-xxs;
-        @extend .bs-solid;
+        @extend %px-m;
+        @extend %bc-grey03;
+        @extend %bw-xxs;
+        @extend %bs-solid;
         border-right-color: transparent;
 
-        @extend .bg-grey00;
+        @extend %bg-grey00;
 
         &.-disabled
         {
             cursor: default;
 
-            @extend .bg-grey01;
+            @extend %bg-grey01;
 
             input[type="radio"], #{$root}__item-label
             {
@@ -59,16 +59,16 @@
         #{$root}__item-label
         {
             cursor: pointer;
-            @extend .c-grey06;
+            @extend %c-grey06;
             line-height: 24px;
-            @extend .w-100;
-            @extend .text-center;
-            @extend .f-regular;
-            @extend .absolute;
+            @extend %w-100;
+            @extend %text-center;
+            @extend %f-regular;
+            @extend %absolute;
             top: 50%;
             left: 50%;
             transform: translateX(-50%) translateY(-50%);
-            @extend .py-none;
+            @extend %py-none;
 
             &.-line-height-initial
             {
@@ -101,7 +101,7 @@
 
             #{$root}__item-label
             {
-                @extend .c-primary03;
+                @extend %c-primary03;
             }
 
             & + #{$root}__item
@@ -114,13 +114,13 @@
         {
             opacity: 0;
 
-            @extend .absolute;
+            @extend %absolute;
             top: 0;
             left: 0;
 
-            @extend .w-100;
-            @extend .h-100;
-            @extend .m-none;
+            @extend %w-100;
+            @extend %h-100;
+            @extend %m-none;
         }
     }
 
@@ -143,12 +143,12 @@
     {
         #{$root}__item
         {
-            @extend .py-xs;
+            @extend %py-xs;
             width: auto;
             height: auto;
 
             #{$root}__item-label {
-                @extend .static;
+                @extend %static;
                 @extend .d-block;
                 transform: none;
             }
@@ -163,9 +163,9 @@
         {
             #{$root}__item
             {
-                @extend .py-xxs;
-                @extend .px-s;
-                @extend .f-s;
+                @extend %py-xxs;
+                @extend %px-s;
+                @extend %f-s;
                 height: auto;
                 min-width: 0;
             }
@@ -180,7 +180,7 @@
         {
             cursor: default;
 
-            @extend .bg-grey01;
+            @extend %bg-grey01;
 
             input[type="radio"], #{$root}__item-label
             {

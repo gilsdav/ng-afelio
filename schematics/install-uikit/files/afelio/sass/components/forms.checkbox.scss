@@ -17,20 +17,20 @@ $root: ".checkbox";
     $size: 16px;
     min-height: $size;
 
-    @extend .w-100;
+    @extend %w-100;
 
     margin: 0;
 
-    @extend .block;
-    @extend .relative;
+    @extend %block;
+    @extend %relative;
 
     cursor: pointer;
     font-size: 22px;
     user-select: none;
 
-    @extend .flex;
-    @extend .flex-start;
-    @extend .flex-top;
+    @extend %flex;
+    @extend %flex-start;
+    @extend %flex-top;
 
     &.-auto
     {
@@ -44,34 +44,34 @@ $root: ".checkbox";
     }
 
     #{$root}__label {
-        @extend .block;
-        @extend .relative;
+        @extend %block;
+        @extend %relative;
 
-        @extend .w-100;
+        @extend %w-100;
 
-        @extend .f-s;
+        @extend %f-s;
         line-height: $size;
 
-        @extend .c-grey08;
-        @extend .f-regular;
-        @extend .pl-xs;
+        @extend %c-grey08;
+        @extend %f-regular;
+        @extend %pl-xs;
     }
 
     #{$root}__input {
-        @extend .absolute;
+        @extend %absolute;
         opacity: 0;
         cursor: pointer;
     }
 
     #{$root}__check {
-        @extend .relative;
+        @extend %relative;
 
-        @extend .br-xs;
+        @extend %br-xs;
 
         min-height: $size;
         min-width: $size;
 
-        @extend .bg-grey00;
+        @extend %bg-grey00;
         border: 1px solid $grey03;
 
         transition-property: border-color;
@@ -80,7 +80,7 @@ $root: ".checkbox";
     }
 
     #{$root}__checker {
-        @extend .absolute;
+        @extend %absolute;
         top: 50%;
         left: 50%;
         transform: translateX(-50%) translateY(-50%);
@@ -102,7 +102,7 @@ $root: ".checkbox";
             background-size: 100%;
             background-repeat: no-repeat;
             background-position: center;
-            @extend .absolute;
+            @extend %absolute;
             top: 50%;
             left: 50%;
             transform: translateY(-50%) translateX(-50%);
@@ -132,11 +132,11 @@ $root: ".checkbox";
 
         width: $size;
 
-        @extend .f-s;
+        @extend %f-s;
 
         &:hover {
             #{$root}__check {
-                @extend .bw-none;
+                @extend %bw-none;
             }
         }
 
@@ -145,30 +145,30 @@ $root: ".checkbox";
             height: $size;
             width: $size;
 
-        @extend .bw-none;
+        @extend %bw-none;
 
         }
 
         #{$root}__checker
         {
-            @extend .flex;
-            @extend .flex-middle;
-            @extend .flex-center;
+            @extend %flex;
+            @extend %flex-middle;
+            @extend %flex-center;
 
-            @extend .br-xs;
-            @extend .bs-solid;
-            @extend .bw-xxs;
-            @extend .bc-grey03;
+            @extend %br-xs;
+            @extend %bs-solid;
+            @extend %bw-xxs;
+            @extend %bc-grey03;
 
             @extend .icon;
         }
 
         #{$root}__input:checked~#{$root}__checker
         {
-            @extend .c-primary04;
-            @extend .bg-primary01;
+            @extend %c-primary04;
+            @extend %bg-primary01;
 
-            @extend .bc-primary04;
+            @extend %bc-primary04;
 
             &:after
             {

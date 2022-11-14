@@ -8,7 +8,8 @@
 //
 @mixin border-radius($name, $ratio)
 {
-  .br-#{$name}
+  .br-#{$name},
+  %br-#{$name}
   {
     border-radius: compute-border($ratio * $border-radius-multiplier);
   }
@@ -24,7 +25,8 @@
 //
 @mixin border-radius-top-left($name, $ratio)
 {
-  .brtl-#{$name}
+  .brtl-#{$name},
+  %brtl-#{$name}
   {
     border-top-left-radius: compute-border($ratio * $border-radius-multiplier);
   }
@@ -40,7 +42,8 @@
 //
 @mixin border-radius-top-right($name, $ratio)
 {
-  .brtr-#{$name}
+  .brtr-#{$name},
+  %brtr-#{$name}
   {
     border-top-right-radius: compute-border($ratio * $border-radius-multiplier);
   }
@@ -56,7 +59,8 @@
 //
 @mixin border-radius-bottom-right($name, $ratio)
 {
-  .brbr-#{$name}
+  .brbr-#{$name},
+  %brbr-#{$name}
   {
     border-bottom-right-radius: compute-border($ratio * $border-radius-multiplier);
   }
@@ -72,7 +76,8 @@
 //
 @mixin border-radius-bottom-left($name, $ratio)
 {
-  .brbl-#{$name}
+  .brbl-#{$name},
+  %brbl-#{$name}
   {
     border-bottom-left-radius: compute-border($ratio * $border-radius-multiplier);
   }
@@ -88,7 +93,8 @@
 //
 @mixin border-width($name, $ratio)
 {
-  .bw-#{$name}
+  .bw-#{$name},
+  %bw-#{$name}
   {
     border-width: compute-border($ratio);
   }

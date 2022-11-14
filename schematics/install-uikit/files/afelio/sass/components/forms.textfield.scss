@@ -10,21 +10,21 @@ $root: ".textfield";
     //
     ////////////////////////////////////////////////////
 
-    @extend .relative;
+    @extend %relative;
 
-    @extend .flex;
-    @extend .flex-middle;
+    @extend %flex;
+    @extend %flex-middle;
 
-    @extend .w-100;
+    @extend %w-100;
 
-    @extend .bc-grey03;
-    @extend .bw-xxs;
-    @extend .bs-solid;
-    @extend .br-m;
+    @extend %bc-grey03;
+    @extend %bw-xxs;
+    @extend %bs-solid;
+    @extend %br-m;
 
-    @extend .p-none;
+    @extend %p-none;
 
-    @extend .bg-grey00;
+    @extend %bg-grey00;
 
     cursor: text;
 
@@ -35,23 +35,23 @@ $root: ".textfield";
     #{$root}__field
     {
         height: 38px;
-        @extend .w-100;
+        @extend %w-100;
 
-        @extend .m-none;
-        @extend .mb-xs;
+        @extend %m-none;
+        @extend %mb-xs;
 
         padding-top: compute-grid($grid-xs + math.div($grid-xxs, 2));
         padding-bottom: compute-grid($grid-xs + math.div($grid-xxs, 2));
-        @extend .px-xs;
+        @extend %px-xs;
 
-        @extend .bw-none;
+        @extend %bw-none;
 
-        @extend .bg-transparent;
+        @extend %bg-transparent;
 
-        @extend .c-grey08;
+        @extend %c-grey08;
 
-        @extend .f-s;
-        @extend .f-regular;
+        @extend %f-s;
+        @extend %f-regular;
 
         &::-ms-clear
         {
@@ -61,7 +61,7 @@ $root: ".textfield";
         &.-empty-mask,
         &::placeholder
         {
-            @extend .c-grey03;
+            @extend %c-grey03;
         }
 
     }
@@ -75,17 +75,17 @@ $root: ".textfield";
 
     #{$root}__button ~ #{$root}__field
     {
-        @extend .pr-xl;
+        @extend %pr-xl;
     }
 
     #{$root}__prefix,
     #{$root}__suffix
     {
-        @extend .px-s;
-        @extend .c-grey06;
-        @extend .text-center;
+        @extend %px-s;
+        @extend %c-grey06;
+        @extend %text-center;
 
-        @extend .absolute;
+        @extend %absolute;
         top: 50%;
         transform: translateY(-50%);
     }
@@ -102,7 +102,7 @@ $root: ".textfield";
 
     #{$root}__button
     {
-        @extend .absolute;
+        @extend %absolute;
         right: compute-grid($grid-xs);
         top: 50%;
         transform: translateY(-50%);
@@ -110,8 +110,8 @@ $root: ".textfield";
         cursor: pointer;
 
         @extend .icon;
-        @extend .c-primary04;
-        @extend .f-xl;
+        @extend %c-primary04;
+        @extend %f-xl;
     }
 
     textarea.textfield__field
@@ -142,7 +142,7 @@ $root: ".textfield";
     &:active,
     &.-active
     {
-        @extend .bc-primary04;
+        @extend %bc-primary04;
 
         &.-error
         {
@@ -162,8 +162,8 @@ $root: ".textfield";
     {
         cursor: default;
 
-        @extend .bc-grey02;
-        @extend .bg-grey01;
+        @extend %bc-grey02;
+        @extend %bg-grey01;
 
         &:hover,
         &:focus-within,
@@ -175,11 +175,11 @@ $root: ".textfield";
 
     &.-error
     {
-        @extend .bc-accent01;
+        @extend %bc-accent01;
 
         #{$root}__field
         {
-            @extend .c-accent01;
+            @extend %c-accent01;
         }
     }
 
@@ -195,18 +195,18 @@ $root: ".textfield";
     {
         #{$root}__icon
         {
-            @extend .absolute;
+            @extend %absolute;
             top: 50%;
             transform: translateY(-50%);
 
             font-size: 18px;
             @extend .icon;
 
-            @extend .c-primary05;
+            @extend %c-primary05;
 
             &.-disabled
             {
-                @extend .c-grey06;
+                @extend %c-grey06;
             }
 
             &.-pointer
@@ -218,22 +218,22 @@ $root: ".textfield";
         button#{$root}__icon
         {
             appearance: none;
-            @extend .no-decoration;
+            @extend %no-decoration;
 
             width: auto;
             min-width: auto;
 
             height: 40px;
 
-            @extend .flex;
-            @extend .flex-middle;
-            @extend .flex-center;
+            @extend %flex;
+            @extend %flex-middle;
+            @extend %flex-center;
 
             // position
-            @extend .block;
+            @extend %block;
 
             // padding
-            @extend .p-none;
+            @extend %p-none;
 
             // borders
             border: 0 !important;
@@ -242,7 +242,7 @@ $root: ".textfield";
             box-shadow: 0;
 
             // Background
-            @extend .bg-transparent;
+            @extend %bg-transparent;
 
             &:hover,
             &:focus,

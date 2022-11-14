@@ -20,7 +20,7 @@
   @include border-radius(#{$size}, $qty);
 }
 
-.br-circle { border-radius: 50%; }
+.br-circle, %br-circle { border-radius: 50%; }
 
 ////////////////////////////////////////////////////
 //
@@ -54,12 +54,14 @@
 //
 ////////////////////////////////////////////////////
 
-.bs-solid
+.bs-solid,
+%bs-solid
 {
   border-style: solid;
 }
 
-.bs-dotted
+.bs-dotted,
+%bs-dotted
 {
   border-style: dotted;
 }
