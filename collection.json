@@ -97,12 +97,6 @@
             "description": "Create an Angular component.",
             "schema": "./schematics/component/schema.json"
         },
-        "class": {
-            "aliases": [
-                "cl"
-            ],
-            "extends": "@schematics/angular:class"
-        },
         "directive": {
             "aliases": [
                 "d"
@@ -111,12 +105,6 @@
             "description": "Create an Angular directive.",
             "schema": "./schematics/directive/schema.json"
         },
-        "enum": {
-            "aliases": [
-                "e"
-            ],
-            "extends": "@schematics/angular:enum"
-        },
         "guard": {
             "aliases": [
                 "g"
@@ -124,12 +112,6 @@
             "factory": "./schematics/guard",
             "description": "Create an Angular guard.",
             "schema": "./schematics/guard/schema.json"
-        },
-        "interface": {
-            "aliases": [
-                "i"
-            ],
-            "extends": "@schematics/angular:interface"
         },
         "pipe": {
             "aliases": [
@@ -146,39 +128,6 @@
             "factory": "./schematics/service",
             "description": "Create an Angular service.",
             "schema": "./schematics/service/schema.json"
-        },
-        "application": {
-            "aliases": [
-                "app"
-            ],
-            "extends": "@schematics/angular:application"
-        },
-        "e2e": {
-            "extends": "@schematics/angular:e2e"
-        },
-        "library": {
-            "aliases": [
-                "lib"
-            ],
-            "extends": "@schematics/angular:library"
-        },
-        "service-worker": {
-            "aliases": [
-                "serviceWorker"
-            ],
-            "extends": "@schematics/angular:serviceWorker"
-        },
-        "app-shell": {
-            "aliases": [
-                "appShell"
-            ],
-            "extends": "@schematics/angular:appShell"
-        },
-        "web-worker": {
-            "aliases": [
-                "webWorker"
-            ],
-            "extends": "@schematics/angular:webWorker"
         },
         "private-plugin": {
             "aliases": [

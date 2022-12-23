@@ -60,7 +60,7 @@ function updateConfig(): Rule {
         }
         (workspace.extensions['cli'] as any)['schematicCollections'] = [
             'ng-afelio',
-            "@schematics/angular"
+            '@schematics/angular'
         ];
     });
 }
