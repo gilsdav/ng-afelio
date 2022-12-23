@@ -76,18 +76,18 @@ program
   });
 
 program
-  .command('serve')
+  .command('serve [name]')
   .alias('ms')
   .description('Start dev server')
   .option('-e, --env <environment>', 'Change default environment')
   .option('-p, --port <port>', 'Change default port', 4200)
   .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
-  .action((options) => {
-    serveMain(options.env, options.port, options.ng);
+  .action((name, options) => {
+    serveMain(options.env, options.port, options.ng, name);
   });
 
 program
-  .command('start')
+  .command('start [name]')
   .alias('s')
   .description('Start all dev tools')
   .option('-e, --env <environment>', 'Change default environment')
@@ -95,8 +95,8 @@ program
   .option('-u, --ui-port <uiPort>', 'Change default port of ui-kit', 5200)
   .option('--ng <ng>', 'Standard Angular CLI options for dev server (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
   .option('--ui-ng <uiNg>', 'Standard Angular CLI options for ui-kit server (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
-  .action((options) => {
-    Promise.all([serveMain(options.env, options.port, options.ng), serveUIKit(options.uiPort, options.uiNg)]);
+  .action((name, options) => {
+    Promise.all([serveMain(options.env, options.port, options.ng, name), serveUIKit(options.uiPort, options.uiNg)]);
   });
 
 const generateCommand = program.command('generate [type] [name]')

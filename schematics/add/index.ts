@@ -58,7 +58,10 @@ function updateConfig(): Rule {
         if (!workspace.extensions['cli']) {
             workspace.extensions['cli'] = {};
         }
-        (workspace.extensions['cli'] as any)['defaultCollection'] = 'ng-afelio';
+        (workspace.extensions['cli'] as any)['schematicCollections'] = [
+            'ng-afelio',
+            "@schematics/angular"
+        ];
     });
 }
 

@@ -13,6 +13,7 @@ const cli = require('@angular/cli');
 // const uiKitTypes = require('./models/ui-kit-types.enum');
 const config = require('./config');
 const { version } = require('./package.json');
+const { getConfig } = require('./scripts/check-files/util');
 
 const currentPath = process.cwd();
 
@@ -120,7 +121,7 @@ const serveUIKit = async (port, ngOptionsString) => {
     return await pexec(`npx ng serve ui-kit --port=${port || '5200'} --host=0.0.0.0 ${produceNgOptions(ngOptionsString).join(' ')}`, { cwd: currentPath });
 }
 
-const serveMain = async (environment, port, ngOptionsString) => {
+const serveMain = async (environment, port, ngOptionsString, projectName) => {
     // return await cli.default({cliArgs: [
     //     'serve',
     //     `--port=${port||'4200'}`,
@@ -128,7 +129,10 @@ const serveMain = async (environment, port, ngOptionsString) => {
     //     ...( environment ? [`--configuration=${environment}`] : []),
     //     ...produceNgOptions(ngOptionsString)
     // ]});
-    return await pexec(`npx ng serve --port=${port || '5200'} --host=0.0.0.0 ${environment ? [`--configuration=${environment}`] : ''} ${produceNgOptions(ngOptionsString).join(' ')}`, { cwd: currentPath });
+    if (!projectName) {
+        projectName = getConfig('defaultProject');
+    }
+    return await pexec(`npx ng serve ${projectName || ''} --port=${port || '4200'} --host=0.0.0.0 ${environment ? [`--configuration=${environment}`] : ''} ${produceNgOptions(ngOptionsString).join(' ')}`, { cwd: currentPath });
 }
 
 const generate = async (type, name, ngOptions) => {
