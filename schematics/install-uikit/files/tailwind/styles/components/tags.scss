@@ -1,0 +1,59 @@
+$root: '.tag';
+
+#{$root} {
+    @apply rounded-full px-2 py-1 leading-none text-sm w-fit flex items-center justify-between h-6 transition-colors;
+
+    &--primary {
+        @apply bg-action-primary text-grey-00;
+
+        &#{$root}--clickable {
+            @apply hover:bg-action-dark;
+        }
+    }
+
+    &--secondary {
+        @apply bg-action-lighter text-action-primary;
+
+        &#{$root}--clickable {
+            @apply hover:bg-action-light;
+        }
+    }
+
+    &--success {
+        @apply bg-success-light text-success-primary;
+    }
+
+    &--danger {
+        @apply bg-danger-light text-danger-primary;
+    }
+
+    &--error {
+        @apply bg-danger-primary text-grey-00;
+    }
+
+    &--grey {
+        @apply bg-grey-02 text-grey-07;
+    }
+
+
+    &--button {
+        button {
+            @apply h-4 w-4 ml-1 mr-0;
+
+            svg {
+                @apply h-5 w-5 mx-0;
+            }
+        }
+    }
+    &--clickable {
+        @apply pr-0 cursor-pointer;
+
+        svg {
+            @apply h-4 w-4 ml-1 mr-2;
+        }
+    }
+
+    &--small {
+        @apply text-xs h-5;
+    }
+}

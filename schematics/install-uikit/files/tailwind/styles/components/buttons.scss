@@ -1,0 +1,123 @@
+$root: '.button';
+
+#{$root} {
+    @apply 
+        py-1 px-4 
+        rounded
+        appearance-none
+        inline-block
+        text-center
+        text-sm leading-6 font-medium
+        h-8;
+
+    &:disabled,
+    &--disabled {
+        @apply opacity-75 pointer-events-none;
+    }
+
+    /*
+     * Styles
+     */
+
+    &--primary {
+        @apply 
+            text-grey-00
+            transition-colors
+            bg-action-primary hover:bg-action-darker;
+    }
+
+    &--secondary {
+        @apply 
+            text-action-primary
+            transition-colors
+            bg-action-lighter hover:bg-action-light;
+    }
+
+    &--success {
+        @apply 
+            text-grey-00
+            transition-colors
+            bg-success-primary hover:bg-success-dark;
+    }
+
+    &--danger {
+        @apply 
+            text-danger-primary
+            transition-colors
+            bg-danger-lighter hover:bg-danger-light;
+    }
+
+    &--warning {
+        @apply 
+            text-warning-primary
+            transition-colors
+            bg-warning-lighter hover:bg-warning-light;
+    }
+
+    &--ghost {
+        @apply 
+            text-grey-09 hover:text-grey-10
+            transition-colors
+            bg-none hover:bg-action-lighter;
+    }
+
+    &--link {
+        @apply 
+            text-action-primary hover:text-action-dark
+            transition-colors
+            bg-none
+            p-0;
+    }
+
+    &--link-dark {
+        @apply 
+            text-grey-10 hover:text-grey-09
+            transition-colors
+            bg-none
+            p-0;
+    }
+
+
+    /*
+     * Specificities
+     */
+    
+    &--icon {
+        @apply flex justify-between items-center;
+
+        svg {
+            @apply h-5 w-5;
+        }
+
+        &--only {
+            @apply p-1 w-8 h-8 justify-center;
+        }
+
+        &--pre {
+            svg {
+                @apply mr-2;
+            }
+        }
+        &--post {
+            svg {
+                @apply ml-2;
+            }
+        }
+    }
+
+    &--circle {
+        @apply rounded-full p-0 w-6 h-6 flex items-center justify-center text-sm;
+
+        svg {
+            @apply h-4 w-4;
+        }
+
+        &--small {
+            @apply w-4 h-4 text-xs;
+
+            svg {
+                @apply h-3 w-3;
+            }
+        }
+    }
+}

@@ -1,0 +1,15 @@
+@layer components {
+    .page-footer {
+        @apply 
+            w-full 
+            shadow 
+            p-4 
+            bg-grey-00
+            h-16
+            z-20;
+
+        &--fixed {
+            @apply fixed bottom-0 left-0;
+        }
+    }
+}

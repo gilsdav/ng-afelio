@@ -1,0 +1,28 @@
+.mat-datepicker-toggle .mat-icon-button .mat-button-wrapper {
+    background-image: url('~assets/pictures/icons/calendar.svg');
+
+    @apply bg-center bg-no-repeat w-6 h-6 absolute -top-[3px] right-0;
+
+    svg {
+        @apply hidden;
+    }
+}
+
+.mat-calendar {
+    .mat-calendar-body-selected {
+        @apply bg-action-primary;
+    }
+
+    .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+        @apply bg-action-dark text-grey-00;
+    }
+
+    .mat-stroked-button {
+        @apply bg-action-primary w-auto text-grey-00;
+    }
+}
+
+.ngx-mat-timepicker form .ngx-mat-timepicker-table .ngx-mat-timepicker-tbody tr td .mat-form-field {
+    width: 40px !important;
+    max-width: 40px !important;
+}
