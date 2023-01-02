@@ -15,7 +15,7 @@ import { AuthenticationService } from '../services/authentication.service';
 })
 export class CanAccessDirective implements OnDestroy {
 
-    private destroy$ = new Subject();
+    private destroy$ = new Subject<void>();
 
     constructor(
         private authService: AuthenticationService,

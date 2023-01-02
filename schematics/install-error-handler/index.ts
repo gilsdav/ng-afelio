@@ -5,6 +5,7 @@ import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@s
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import * as ts from 'typescript';
+import * as colors from 'colors';
 
 import { addImportToModule, findNodes, insertImport } from '../util/ast-util';
 import { Change, InsertChange, applyChangesToHost } from '../util/change';
@@ -18,7 +19,7 @@ function installNgxToastr(): Rule {
         const ngxToastr: NodeDependency = {
             type: NodeDependencyType.Default,
             name: 'ngx-toastr',
-            version: '14.0.0',
+            version: '^16.0.1',
             overwrite: false,
         };
         addPackageJsonDependency(host, ngxToastr);
@@ -42,12 +43,17 @@ function getEnvironmentNode(source: ts.SourceFile): ts.Node | undefined {
     }
 }
 
-function applyIntoEnvironment(projectAppPath: string, projectName: string, prodEnv = false): Rule {
+function applyIntoEnvironment(projectAppPath: string, projectName: String): Rule {
 
-    const projectEnvPath = join(projectAppPath as Path, prodEnv ? '../environments/environment.prod.ts' : '../environments/environment.ts');
+    // const projectEnvPath = join(projectAppPath as Path, prodEnv ? '../environments/environment.prod.ts' : '../environments/environment.ts');
+    let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
 
     return host => {
-        const text = host.read(projectEnvPath);
+        let text = host.read(projectEnvPath);
+        if (!text) { // Fallback for old project version
+            projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
+            text = host.read(projectEnvPath);
+        }
         if (!text) {
             throw new SchematicsException(`Environment file on ${projectName} project does not exist.`);
         }
@@ -62,15 +68,27 @@ function applyIntoEnvironment(projectAppPath: string, projectName: string, prodE
         const changes: Change[] = [];
         if (node) {
             const lastRouteNode = node.getLastToken();
+            const envToAdd = `\n    errorsHandler: {\n        enable: true,\n        codesToExclude: []\n    }`;
             if (lastRouteNode) {
                 changes.push(
                     new InsertChange(
                         projectEnvPath,
                         lastRouteNode.getEnd(),
-                        `,\n    errorsHandler: {\n        enable: true,\n        codesToExclude: []\n    }`
+                        `,${envToAdd}`
+                    )
+                );
+            } else {
+                changes.push(
+                    new InsertChange(
+                        projectEnvPath,
+                        node.getEnd(),
+                        `${envToAdd}\n`
                     )
                 );
             }
+            console.log(`${colors.green('Changes will be applied to dev environment.')} ${colors.yellow('Please apply it to others.')}`);
+        } else {
+            throw new SchematicsException(`No "export const environment" found`);
         }
         applyChangesToHost(host, projectEnvPath, changes);
         return host;
@@ -138,7 +156,7 @@ function addNgxToastrStyle(projectAppPath: string): Rule {
             new InsertChange(
                 stylePath,
                 text.length,
-                `\n@import '~ngx-toastr/toastr';\n`
+                `\n@import 'node_modules/ngx-toastr/toastr';\n`
             )
         );
         applyChangesToHost(host, stylePath, changes);
@@ -179,7 +197,7 @@ export default function(options: ErrorHandlerOptions): Rule {
         const rules: Rule[] = [
             mergeWith(templateSource),
             applyIntoEnvironment(projectAppPath, options.project),
-            applyIntoEnvironment(projectAppPath, options.project, true),
+            // applyIntoEnvironment(projectAppPath, options.project, true),
             applyModuleImports(projectAppPath, options, useNgxToastr),
         ];
 

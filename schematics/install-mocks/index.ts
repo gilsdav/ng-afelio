@@ -3,6 +3,7 @@ import { Rule, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWit
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import * as ts from 'typescript';
+import * as colors from 'colors';
 
 import { addProviderToModule, findNodes, insertImport } from '../util/ast-util';
 import { Change, InsertChange, applyChangesToHost } from '../util/change';
@@ -59,9 +60,13 @@ function getEnvironmentNode(source: ts.SourceFile): ts.Node | undefined {
 }
 
 function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule {
-    const projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
+    let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
     return host => {
-        const text = host.read(projectEnvPath);
+        let text = host.read(projectEnvPath);
+        if (!text) { // Fallback for old project version
+            projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
+            text = host.read(projectEnvPath);
+        }
         if (!text) {
             throw new SchematicsException(`Environment file on ${projectName} project does not exist.`);
         }
@@ -75,16 +80,30 @@ function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule
         const node = getEnvironmentNode(source);
         const changes: Change[] = [];
         if (node) {
-            const lastRouteNode = node.getLastToken();
-            if (lastRouteNode) {
-                changes.push(
-                    new InsertChange(
-                        projectEnvPath,
-                        lastRouteNode.getEnd(),
-                        `,\n    mock: {\n        enable: true,\n        all: false,\n        services: {\n            getPets: true\n        }\n    }`
-                    )
-                );
+            if (!node.getText().includes('mock:')) {
+                const lastRouteNode = node.getLastToken();
+                const mocksToAdd = `\n    mock: {\n        enable: true,\n        all: false,\n        services: {\n            getPets: true\n        }\n    }`;
+                if (lastRouteNode) {
+                    changes.push(
+                        new InsertChange(
+                            projectEnvPath,
+                            lastRouteNode.getEnd(),
+                            `,${mocksToAdd}`
+                        )
+                    );
+                } else {
+                    changes.push(
+                        new InsertChange(
+                            projectEnvPath,
+                            node.getEnd(),
+                            `${mocksToAdd}\n`
+                        )
+                    );
+                }
+                console.log(`${colors.green('Changes will be applied to dev environment.')} ${colors.yellow('Please apply it to others.')}`)
             }
+        } else {
+            throw new SchematicsException(`No "export const environment" found`);
         }
         applyChangesToHost(host, projectEnvPath, changes);
         return host;

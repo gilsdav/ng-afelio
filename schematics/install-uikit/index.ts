@@ -131,7 +131,6 @@ function updateScripts(): Rule {
 function addLinesToMainStyleFile(options: UIKitOptions): Rule {
     return (host: Tree) => {
         const styleFilePath = join(options.projectPath, 'styles.scss');
-        console.log('stylePath', styleFilePath.toString());
         const text = host.read(styleFilePath);
         if (!text) {
             throw new SchematicsException(`Can not find "styles.scss" file in your project.`);

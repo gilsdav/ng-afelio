@@ -5,6 +5,7 @@ import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@s
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import ts = require('typescript');
+import * as colors from 'colors';
 
 import { addImportToModule, findNodes, insertImport } from '../util/ast-util';
 import { Change, InsertChange, applyChangesToHost } from '../util/change';
@@ -77,9 +78,13 @@ function getEnvironmentNode(source: ts.SourceFile): ts.Node | undefined {
 }
 
 function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule {
-    const projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
+    let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
     return host => {
-        const text = host.read(projectEnvPath);
+        let text = host.read(projectEnvPath);
+        if (!text) { // Fallback for old project version
+            projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
+            text = host.read(projectEnvPath);
+        }
         if (!text) {
             throw new SchematicsException(`Environment file on ${projectName} project does not exist.`);
         }
@@ -93,32 +98,44 @@ function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule
         const node = getEnvironmentNode(source);
         const changes: Change[] = [];
         if (node) {
-            const lastRouteNode = node.getLastToken();
-            if (lastRouteNode) {
-                changes.push(
-                    new InsertChange(
-                        projectEnvPath,
-                        lastRouteNode.getEnd(),
-                        `,
+            if (!node.getText().includes('oidc:')) {
+                const lastRouteNode = node.getLastToken();
+                const envToAdd = `
     oidc: {
         issuer: 'http://keycloak:8080/auth/realms',
         redirectUri: 'http://localhost:4200',
         realm: 'myrealm',
         clientId: 'myapp',
         responseType: 'code',
-        scope: 'openid profile email offline_access roles',
+        scope: 'openid profile email roles',
         showDebugInformation: true,
         requireHttps: false,
         disableAtHashCheck: true,
         completeSecure: true,
         authErrorRoute: '/auth-error',
         storage: 'session' as const
-    }`
-                    )
-
-
-                );
+    }`;
+                if (lastRouteNode) {
+                    changes.push(
+                        new InsertChange(
+                            projectEnvPath,
+                            lastRouteNode.getEnd(),
+                            `,${envToAdd}`
+                        )
+                    );
+                } else {
+                    changes.push(
+                        new InsertChange(
+                            projectEnvPath,
+                            node.getEnd(),
+                            `${envToAdd}\n`
+                        )
+                    );
+                }
+                console.log(`${colors.green('Changes will be applied to dev environment.')} ${colors.yellow('Please apply it to others.')}`)
             }
+        } else {
+            throw new SchematicsException(`No "export const environment" found`);
         }
         applyChangesToHost(host, projectEnvPath, changes);
         return host;

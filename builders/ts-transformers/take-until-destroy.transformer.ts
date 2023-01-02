@@ -41,7 +41,7 @@ export const takeUntilDestroyTransformer = <T extends ts.Node>(context: ts.Trans
               false,
               undefined,
               ts.factory.createNamedImports([
-                ts.factory.createImportSpecifier(ts.factory.createIdentifier('UntilDestroy'), ts.factory.createIdentifier('UntilDestroy')),
+                ts.factory.createImportSpecifier(false, ts.factory.createIdentifier('UntilDestroy'), ts.factory.createIdentifier('UntilDestroy')),
               ])),
               ts.factory.createStringLiteral('@ngneat/until-destroy'));
           return [ newImport, node ];

@@ -34,11 +34,11 @@ export class PermissionGuard implements CanActivate, CanActivateChild, CanLoad {
     }
 
     private checkPermissions(route: ActivatedRouteSnapshot | Route): Observable<boolean> {
-        const permissions: string[] = route.data && route.data.permissions;
+        const permissions: string[] = route.data && route.data['permissions'];
         return this.authService.canAccess(permissions).pipe(
             tap(canAccess => {
-                if (!canAccess && (route.data && route.data.unauthorizedRedirect)) {
-                    this.router.navigateByUrl(route.data.unauthorizedRedirect);
+                if (!canAccess && (route.data && route.data['unauthorizedRedirect'])) {
+                    this.router.navigateByUrl(route.data['unauthorizedRedirect']);
                 }
             })
         );
