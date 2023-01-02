@@ -4,12 +4,12 @@ import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import ts = require('typescript');
-import * as colors from 'colors';
 
-import { addImportToModule, findNodes, insertImport } from '../util/ast-util';
-import { Change, applyChangesToHost, InsertChange } from '../util/change';
+import { addImportToModule, insertImport } from '../util/ast-util';
+import { Change, applyChangesToHost } from '../util/change';
 
 import { Schema as StoreOptions } from './schema';
+import { appendIntoEnvironment } from '../util/environment';
 
 function installNgxs(): Rule {
     return (host: Tree, context: SchematicContext) => {
@@ -67,71 +67,73 @@ function applyModuleImports(projectAppPath: string, options: StoreOptions): Rule
     };
 }
 
-function getEnvironmentNode(source: ts.SourceFile): ts.Node | undefined {
-    const keywords = findNodes(source, ts.SyntaxKind.VariableStatement);
-    for (const keyword of keywords) {
-        if (ts.isVariableStatement(keyword)) {
-            const [declaration] = keyword.declarationList.declarations;
-            if (
-                ts.isVariableDeclaration(declaration) &&
-                declaration.initializer &&
-                declaration.name.getText() === 'environment'
-            ) {
-                return declaration.initializer.getChildAt(1);
-            }
-        }
-    }
-}
+// function getEnvironmentNode(source: ts.SourceFile): ts.Node | undefined {
+//     const keywords = findNodes(source, ts.SyntaxKind.VariableStatement);
+//     for (const keyword of keywords) {
+//         if (ts.isVariableStatement(keyword)) {
+//             const [declaration] = keyword.declarationList.declarations;
+//             if (
+//                 ts.isVariableDeclaration(declaration) &&
+//                 declaration.initializer &&
+//                 declaration.name.getText() === 'environment'
+//             ) {
+//                 return declaration.initializer.getChildAt(1);
+//             }
+//         }
+//     }
+// }
 
 function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule {
-    let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
-    return host => {
-        let text = host.read(projectEnvPath);
-        if (!text) { // Fallback for old project version
-            projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
-            text = host.read(projectEnvPath);
-        }
-        if (!text) {
-            throw new SchematicsException(`Environment file on ${projectName} project does not exist.`);
-        }
-        const sourceText = text.toString('utf8');
-        const source = ts.createSourceFile(
-            projectEnvPath,
-            sourceText,
-            ts.ScriptTarget.Latest,
-            true
-        );
-        const node = getEnvironmentNode(source);
-        const changes: Change[] = [];
-        if (node) {
-            if (!node.getText().includes('ngxsDebugger:')) {
-                const lastRouteNode = node.getLastToken();
-                const envToAdd = `\n    ngxsDebugger: true`;
-                if (lastRouteNode) {
-                    changes.push(
-                        new InsertChange(
-                            projectEnvPath,
-                            lastRouteNode.getEnd(),
-                            `,${envToAdd}`
-                        )
-                    );
-                } else {
-                    changes.push(
-                        new InsertChange(
-                            projectEnvPath,
-                            node.getEnd(),
-                            `${envToAdd}\n`
-                        )
-                    );
-                }
-                console.log(`${colors.green('Changes will be applied to dev environment.')} ${colors.yellow('Please apply it to others.')}`);
-            }
-        } else {
-            throw new SchematicsException(`No "export const environment" found`);
-        }
-        applyChangesToHost(host, projectEnvPath, changes);
-        return host;
-    };
+    const envToAdd = `\n    ngxsDebugger: true`;
+    return appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'ngxsDebugger:');
+    // let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
+    // return host => {
+    //     let text = host.read(projectEnvPath);
+    //     if (!text) { // Fallback for old project version
+    //         projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
+    //         text = host.read(projectEnvPath);
+    //     }
+    //     if (!text) {
+    //         throw new SchematicsException(`Environment file on ${projectName} project does not exist.`);
+    //     }
+    //     const sourceText = text.toString('utf8');
+    //     const source = ts.createSourceFile(
+    //         projectEnvPath,
+    //         sourceText,
+    //         ts.ScriptTarget.Latest,
+    //         true
+    //     );
+    //     const node = getEnvironmentNode(source);
+    //     const changes: Change[] = [];
+    //     if (node) {
+    //         if (!node.getText().includes('ngxsDebugger:')) {
+    //             const lastRouteNode = node.getLastToken();
+    //             const envToAdd = `\n    ngxsDebugger: true`;
+    //             if (lastRouteNode) {
+    //                 changes.push(
+    //                     new InsertChange(
+    //                         projectEnvPath,
+    //                         lastRouteNode.getEnd(),
+    //                         `,${envToAdd}`
+    //                     )
+    //                 );
+    //             } else {
+    //                 changes.push(
+    //                     new InsertChange(
+    //                         projectEnvPath,
+    //                         node.getEnd(),
+    //                         `${envToAdd}\n`
+    //                     )
+    //                 );
+    //             }
+    //             console.log(`${colors.green('Changes will be applied to dev environment.')} ${colors.yellow('Please apply it to others.')}`);
+    //         }
+    //     } else {
+    //         throw new SchematicsException(`No "export const environment" found`);
+    //     }
+    //     applyChangesToHost(host, projectEnvPath, changes);
+    //     return host;
+    // };
 }
 
 export default function(options: StoreOptions): Rule {

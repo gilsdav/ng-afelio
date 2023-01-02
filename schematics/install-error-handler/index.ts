@@ -5,12 +5,12 @@ import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@s
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import * as ts from 'typescript';
-import * as colors from 'colors';
 
-import { addImportToModule, findNodes, insertImport } from '../util/ast-util';
+import { addImportToModule, insertImport } from '../util/ast-util';
 import { Change, InsertChange, applyChangesToHost } from '../util/change';
 
 import { Schema as ErrorHandlerOptions } from './schema';
+import { appendIntoEnvironment } from '../util/environment';
 
 const buildPath = './core';
 
@@ -27,72 +27,74 @@ function installNgxToastr(): Rule {
     };
 }
 
-function getEnvironmentNode(source: ts.SourceFile): ts.Node | undefined {
-    const keywords = findNodes(source, ts.SyntaxKind.VariableStatement);
-    for (const keyword of keywords) {
-        if (ts.isVariableStatement(keyword)) {
-            const [declaration] = keyword.declarationList.declarations;
-            if (
-                ts.isVariableDeclaration(declaration) &&
-                declaration.initializer &&
-                declaration.name.getText() === 'environment'
-            ) {
-                return declaration.initializer.getChildAt(1);
-            }
-        }
-    }
-}
+// function getEnvironmentNode(source: ts.SourceFile): ts.Node | undefined {
+//     const keywords = findNodes(source, ts.SyntaxKind.VariableStatement);
+//     for (const keyword of keywords) {
+//         if (ts.isVariableStatement(keyword)) {
+//             const [declaration] = keyword.declarationList.declarations;
+//             if (
+//                 ts.isVariableDeclaration(declaration) &&
+//                 declaration.initializer &&
+//                 declaration.name.getText() === 'environment'
+//             ) {
+//                 return declaration.initializer.getChildAt(1);
+//             }
+//         }
+//     }
+// }
 
-function applyIntoEnvironment(projectAppPath: string, projectName: String): Rule {
+function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule {
+    const envToAdd = `\n    errorsHandler: {\n        enable: true,\n        codesToExclude: []\n    }`;
+    return appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'errorsHandler:');
 
-    // const projectEnvPath = join(projectAppPath as Path, prodEnv ? '../environments/environment.prod.ts' : '../environments/environment.ts');
-    let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
+    // // const projectEnvPath = join(projectAppPath as Path, prodEnv ? '../environments/environment.prod.ts' : '../environments/environment.ts');
+    // let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
 
-    return host => {
-        let text = host.read(projectEnvPath);
-        if (!text) { // Fallback for old project version
-            projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
-            text = host.read(projectEnvPath);
-        }
-        if (!text) {
-            throw new SchematicsException(`Environment file on ${projectName} project does not exist.`);
-        }
-        const sourceText = text.toString('utf8');
-        const source = ts.createSourceFile(
-            projectEnvPath,
-            sourceText,
-            ts.ScriptTarget.Latest,
-            true
-        );
-        const node = getEnvironmentNode(source);
-        const changes: Change[] = [];
-        if (node) {
-            const lastRouteNode = node.getLastToken();
-            const envToAdd = `\n    errorsHandler: {\n        enable: true,\n        codesToExclude: []\n    }`;
-            if (lastRouteNode) {
-                changes.push(
-                    new InsertChange(
-                        projectEnvPath,
-                        lastRouteNode.getEnd(),
-                        `,${envToAdd}`
-                    )
-                );
-            } else {
-                changes.push(
-                    new InsertChange(
-                        projectEnvPath,
-                        node.getEnd(),
-                        `${envToAdd}\n`
-                    )
-                );
-            }
-            console.log(`${colors.green('Changes will be applied to dev environment.')} ${colors.yellow('Please apply it to others.')}`);
-        } else {
-            throw new SchematicsException(`No "export const environment" found`);
-        }
-        applyChangesToHost(host, projectEnvPath, changes);
-        return host;
-    };
+    // return host => {
+    //     let text = host.read(projectEnvPath);
+    //     if (!text) { // Fallback for old project version
+    //         projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
+    //         text = host.read(projectEnvPath);
+    //     }
+    //     if (!text) {
+    //         throw new SchematicsException(`Environment file on ${projectName} project does not exist.`);
+    //     }
+    //     const sourceText = text.toString('utf8');
+    //     const source = ts.createSourceFile(
+    //         projectEnvPath,
+    //         sourceText,
+    //         ts.ScriptTarget.Latest,
+    //         true
+    //     );
+    //     const node = getEnvironmentNode(source);
+    //     const changes: Change[] = [];
+    //     if (node) {
+    //         const lastRouteNode = node.getLastToken();
+    //         const envToAdd = `\n    errorsHandler: {\n        enable: true,\n        codesToExclude: []\n    }`;
+    //         if (lastRouteNode) {
+    //             changes.push(
+    //                 new InsertChange(
+    //                     projectEnvPath,
+    //                     lastRouteNode.getEnd(),
+    //                     `,${envToAdd}`
+    //                 )
+    //             );
+    //         } else {
+    //             changes.push(
+    //                 new InsertChange(
+    //                     projectEnvPath,
+    //                     node.getEnd(),
+    //                     `${envToAdd}\n`
+    //                 )
+    //             );
+    //         }
+    //         console.log(`${colors.green('Changes will be applied to dev environment.')} ${colors.yellow('Please apply it to others.')}`);
+    //     } else {
+    //         throw new SchematicsException(`No "export const environment" found`);
+    //     }
+    //     applyChangesToHost(host, projectEnvPath, changes);
+    //     return host;
+    // };
 }
 
 function applyModuleImports(projectAppPath: string, options: ErrorHandlerOptions, useNgxToastr: boolean): Rule {
@@ -152,14 +154,16 @@ function addNgxToastrStyle(projectAppPath: string): Rule {
             throw new SchematicsException(`Can not add NgxStoastr style, ${stylePath} does not exist.`);
         }
 
-        changes.push(
-            new InsertChange(
-                stylePath,
-                text.length,
-                `\n@import 'node_modules/ngx-toastr/toastr';\n`
-            )
-        );
-        applyChangesToHost(host, stylePath, changes);
+        if (!text.includes('ngx-toastr/toastr')) {
+            changes.push(
+                new InsertChange(
+                    stylePath,
+                    text.length,
+                    `\n@import 'node_modules/ngx-toastr/toastr';\n`
+                )
+            );
+            applyChangesToHost(host, stylePath, changes);
+        }
         return host;
     };
 }
