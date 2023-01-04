@@ -140,7 +140,12 @@ const serveUIKit = async (port, ngOptionsString) => {
     //     '--host=0.0.0.0',
     //     ...produceNgOptions(ngOptionsString)
     // ]});
-    return await pexec(`npx ng serve ui-kit --port=${port || '5200'} --host=0.0.0.0 ${produceNgOptions(ngOptionsString).join(' ')}`, { cwd: currentPath });
+    return await pexec(`npx ng serve ui-kit --port=${port || '5200'} --host=0.0.0.0 ${produceNgOptions(ngOptionsString).join(' ')}`, { cwd: currentPath }).then(code => {
+        if (code > 0) {
+            console.log(colors.yellow('Do you have a ui-kit project ?'));
+        }
+        return code;
+    });
 }
 
 const serveMain = async (environment, port, ngOptionsString, projectName) => {
