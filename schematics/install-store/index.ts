@@ -84,8 +84,10 @@ function applyModuleImports(projectAppPath: string, options: StoreOptions): Rule
 // }
 
 function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule {
-    const envToAdd = `\n    ngxsDebugger: true`;
-    return appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'ngxsDebugger:');
+    return chain([
+        appendIntoEnvironment(projectAppPath, projectName, `\n    ngxsDebugger: true`, 'ngxsDebugger:', false),
+        appendIntoEnvironment(projectAppPath, projectName, `\n    ngxsDebugger: false`, 'ngxsDebugger:', true)
+    ]);
     // let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
     // return host => {
     //     let text = host.read(projectEnvPath);

@@ -22,17 +22,25 @@ export function getEnvironmentNode(source: ts.SourceFile): ts.Node | undefined {
     }
 }
 
-export function appendIntoEnvironment(projectAppPath: string, projectName: string, toAppend: string, toCheck?: string): Rule {
+export function appendIntoEnvironment(projectAppPath: string, projectName: string, toAppend: string, toCheck?: string, prod = false): Rule {
 
     // const projectEnvPath = join(projectAppPath as Path, prodEnv ? '../environments/environment.prod.ts' : '../environments/environment.ts');
-    let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
+    let devProjectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
+    let prodProjectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
+    let projectEnvPath = devProjectEnvPath;
 
     return host => {
-        let text = host.read(projectEnvPath);
-        if (!text) { // Fallback for old project version
+        const legacyEnvironment = host.exists(join(projectAppPath as Path, '../environments/environment.prod.ts'));
+        if (legacyEnvironment) {
             projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
-            text = host.read(projectEnvPath);
+            prodProjectEnvPath = join(projectAppPath as Path, '../environments/environment.prod.ts');
         }
+
+        if (prod) {
+            projectEnvPath = prodProjectEnvPath;
+        }
+
+        let text = host.read(projectEnvPath);
         if (!text) {
             throw new SchematicsException(`Environment file on ${projectName} project does not exist.`);
         }
@@ -65,7 +73,7 @@ export function appendIntoEnvironment(projectAppPath: string, projectName: strin
                         )
                     );
                 }
-                console.log(`${colors.green('Changes will be applied to dev environment.')} ${colors.yellow('Please apply it to others.')}`);
+                console.log(`${colors.green(`Changes will be applied to ${prod ? 'prod' : 'dev'} environment.`)} ${colors.yellow('Please apply it to others.')}`);
             }
         } else {
             throw new SchematicsException(`No "export const environment" found`);

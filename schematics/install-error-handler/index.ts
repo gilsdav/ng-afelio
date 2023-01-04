@@ -45,7 +45,10 @@ function installNgxToastr(): Rule {
 
 function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule {
     const envToAdd = `\n    errorsHandler: {\n        enable: true,\n        codesToExclude: []\n    }`;
-    return appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'errorsHandler:');
+    return chain([
+        appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'errorsHandler:', false),
+        appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'errorsHandler:', true)
+    ]);
 
     // // const projectEnvPath = join(projectAppPath as Path, prodEnv ? '../environments/environment.prod.ts' : '../environments/environment.ts');
     // let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');

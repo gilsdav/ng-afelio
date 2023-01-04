@@ -60,7 +60,11 @@ function applyModuleImports(projectAppPath: string, mockPath: string, options: M
 
 function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule {
     const envToAdd = `\n    mock: {\n        enable: true,\n        all: false,\n        services: {\n            getPets: true\n        }\n    }`;
-    return appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'mock:');
+    const envToAddProd = `\n    mock: {\n        enable: false,\n        all: false,\n        services: {\n            getPets: false\n        }\n    }`;
+    return chain([
+        appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'mock:', false),
+        appendIntoEnvironment(projectAppPath, projectName, envToAddProd, 'mock:', true)
+    ]);
     // let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
     // return host => {
     //     let text = host.read(projectEnvPath);

@@ -93,7 +93,10 @@ function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule
         authErrorRoute: '/auth-error',
         storage: 'session' as const
     }`;
-    return appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'oidc:');
+    return chain([
+        appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'oidc:', false),
+        appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'oidc:', true)
+    ]);
 
     // let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
     // return host => {
