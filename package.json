@@ -1,6 +1,6 @@
 {
   "name": "ng-afelio",
-  "version": "2.3.0-rc3",
+  "version": "2.3.0-rc4",
   "description": "Extended Angular CLI",
   "main": "index.js",
   "bin": "./index.js",
@@ -29,6 +29,7 @@
     "url": "https://github.com/gilsdav/ng-afelio.git"
   },
   "dependencies": {
+    "@angular-devkit/schematics": "^15.0.4",
     "colors": "1.4.0",
     "commander": "7.2.0",
     "css-node-extract": "3.0.2",
@@ -47,7 +48,6 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "^15.0.4",
     "@angular-devkit/core": "^15.0.4",
-    "@angular-devkit/schematics": "^15.0.4",
     "@schematics/angular": "^15.0.4",
     "@types/node-fetch": "^2.6.2",
     "@types/unzipper": "^0.10.5",
