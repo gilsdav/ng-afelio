@@ -21,8 +21,6 @@ const {
   generateI18n
 } = require('./logic');
 
-const { ConnectorBuilder } = require('./schematics/plugin/connector.builder');
-
 const { version: ngAfelioVersion } = require('./package.json');
 
 const { getAllArgs } = require('./remainer-args');
@@ -157,6 +155,7 @@ pluginCommand
         process.exit();
       });
     } else if (repo && options.list) {
+      const { ConnectorBuilder } = require('./schematics/plugin/connector.builder');
       const connector = ConnectorBuilder.build(repo);
       connector.getCompatiblePlugins(ngAfelioVersion).then(pluginNames => {
         console.info(`Available plugins:`);
