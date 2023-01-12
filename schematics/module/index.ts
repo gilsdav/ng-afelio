@@ -2,6 +2,7 @@ import { strings } from '@angular-devkit/core';
 import { Rule, SchematicsException, Tree, apply, branchAndMerge, chain, filter, mergeWith, move, noop, template, url } from '@angular-devkit/schematics';
 import { parseName } from '@schematics/angular/utility/parse-name';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { relativeCwdFromRelativeProjectPath } from '../util/barrel';
 
 import { validateName } from '../util/validation';
 
@@ -21,7 +22,7 @@ export default function(options: ModuleOptions): Rule {
 
         const parsedPath = parseName(options.path as string, options.name);
         options.name = parsedPath.name;
-        options.path = parsedPath.path;
+        options.path = relativeCwdFromRelativeProjectPath(parsedPath.path);
 
         validateName(options.name);
 
@@ -35,7 +36,7 @@ export default function(options: ModuleOptions): Rule {
               'if-flat': (s: string) => (options.flat ? '' : s),
               ...options,
             }),
-            move(parsedPath.path),
+            move(options.path),
         ]);
 
         return chain([

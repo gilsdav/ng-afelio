@@ -11,6 +11,7 @@ const cssNodeExtract = require('css-node-extract');
 const postcssScssSyntax = require('postcss-scss');
 
 const path = require('path');
+const findParentDir = require('find-parent-dir');
 
 const baseConfig = require('../templates/config/ng-afelio.json');
 const configPath = 'ng-afelio.json';
@@ -19,6 +20,39 @@ let outputDirectory = '../../styles';
 let inputDirectory = './projects/ui-kit';
 let inputPrefix = './src/';
 let angularConfigPath = '../../angular.json';
+
+
+function resolveToNodeModules(targetUrl, currentPath, defaultIndex = 'index') {
+  var packageRoot = findParentDir.sync(currentPath, 'node_modules');
+
+  if (!packageRoot) {
+    return null;
+  }
+
+  var filePath = path.resolve(packageRoot, 'node_modules', targetUrl);
+  var isPotentiallyDirectory = !path.extname(filePath);
+
+  if (isPotentiallyDirectory) {
+    if (fs.existsSync(filePath + '.scss')) {
+      return filePath + '.scss';
+    }
+
+    if (fs.existsSync(filePath)) {
+      return path.resolve(filePath, defaultIndex);
+    }
+  }
+
+  if (fs.existsSync(path.dirname(filePath))) {
+    return filePath;
+  }
+
+  return resolveToNodeModules(targetUrl, path.dirname(packageRoot));
+}
+
+const tildeImporter = function (url, currentPath) {
+  return (url[ 0 ] === '~') ? { file: resolveToNodeModules(url.substr(1), currentPath) } : null;
+};
+
 
 function reorganiseScssUse(scssSrc) {
     let toReplace = [];
@@ -180,10 +214,24 @@ function buildStyleFiles(config, bundlerBasePath) {
             // const cwd = process.cwd();
             // process.chdir(path.dirname(path.join(process.cwd(), inputPrefix, input)));
 
-            await new Promise((resolve, error) => {
+            await new Promise(async (resolve, error) => {
                 try {
-                    // const compiledFile = sass.compileString(toWrite, { importer: magicImporter() });
-                    const compiledFile = sass.compileString(toWrite);
+                    const nodeModulesPath = resolveToNodeModules('', process.cwd(), '');
+
+                    const compiledFile = sass.compileString(toWrite, {
+                        importer: {
+                            findFileUrl: (url, options) => {
+                                const tildeImporterResult = tildeImporter(url, process.cwd())?.file;
+                                return tildeImporterResult ? new URL( 'file://'  + (tildeImporter(url, process.cwd())?.file)) : null;
+                            },
+                        },
+                        quietDeps: true,
+                        style: 'expanded',
+                        verbose: true,
+                        loadPaths: [
+                            nodeModulesPath
+                        ]
+                    });
                     fs.writeFile(outputPath, compiledFile.css, (err) => {
                         if (!err) {
                             console.info(`${colors.green(`BUILD ${isGlobal ? 'global ' : ''}style`)} was saved in "${outputPath}"`);

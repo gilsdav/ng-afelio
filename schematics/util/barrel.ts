@@ -6,6 +6,7 @@ import ts = require('typescript');
 import { findNodes, insertExport, insertImport } from './ast-util';
 import { Change, InsertChange, applyChangesToHost } from './change';
 
+
 /**
  * @param type something like 'component'
  */
@@ -67,4 +68,13 @@ export function addIntoIndex(path: string, options: { barrel?: boolean, name: st
         }
         return host;
     };
+}
+
+export function relativeCwdFromRelativeProjectPath(relativePath: Path): string {
+    const currentCwd = process.cwd();
+    if (currentCwd.includes(relativePath)) {
+        return '/' + currentCwd.substring(currentCwd.indexOf(relativePath) + 1);
+    } else {
+        return relativePath;
+    }
 }

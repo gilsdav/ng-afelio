@@ -6,6 +6,7 @@ import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/work
 import ts = require('typescript');
 
 import { findNodes, insertImport } from '../util/ast-util';
+import { relativeCwdFromRelativeProjectPath } from '../util/barrel';
 import { Change, InsertChange, applyChangesToHost } from '../util/change';
 import { validateName } from '../util/validation';
 
@@ -81,7 +82,7 @@ export default function(options: StoreOptions): Rule {
 
         const parsedPath = parseName(options.path as string, options.name);
         options.name = parsedPath.name;
-        options.path = parsedPath.path;
+        options.path = relativeCwdFromRelativeProjectPath(parsedPath.path);
 
         validateName(options.name);
 

@@ -11,6 +11,7 @@ import { Change, InsertChange, applyChangesToHost } from '../util/change';
 import { validateName } from '../util/validation';
 
 import { Schema as MockOptions } from './schema';
+import { relativeCwdFromRelativeProjectPath } from '../util/barrel';
 
 function getMocksNode(source: ts.SourceFile): ts.Node | undefined {
     const keywords = findNodes(source, ts.SyntaxKind.VariableStatement);
@@ -223,7 +224,7 @@ export default function(options: MockOptions): Rule {
 
         const parsedPath = parseName(options.path as string, options.name);
         options.name = parsedPath.name;
-        options.path = parsedPath.path;
+        options.path = relativeCwdFromRelativeProjectPath(parsedPath.path);
 
         validateName(options.name);
 
