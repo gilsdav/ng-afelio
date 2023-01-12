@@ -1,6 +1,6 @@
 {
   "name": "ng-afelio",
-  "version": "2.3.0-rc6",
+  "version": "2.3.0-rc7",
   "description": "Extended Angular CLI",
   "main": "index.js",
   "bin": "./index.js",
