@@ -146,12 +146,14 @@ pluginCommand
   .option('-h, --help', 'output help message')
   .option('-l, --list', 'get the list of plugins from specific repo')
   .option('-i, --ignoredParts', 'comma separated list of part names to ignore. Example: search,pagniation')
+  .option('-p, --path', 'The path to create the module, relative to project directory. Default: ./shared/modules')
   .allowUnknownOption()
   // .parse(process.argv)
   .action((repo, name, options, command) => {
     if (repo && name) {
       const ignoredParts = options.ignoredParts ? [ 'ignoredParts=' + options.ignoredParts ] : [];
-      generate(`private-plugin`, repo, [name, ...ignoredParts, ...getAllArgs(command, options.help)]).then(() => {
+      const path = options.ignoredParts ? [ 'path=' + options.path ] : [];
+      generate(`private-plugin`, repo, [name, ...ignoredParts, ...path, ...getAllArgs(command, options.help)]).then(() => {
         process.exit();
       });
     } else if (repo && options.list) {

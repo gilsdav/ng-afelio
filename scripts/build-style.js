@@ -5,7 +5,7 @@ const decomment = require('decomment');
 const colors = require('colors');
 
 const sass = require('sass');
-// const magicImporter = require('node-sass-magic-importer');
+const magicImporter = require('node-sass-magic-importer');
 
 const cssNodeExtract = require('css-node-extract');
 const postcssScssSyntax = require('postcss-scss');
@@ -197,6 +197,10 @@ function buildStyleFiles(config, bundlerBasePath) {
 
     function bundling(input, output, isGlobal) {
         logSameLine(`${colors.blue(`PROCESS bundling...`)} "${input}"`);
+
+        const mainFile = path.join(process.cwd(), path.join(inputPrefix, input));
+        const mainFolder = path.dirname(mainFile);
+
         return bundler.bundle(path.join(inputPrefix, input)).then(async result => {
             if (!result.found) {
                 console.error(colors.red(`BUILD ERROR file "${input}" not found`));
@@ -219,12 +223,94 @@ function buildStyleFiles(config, bundlerBasePath) {
                     const nodeModulesPath = resolveToNodeModules('', process.cwd(), '');
 
                     const compiledFile = sass.compileString(toWrite, {
-                        importer: {
-                            findFileUrl: (url, options) => {
-                                const tildeImporterResult = tildeImporter(url, process.cwd())?.file;
-                                return tildeImporterResult ? new URL( 'file://'  + (tildeImporter(url, process.cwd())?.file)) : null;
+                        importers: [
+                            // Magic-importer
+                            {
+                                canonicalize: (url, options) => {
+                                    if (!options.fromImport) {
+                                        return null;
+                                    }
+                                    let decodedUrl = decodeURIComponent(url);
+                                    if (decodedUrl.startsWith('file://')) {
+                                        if (!decodedUrl.includes('{') && !decodedUrl.includes('[')) {
+                                            return new URL(url);
+                                        }
+                                        console.log(colors.bgYellow(`magic-importer is deprecated. Don't use it in new projects`));
+                                        decodedUrl = decodedUrl.substring(7); // Remove file://
+                                        const startIndex = decodedUrl.includes('{') ? decodedUrl.indexOf('{') : decodedUrl.indexOf('[');
+                                        const endIndex = decodedUrl.indexOf('from') + 4;
+                                        const beforeString = decodedUrl.substring(startIndex, endIndex);
+                                        decodedUrl = `${beforeString} ${decodedUrl.replace(beforeString, '').replace(/ /g, '')}`;
+                                    }
+                                    if (decodedUrl.includes('{') || decodedUrl.includes('[')) {
+                                        console.log(colors.bgYellow(`magic-importer is deprecated. Don't use it in new projects`));
+                                        const newUrl = new URL('file://' + decodedUrl.substring(decodedUrl.indexOf('from') + 4).trim());
+                                        newUrl.searchParams.append('decodedUrl', decodedUrl);
+                                        return newUrl;
+                                    } else {
+                                        return null;
+                                    }
+                                },
+                                load: function (url) {
+                                    const decodedUrl = url.searchParams.get('decodedUrl');
+                                    if (!decodedUrl) {
+                                        return {
+                                            contents: fs.readFileSync(path.join(mainFolder, url.hostname, url.pathname)).toString(),
+                                            syntax: 'scss'
+                                        };
+                                    }
+                                    // else {
+                                    //     return {
+                                    //         contents: fs.readFileSync(path.join(mainFolder, decodedUrl.substring(decodedUrl.indexOf('from') + 4).trim())).toString(),
+                                    //         syntax: 'scss'
+                                    //     };
+                                    // }
+                                    // const cleanedUrl = decodedUrl.substring(decodedUrl.indexOf('from') + 4).trim();
+                                    const importer = magicImporter();
+                                    try {
+                                        const magicImport = importer.bind({
+                                            options: {
+                                                cwd: process.cwd(),
+                                                extensions: [
+                                                    `.scss`,
+                                                    `.sass`,
+                                                    `.css`,
+                                                ],
+                                                packageKeys: [
+                                                    `sass`,
+                                                    `scss`,
+                                                    `style`,
+                                                    `css`,
+                                                    `main.sass`,
+                                                    `main.scss`,
+                                                    `main.style`,
+                                                    `main.css`,
+                                                    `main`,
+                                                ],
+                                                packagePrefix: `~`,
+                                                disableImportOnce: false,
+                                                customFilters: undefined,
+                                                includePaths: ''
+                                            }
+                                        })(decodedUrl, mainFile);
+                                        return {
+                                            contents: magicImport.contents,
+                                            syntax: 'scss'
+                                        };
+                                    } catch (e) {
+                                        console.log(colors.yellow(`Can not find (${decodedUrl}) from magic-importer. You must use magic-importer from root import to be able to use it here.`));
+                                        return null;
+                                    }
+                                }
                             },
-                        },
+                            // Tilde importer
+                            {
+                                findFileUrl: function (url, options) {
+                                    const tildeImporterResult = tildeImporter(url, process.cwd())?.file;
+                                    return tildeImporterResult ? new URL( 'file://'  + tildeImporterResult) : null;
+                                }
+                            }
+                        ],
                         quietDeps: true,
                         style: 'expanded',
                         verbose: true,
