@@ -50,7 +50,7 @@ const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString) => 
     if (isOpenApi) {
         console.info(`Creating project ${name}`);
         // await cli.default({ cliArgs: ['new', name, '--create-application=false', '--new-project-root=apis', '--skip-install', ...produceNgOptions(ngOptionsString)] });
-        await pexec(`npx @angular/cli@latest new ${name} --create-application=false --new-project-root=apis --skip-install ${ngOptionsString || ''}`);
+        await pexec(`npx @angular/cli@latest new ${name} --create-application=false --new-project-root=apis ${ngOptionsString || ''}`);
         console.info(`${colors.green('Project created')}`);
 
         process.chdir(`./${name}`);
@@ -109,12 +109,10 @@ const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString) => 
 
     } else {
         // await cli.default({ cliArgs: ['new', name, '--routing', '--style=scss', '--skip-install', ...produceNgOptions(ngOptionsString)] });
-        await pexec(`npx @angular/cli@latest new ${name} --routing --style=scss --skip-install ${ngOptionsString || ''}`);
+        await pexec(`npx @angular/cli@latest new ${name} --routing --style=scss ${ngOptionsString || ''}`);
         process.chdir(`./${name}`);
         const ngAfelioSrc = config.production ? `ng-afelio@${version}` : __dirname;
         await pexec(`npx ng add ${ngAfelioSrc} --skip-confirmation --ui-kit=${uiKitType}`);
-
-        await pexec(`npm i --save-dev @angular/cli@next`);
 
         await pexec(`npx ng generate @schematics/angular:environments`);
         // await cli.default({ cliArgs: ['add', ngAfelioSrc, '--skip-confirmation', `--ui-kit=${uiKitType}`] });
