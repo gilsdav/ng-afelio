@@ -306,8 +306,9 @@ function buildStyleFiles(config, bundlerBasePath) {
                             // Tilde importer
                             {
                                 findFileUrl: function (url, options) {
-                                    const tildeImporterResult = tildeImporter(url, process.cwd())?.file;
-                                    return tildeImporterResult ? new URL( 'file://'  + tildeImporterResult) : null;
+                                    const tildeImporterResult = tildeImporter(url, process.cwd());
+                                    const tildeImporterResultFile = tildeImporterResult ? tildeImporterResult.file : null;
+                                    return tildeImporterResultFile ? new URL( 'file://'  + tildeImporterResultFile) : null;
                                 }
                             }
                         ],
