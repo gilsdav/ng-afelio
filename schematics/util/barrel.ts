@@ -71,7 +71,10 @@ export function addIntoIndex(path: string, options: { barrel?: boolean, name: st
 }
 
 export function relativeCwdFromRelativeProjectPath(relativePath: Path): string {
-    const currentCwd = process.cwd();
+    let currentCwd = process.cwd();
+    if (process.platform.startsWith('win')) {
+        currentCwd = currentCwd.replace(/\\/g, '/');
+    }
     if (currentCwd.includes(relativePath)) {
         return '/' + currentCwd.substring(currentCwd.indexOf(relativePath) + 1);
     } else {
