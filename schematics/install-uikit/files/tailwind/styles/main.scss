@@ -1,9 +1,25 @@
 /**
+* CSS variables instanciation
+*/
+
+:root {
+    --container-gutter-x: 16px;
+    --col-gutter-x: 12px;
+
+    --container-sm: 580px;
+    --container-md: 640px;
+    --container-lg: 960px;
+    --container-xl: 1024px;
+    --container-2xl: 1280px;
+}
+
+/**
 * Base layer
 */
 
 @import 'base/template';
 @import 'base/typography';
+@import 'base/bootstrap-grid';
 
 
 /**
@@ -11,7 +27,6 @@
  */
 
 @import 'components/buttons';
-@import 'components/card';
 @import 'components/modal';
 @import 'components/tags';
 @import 'components/tables';
