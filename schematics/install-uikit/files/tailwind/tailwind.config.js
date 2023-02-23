@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-    content: ["./src/**/*.{html,ts}", "./projects/**/*.{html,ts,css}"],
+    content: ["./src/**/*.{html,scss,ts}", "./styles/**/*.{css,scss}"],
     theme: {
         colors: {
             transparent: "transparent",
@@ -43,7 +43,7 @@ module.exports = {
                 "07": "#3A4F5E",
                 "08": "#26323B",
                 "09": "#2C3034",
-                10: "#000000",
+                "10": "#000000"
             },
         },
         fontFamily: {
@@ -52,7 +52,15 @@ module.exports = {
         gap: {
             DEFAULT: "8px",
         },
+        screens: {
+            'sm': '640px',
+            'md': '768px',
+            'lg': '1024px',
+            'xl': '1280px',
+            '2xl': '1536px'
+        },
         extend: {
+
             container: {
                 center: true,
                 padding: {
@@ -61,13 +69,12 @@ module.exports = {
             },
         },
     },
+    corePlugins: {
+        container: false,
+    },
     plugins: [
         require("postcss-import"),
-        require("@tailwindcss/nesting"),
         require("postcss-nested-ancestors"),
-        require("prettier-plugin-tailwindcss"),
-        require("tailwind-bootstrap-grid")({
-            generateContainer: false,
-        }),
+        require("prettier-plugin-tailwindcss")
     ],
 };

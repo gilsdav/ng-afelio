@@ -62,12 +62,6 @@ function installDependencies(options: UIKitOptions): Rule {
             });
             toInstall.push({
                 type: NodeDependencyType.Dev,
-                name: '@tailwindcss/nesting',
-                version: '^0.0.0-insiders.565cd3e',
-                overwrite: true,
-            });
-            toInstall.push({
-                type: NodeDependencyType.Dev,
                 name: 'postcss-import',
                 version: '^15.1.0',
                 overwrite: true,
@@ -76,12 +70,6 @@ function installDependencies(options: UIKitOptions): Rule {
                 type: NodeDependencyType.Dev,
                 name: 'postcss-nested-ancestors',
                 version: '^3.0.0',
-                overwrite: true,
-            });
-            toInstall.push({
-                type: NodeDependencyType.Dev,
-                name: 'tailwind-bootstrap-grid',
-                version: '^5.0.1',
                 overwrite: true,
             });
             toInstall.push({
