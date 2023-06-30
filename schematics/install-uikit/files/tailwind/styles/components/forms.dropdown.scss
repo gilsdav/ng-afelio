@@ -18,7 +18,7 @@ $root: '.dropdown';
         @apply cursor-pointer outline-none bg-no-repeat py-1;
     }
 
-   
+
 
 
     ////////////////////////////////////////////////////
@@ -151,10 +151,15 @@ $root: '.dropdown';
         }
 
         .ng-clear-wrapper {
-            @apply absolute top-1/2 right-7 -translate-y-1/2;
-
+            @apply absolute top-1/2 right-8 -translate-y-1/2 w-6 h-6 flex justify-center items-center;
             .ng-clear {
                 @apply text-2xl text-grey-04 leading-7;
+            }
+            &:hover{
+                @apply bg-action-light rounded-full;
+                .ng-clear{
+                    @apply text-grey-00 ;
+                }
             }
         }
 
@@ -196,22 +201,22 @@ $root: '.dropdown';
                 }
 
                 .ng-value {
-                    @apply flex flex-row-reverse max-w-[90%] rounded-full px-2 text-grey-07 bg-action-light border border-grey-03 mr-1 mb-1;
+                    @apply flex flex-row-reverse items-center max-w-[90%] rounded-full px-2 text-grey-10 bg-action-lighter mr-1 mb-1;
 
                     span {
-                        @apply leading-6 whitespace-normal max-w-full break-all;
+                        @apply leading-6 whitespace-normal text-xs max-w-full break-all;
                     }
 
                     .ng-value-icon,
                     .ng-value-icon.left {
-                        border-right: none !important;
-                        padding: 0px 3px;
-
-                        @apply rounded ml-1;
-
-                        &:hover {
-                            @apply bg-grey-03;
-                        }
+                        @apply rounded-full
+                            ml-1
+                            w-4 h-4
+                            flex justify-center items-center
+                            text-grey-05
+                            text-base
+                            hover:bg-action-light
+                            hover:text-grey-00;
                     }
 
                     .ng-value-label {

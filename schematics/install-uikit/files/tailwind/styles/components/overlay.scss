@@ -1,0 +1,37 @@
+/**
+* Overlay Material (Datepicker / Select )
+*/
+.cdk-overlay-backdrop.mat-overlay-transparent-backdrop{
+    @apply bg-transparent;
+}
+.cdk-overlay-pane{
+    @apply bg-grey-00
+        drop-shadow-md
+        w-auto #{!important};
+    .mdc-menu-surface.mat-mdc-select-panel{
+        @apply p-1;
+        .mat-mdc-option{
+            @apply p-2
+                min-h-0
+                leading-6
+                rounded-md;
+            &:hover{
+                @apply bg-grey-03;
+            }
+            &.mat-mdc-option-active{
+                @apply bg-action-lighter
+                    text-action-primary;
+            }
+            .mat-pseudo-checkbox-minimal{
+                @apply ml-2;
+            }
+            .mat-pseudo-checkbox{
+                @apply scale-75;
+            }
+            .mat-pseudo-checkbox::after,
+            .mat-pseudo-checkbox-checked::after{
+                @apply border-action-primary;
+            }
+        }
+    }
+}
