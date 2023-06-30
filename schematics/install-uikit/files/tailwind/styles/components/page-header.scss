@@ -1,0 +1,31 @@
+@layer components {
+    .page-header {
+        @apply 
+            w-full 
+            shadow 
+            p-4 
+            bg-grey-00
+            h-16
+            z-50;
+
+        &--fixed {
+            @apply fixed top-0 left-0;
+        }
+
+        &--subnav {
+            @apply h-[5.5rem] pb-0;
+
+            nav {
+                @apply border-none;
+
+                .mat-tab-link {
+                    @apply h-8 mt-2 min-w-fit px-0 mr-4 last:mr-0;
+
+                    &.mat-tab-label-active {
+                        @apply text-action-primary;
+                    }
+                }
+            }
+        }
+    }
+}

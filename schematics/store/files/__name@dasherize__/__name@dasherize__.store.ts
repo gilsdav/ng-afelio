@@ -21,7 +21,7 @@ export class <%= classify(name) %>State {
     constructor() {}
 
     @Action(ClearState)
-    ClearState(ctx: StateContext<BobiStateModel>) {
+    ClearState(ctx: StateContext<<%= classify(name) %>StateModel>) {
         ctx.setState({ ...defaultStateModel });
     }
 <% if(example) { %>

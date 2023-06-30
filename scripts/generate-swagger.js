@@ -66,7 +66,7 @@ function installOpenapiGen(scriptName, configFileName) {
         return Promise.resolve();
     } else {
         console.info('Installing NgOpenapiGen');
-        return pexec('npm install ng-openapi-gen@0.2.3 --save-dev');
+        return pexec('npm install ng-openapi-gen@0.23.0 --save-dev');
     }
 }
 

@@ -1,0 +1,80 @@
+table {
+    @apply 
+        w-full
+        max-h-full;
+
+    thead {
+        .mat-header-cell,
+        .mat-sort-header {
+            @apply table-cell align-top py-2;
+        }
+
+        .mat-header-cell,
+        .mat-sort-header .mat-sort-header-content {
+            @apply font-bold text-sm text-grey-10 text-left;
+        }
+
+        tr.mat-header-row {
+            @apply h-fit;
+        }
+    }
+
+    th.mat-header-cell,
+    td.mat-cell {
+        @apply px-2;
+
+        &:first-of-type {
+            @apply pl-4;
+        }
+        &:last-of-type {
+            @apply pr-4;
+        }
+    }
+
+    td.cdk-column-Actions {
+        @apply text-right;
+    }
+
+    &.list-table {
+        @apply w-full;
+        
+        .mat-row .mat-cell {
+            @apply min-w-[120px] max-w-[140px] break-words py-2 ;
+        }
+    }
+
+    &.hide-head {
+        thead { 
+            @apply hidden;
+        }
+    }
+
+    /**
+     * Tables in modal
+     */
+    &.modal-table {
+        thead {
+            .mat-header-cell,
+            .mat-sort-header .mat-sort-header-content {
+                @apply font-medium text-sm text-grey-08;
+            }
+
+            tr.mat-header-row {
+                @apply h-8;
+            }
+        }
+
+        tbody {
+            tr.mat-row {
+                @apply h-10;
+            }
+        }
+
+        th.mat-header-cell,
+        td.mat-cell {
+            &:first-of-type {
+                @apply pl-0;
+            }
+        }
+    }
+}

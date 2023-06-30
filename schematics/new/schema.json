@@ -159,6 +159,10 @@
                         "label": "bootstrap"
                     },
                     {
+                      "value": "tailwind",
+                      "label": "tailwind"
+                    },
+                    {
                       "value": "none",
                       "label": "none"
                   }

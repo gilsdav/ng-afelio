@@ -21,8 +21,6 @@ const {
   generateI18n
 } = require('./logic');
 
-const { ConnectorBuilder } = require('./schematics/plugin/connector.builder');
-
 const { version: ngAfelioVersion } = require('./package.json');
 
 const { getAllArgs } = require('./remainer-args');
@@ -76,18 +74,18 @@ program
   });
 
 program
-  .command('serve')
+  .command('serve [name]')
   .alias('ms')
   .description('Start dev server')
   .option('-e, --env <environment>', 'Change default environment')
   .option('-p, --port <port>', 'Change default port', 4200)
   .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
-  .action((options) => {
-    serveMain(options.env, options.port, options.ng);
+  .action((name, options) => {
+    serveMain(options.env, options.port, options.ng, name);
   });
 
 program
-  .command('start')
+  .command('start [name]')
   .alias('s')
   .description('Start all dev tools')
   .option('-e, --env <environment>', 'Change default environment')
@@ -95,8 +93,8 @@ program
   .option('-u, --ui-port <uiPort>', 'Change default port of ui-kit', 5200)
   .option('--ng <ng>', 'Standard Angular CLI options for dev server (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
   .option('--ui-ng <uiNg>', 'Standard Angular CLI options for ui-kit server (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
-  .action((options) => {
-    Promise.all([serveMain(options.env, options.port, options.ng), serveUIKit(options.uiPort, options.uiNg)]);
+  .action((name, options) => {
+    Promise.all([serveMain(options.env, options.port, options.ng, name), serveUIKit(options.uiPort, options.uiNg)]);
   });
 
 const generateCommand = program.command('generate [type] [name]')
@@ -147,16 +145,19 @@ pluginCommand
   })
   .option('-h, --help', 'output help message')
   .option('-l, --list', 'get the list of plugins from specific repo')
-  .option('-i, --ignoredParts', 'comma separated list of part names to ignore. Example: search,pagniation')
+  .option('-i, --ignored-parts <ignoredParts>', 'comma separated list of part names to ignore. Example: search,pagniation')
+  .option('-p, --path', 'The path to create the module, relative to project directory. Default: ./shared/modules')
   .allowUnknownOption()
   // .parse(process.argv)
   .action((repo, name, options, command) => {
     if (repo && name) {
-      const ignoredParts = options.ignoredParts ? [ 'ignoredParts=' + options.ignoredParts ] : [];
-      generate(`private-plugin`, repo, [name, ...ignoredParts, ...getAllArgs(command, options.help)]).then(() => {
+      const ignoredParts = options.ignoredParts ? [ '--ignored-parts=' + options.ignoredParts ] : [];
+      const path = options.path ? [ '--path=' + options.path ] : [];
+      generate(`private-plugin`, repo, [name, ...ignoredParts, ...path, ...getAllArgs(command, options.help)]).then(() => {
         process.exit();
       });
     } else if (repo && options.list) {
+      const { ConnectorBuilder } = require('./schematics/plugin/connector.builder');
       const connector = ConnectorBuilder.build(repo);
       connector.getCompatiblePlugins(ngAfelioVersion).then(pluginNames => {
         console.info(`Available plugins:`);

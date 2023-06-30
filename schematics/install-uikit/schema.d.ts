@@ -1,3 +1,4 @@
 export interface Schema {
-    type: string;
+    project: string;
+    type: 'afelio' | 'bootstrap' | 'tailwind';
 }

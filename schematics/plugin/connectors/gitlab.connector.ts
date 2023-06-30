@@ -53,6 +53,8 @@ export class GitlabConnector extends PluginConnector {
 
         copySync(join(tmpPath, tempExtractName), `${tempPath}`);
 
+        await new Promise(resolve => { setTimeout(() => resolve(null), 100) });
+
         removeSync(tmpPath);
 
     }

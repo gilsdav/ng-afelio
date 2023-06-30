@@ -111,6 +111,9 @@
             },
             "additionalProperties": false,
             "required": ["repos"]
+        },
+        "defaultProject": {
+            "type": "string"
         }
     },
     "additionalProperties": false,

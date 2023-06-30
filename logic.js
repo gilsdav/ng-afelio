@@ -1,56 +1,73 @@
 // const util = require('util');
-const exec = require('child_process').exec;
+// const exec = require('child_process').exec;
+const spawn = require('child_process').spawn;
 const colors = require('colors');
 const fs = require('fs');
 const fse = require('fs-extra');
 const { join, basename } = require('path');
 const { watchTree } = require('watch');
 
-const cli = require('@angular/cli');
+// const cli = require('@angular/cli');
 
 // const addLocalCli = require('./scripts/add-local-cli');
 
 // const uiKitTypes = require('./models/ui-kit-types.enum');
 const config = require('./config');
 const { version } = require('./package.json');
+const { getConfig } = require('./scripts/check-files/util');
 
 const currentPath = process.cwd();
 
-function promiseFromChildProcess(child) {
-    return new Promise(function (resolve, reject) {
-        child.stdout.pipe(process.stdout);
-        child.stderr.pipe(process.stderr);
-        child.addListener("error", reject);
-        child.addListener("exit", resolve);
+// function promiseFromChildProcess(child) {
+//     return new Promise(function (resolve, reject) {
+//         child.stdout.pipe(process.stdout);
+//         child.stderr.pipe(process.stderr);
+//         child.addListener("error", reject);
+//         child.addListener("exit", resolve);
+//     });
+// }
+
+// pexec = (command, options) => promiseFromChildProcess(exec(command, options));
+
+pexec = (command, options) => new Promise(function (resolve, reject) {
+    const process = spawn(command, { stdio: 'inherit', shell: true, ...options });
+    process.on('close', function (code) {
+      resolve(code);
     });
-}
+    process.on('error', function (err) {
+        console.error(err);
+      reject(err);
+    });
+});
 
-pexec = (command, options) => promiseFromChildProcess(exec(command, options));
 
 
-const getAngularVersion = async () => {
-    return await cli.default({ cliArgs: ['--version'] });
-}
+// const getAngularVersion = async () => {
+//     return await cli.default({ cliArgs: ['--version'] });
+// }
 
 const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString) => {
     if (isOpenApi) {
         console.info(`Creating project ${name}`);
-        await cli.default({ cliArgs: ['new', name, '--create-application=false', '--new-project-root=apis', '--skip-install', ...produceNgOptions(ngOptionsString)] });
+        // await cli.default({ cliArgs: ['new', name, '--create-application=false', '--new-project-root=apis', '--skip-install', ...produceNgOptions(ngOptionsString)] });
+        await pexec(`npx @angular/cli@latest new ${name} --create-application=false --new-project-root=apis ${ngOptionsString || ''}`);
         console.info(`${colors.green('Project created')}`);
 
         process.chdir(`./${name}`);
 
         console.info(`Adding ng-afelio`);
         const ngAfelioSrc = config.production ? `ng-afelio@${version}` : __dirname;
-        await cli.default({ cliArgs: ['add', ngAfelioSrc, '--skip-confirmation', '--ui-kit=none'] });
+        // await cli.default({ cliArgs: ['add', ngAfelioSrc, '--skip-confirmation', '--ui-kit=none'] });
+        await pexec(`npx ng add ${ngAfelioSrc} --skip-confirmation --ui-kit=none`);
         console.info(`${colors.green('ng-afelio installed')}`);
 
         console.info(`Creating library project`);
-        await cli.default({ cliArgs: ['generate', 'library', 'api', '--prefix=lib'] });
+        // await cli.default({ cliArgs: ['generate', 'library', 'api', '--prefix=lib'] });
+        await pexec(`npx ng generate library api --prefix=lib`);
         console.info(`${colors.green('Library created')}`);
 
         console.info(`Install dependencies`);
-        await pexec('npm install ng-openapi-gen@0.2.3 gulp@4.0.2 gulp-replace@1.0.0  --save-dev');
+        await pexec('npm install ng-openapi-gen@0.23.0 gulp@4.0.2 gulp-replace@1.0.0  --save-dev');
         console.info(`${colors.green('Dependencies installed')}`);
 
         console.info(`Apply template`);
@@ -91,10 +108,14 @@ const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString) => 
         console.info(`${colors.green('Template applied')}`);
 
     } else {
-        await cli.default({ cliArgs: ['new', name, '--routing', '--style=scss', '--skip-install', ...produceNgOptions(ngOptionsString)] });
+        // await cli.default({ cliArgs: ['new', name, '--routing', '--style=scss', '--skip-install', ...produceNgOptions(ngOptionsString)] });
+        await pexec(`npx @angular/cli@latest new ${name} --routing --style=scss ${ngOptionsString || ''}`);
         process.chdir(`./${name}`);
         const ngAfelioSrc = config.production ? `ng-afelio@${version}` : __dirname;
-        await cli.default({ cliArgs: ['add', ngAfelioSrc, '--skip-confirmation', `--ui-kit=${uiKitType}`] });
+        await pexec(`npx ng add ${ngAfelioSrc} --skip-confirmation --ui-kit=${uiKitType}`);
+
+        await pexec(`npx ng generate @schematics/angular:environments`);
+        // await cli.default({ cliArgs: ['add', ngAfelioSrc, '--skip-confirmation', `--ui-kit=${uiKitType}`] });
     }
 
 
@@ -117,10 +138,15 @@ const serveUIKit = async (port, ngOptionsString) => {
     //     '--host=0.0.0.0',
     //     ...produceNgOptions(ngOptionsString)
     // ]});
-    return await pexec(`npx ng serve ui-kit --port=${port || '5200'} --host=0.0.0.0 ${produceNgOptions(ngOptionsString).join(' ')}`, { cwd: currentPath });
+    return await pexec(`npx ng serve ui-kit --port=${port || '5200'} --host=0.0.0.0 ${produceNgOptions(ngOptionsString).join(' ')}`, { cwd: currentPath }).then(code => {
+        if (code > 0) {
+            console.log(colors.yellow('Do you have a ui-kit project ?'));
+        }
+        return code;
+    });
 }
 
-const serveMain = async (environment, port, ngOptionsString) => {
+const serveMain = async (environment, port, ngOptionsString, projectName) => {
     // return await cli.default({cliArgs: [
     //     'serve',
     //     `--port=${port||'4200'}`,
@@ -128,12 +154,16 @@ const serveMain = async (environment, port, ngOptionsString) => {
     //     ...( environment ? [`--configuration=${environment}`] : []),
     //     ...produceNgOptions(ngOptionsString)
     // ]});
-    return await pexec(`npx ng serve --port=${port || '5200'} --host=0.0.0.0 ${environment ? [`--configuration=${environment}`] : ''} ${produceNgOptions(ngOptionsString).join(' ')}`, { cwd: currentPath });
+    if (!projectName) {
+        projectName = getConfig('defaultProject');
+    }
+    return await pexec(`npx ng serve ${projectName || ''} --port=${port || '4200'} --host=0.0.0.0 ${environment ? [`--configuration=${environment}`] : ''} ${produceNgOptions(ngOptionsString).join(' ')}`, { cwd: currentPath });
 }
 
 const generate = async (type, name, ngOptions) => {
     type = `ng-afelio:${type}`
-    return await cli.default({ cliArgs: ['generate', type, ...(name ? [name] : []), ...ngOptions] });
+    // return await cli.default({ cliArgs: ['generate', type, ...(name ? [name] : []), ...ngOptions] });
+    return await pexec(`npx ng generate ${type} ${name || ''} ${ngOptions.join(' ')}`);
 }
 
 const generateApi = (source, moduleName, apiKey, extract, version, proxy) => {
@@ -242,7 +272,7 @@ function produceNgOptions(ngOptionsString) {
 
 // Export all methods
 module.exports = {
-    getAngularVersion,
+    // getAngularVersion,
     createNewProject,
     serveUIKit,
     serveMain,

@@ -1,0 +1,10 @@
+@layer base {
+    body {
+        @apply bg-grey-01;
+        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        scroll-behavior: smooth;
+        overflow-y: scroll;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch;
+    }
+}

@@ -1,0 +1,7 @@
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>x/Icons/user</title>
+    <g id="x/Icons/user" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <rect id="Rectangle" stroke="currentColor" stroke-width="2" x="8" y="4" width="8" height="8" rx="4"></rect>
+        <path d="M5,20.0021321 L5,19 C5,16.790861 6.790861,15 9,15 L15,15 C17.209139,15 19,16.790861 19,19 L19,20.0021321 L19,20.0021321" id="Path-2" stroke="currentColor" stroke-width="2"></path>
+    </g>
+</svg>

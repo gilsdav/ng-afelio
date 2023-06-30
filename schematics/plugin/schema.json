@@ -22,7 +22,7 @@
             "description": "The name of the repo available into ng-afelio.json",
             "$default": {
                 "$source": "argv",
-                "index": 0
+                "index": 1
             }
         },
         "pluginName": {
@@ -30,7 +30,7 @@
             "description": "The name of the plugin available in specified repo.",
             "$default": {
                 "$source": "argv",
-                "index": 1
+                "index": 2
             }
         },
         "ignoredParts": {
