@@ -4,10 +4,30 @@ import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { spawn } from 'child_process';
 
 import { Schema as UIKitOptionsExternal } from './schema';
 
 type UIKitOptions = UIKitOptionsExternal & { projectPath: Path };
+
+interface PackageJson {
+    dependencies: Record<string, string>;
+  }
+
+function getPackageVersionFromPackageJson(tree: Tree, name: string): string | null {
+    if (!tree.exists('package.json')) {
+      return null;
+    }
+  
+    const packageJson = JSON.parse(tree.read('package.json')!.toString('utf8')) as PackageJson;
+  
+    if (packageJson.dependencies && packageJson.dependencies[name]) {
+      return packageJson.dependencies[name];
+    }
+  
+    return null;
+  }
+
 
 function installDependencies(options: UIKitOptions): Rule {
     const needBootstrap = !!options && options.type === 'bootstrap';
@@ -42,6 +62,15 @@ function installDependencies(options: UIKitOptions): Rule {
             });
         }
         if (options.type === 'tailwind') {
+            const ngCoreVersionTag = getPackageVersionFromPackageJson(host, '@angular/core');
+
+            toInstall.push({
+                type: NodeDependencyType.Default,
+                name: '@angular/material',
+                version: ngCoreVersionTag!,
+                overwrite: true,
+            });
+
             toInstall.push({
                 type: NodeDependencyType.Dev,
                 name: 'tailwindcss',
@@ -128,11 +157,11 @@ function addLinesToMainStyleFile(options: UIKitOptions): Rule {
         const relativeMainStylePath = buildRelativePath(styleFilePath, '/styles/main.scss');
 
         const toInsert = `
-            @tailwind base;
-            @tailwind components;
-            @tailwind utilities;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-            @import '${relativeMainStylePath}';
+@import '${relativeMainStylePath}';
             `;
         const alreadyInstalled = sourceText.indexOf('@tailwind base') !== -1;
         if (!alreadyInstalled) {
@@ -142,6 +171,31 @@ function addLinesToMainStyleFile(options: UIKitOptions): Rule {
 
         return host;
     };
+}
+
+function installNpmSchematicPackage(packageName: string): Rule {
+    return async (host: Tree, context: SchematicContext) => {
+        return new Promise<void>((resolve) => {
+            context.logger.info(
+              `📦 Installing package '${packageName}' for external schematic setup...`,
+            );
+            spawn('npm', ['install', packageName], { stdio: 'inherit' }).on(
+              'close',
+              (code: number) => {
+                if (code === 0) {
+                  context.logger.info(
+                    `✅ '${packageName}' package installed successfully`,
+                  );
+                  resolve();
+                } else {
+                  const errorMessage = `❌ installation of '${packageName}' package failed`;
+                  context.logger.error(errorMessage);
+                  throw new Error();
+                }
+              },
+            );
+        });
+    }
 }
 
 async function applyUiKitTemplate(options: UIKitOptions, projectUiKitPath = '/projects/ui-kit/src'): Promise<Rule> {
@@ -194,8 +248,10 @@ export default function(options: UIKitOptions): Rule {
         } else if (options.type === 'tailwind') {
             rules = [
                 await applyUiKitTemplate(options, '/'),
-                addLinesToMainStyleFile(options),
+                installNpmSchematicPackage('@angular/material'),
                 installDependencies(options),
+                externalSchematic('@angular/material', 'ng-add', {}),
+                addLinesToMainStyleFile(options)
             ]
         }
         return chain(rules);
