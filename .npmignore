@@ -32,3 +32,5 @@ tslint.js
 !*.d.ts
 !schematics/*/files/**/*.ts
 *.back
+
+temp-files
