@@ -87,3 +87,5 @@ builders/**/*.d.ts
 !builders/**/schema.d.ts
 !schematics/**/schema.d.ts
 !schematics/*/files/**/*
+
+temp-files
