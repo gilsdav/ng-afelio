@@ -35,5 +35,6 @@
         "models/**",
         "scripts/**",
         "templates/**",
+        "schematics/**/temp-files"
     ]
 }

@@ -4,6 +4,7 @@ import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { installNpmSchematicPackage } from '../util/packages-util';
 
 import { Schema as UIKitOptionsExternal } from './schema';
 
@@ -45,13 +46,13 @@ function installDependencies(options: UIKitOptions): Rule {
             toInstall.push({
                 type: NodeDependencyType.Dev,
                 name: 'tailwindcss',
-                version: '^3.2.4',
+                version: '^3.3.2',
                 overwrite: true,
             });
             toInstall.push({
                 type: NodeDependencyType.Dev,
                 name: 'postcss',
-                version: '^8.4.19',
+                version: '^8.4.24',
                 overwrite: true,
             });
             toInstall.push({
@@ -75,13 +76,13 @@ function installDependencies(options: UIKitOptions): Rule {
             toInstall.push({
                 type: NodeDependencyType.Dev,
                 name: 'prettier-plugin-tailwindcss',
-                version: '^0.1.13',
+                version: '^0.3.0',
                 overwrite: true,
             });
             toInstall.push({
                 type: NodeDependencyType.Dev,
                 name: 'prettier',
-                version: '^2.7.1',
+                version: '^2.8.8',
                 overwrite: true,
             });
         }
@@ -194,8 +195,10 @@ export default function(options: UIKitOptions): Rule {
         } else if (options.type === 'tailwind') {
             rules = [
                 await applyUiKitTemplate(options, '/'),
-                addLinesToMainStyleFile(options),
+                installNpmSchematicPackage('@angular/material'),
                 installDependencies(options),
+                externalSchematic('@angular/material', 'ng-add', {}),
+                addLinesToMainStyleFile(options)
             ]
         }
         return chain(rules);

@@ -7,21 +7,21 @@ $root: ".textfield";
     //
     ////////////////////////////////////////////////////
 
-    @apply 
-        relative 
-        flex align-middle 
-        w-full 
-        p-0 
+    @apply
+        relative
+        flex align-middle
+        w-full
+        p-0
         cursor-text;
 
     &__field {
-        @apply 
-            h-8 w-full 
-            m-0 p-2 
-            border border-grey-04 
-            rounded 
-            bg-grey-00 
-            text-grey-08 text-sm 
+        @apply
+            h-8 w-full
+            m-0 p-2
+            border border-grey-04
+            rounded
+            bg-grey-00
+            text-grey-08 text-sm
             transition-colors;
 
         &::-ms-clear {
@@ -41,8 +41,8 @@ $root: ".textfield";
 
     &__prefix,
     &__suffix {
-        @apply 
-            absolute 
+        @apply
+            absolute
             px-2
             text-grey-06
             text-center
@@ -59,7 +59,7 @@ $root: ".textfield";
     }
 
     &__button {
-        @apply 
+        @apply
             absolute
             right-2
             top-1/2
@@ -69,7 +69,7 @@ $root: ".textfield";
     }
 
     textarea.textfield__field {
-        @apply 
+        @apply
             resize-none
             h-40;
     }
@@ -87,8 +87,12 @@ $root: ".textfield";
         @apply border-action-primary;
     }
 
-    &.-error {
+    #{$root}__field:focus-within,
+    #{$root}__field:active {
+        @apply border-2;
+    }
 
+    &.-error {
         #{$root}__field:hover,
         #{$root}__field:focus-within,
         #{$root}__field:active {
@@ -106,7 +110,7 @@ $root: ".textfield";
     #{$root}__field:disabled,
     &.-disabled #{$root}__field {
         @apply border-grey-04 bg-grey-02;
-        
+
         &:hover,
         &:focus-within,
         &:active {
@@ -131,21 +135,39 @@ $root: ".textfield";
         }
     }
 
+    &.-search{
+        #{$root}__field{
+            @apply pr-8;
+        }
+        &::before{
+            content: '';
+            mask-image: url('~src/assets/icons/ds/search.svg');
+            mask-size: 1.5rem;
+            @apply absolute
+                top-1/2 -translate-y-1/2
+                right-2
+                w-6
+                h-6
+                bg-grey-04;
+        }
+    }
+}
+
 
     ////////////////////////////////////////////////////
     //
     //                  With icon
     //
     ////////////////////////////////////////////////////
-
+/*
     &.-pre,
     &.-post {
         #{$root}__icon {
-            @apply 
+            @apply
                 absolute
                 top-1/2
                 -translate-y-1/2;
-                
+
             &.-pointer {
                 @apply cursor-pointer;
             }
@@ -193,71 +215,65 @@ $root: ".textfield";
 
 }
 
-.error-msg {
-    @apply 
-        text-xs
-        text-danger-primary
-        mt-1;
-}
 
+    ////////////////////////////////////////////////////
+    //
+    //                  Material
+    //
+    ////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////
-//
-//                  Material
-//
-////////////////////////////////////////////////////
+    .mat-form-field.mat-form-field-type-mat-input {
+        @extend .textfield;
 
-.mat-form-field.mat-form-field-type-mat-input {
-    @extend .textfield;
-
-    .mat-form-field-underline {
-        @apply hidden;
-    }
-
-    .mat-form-field-wrapper {
-        @apply w-full p-0;
-    }
-
-    .mat-form-field-flex {
-        @apply items-center w-full;
-
-        @extend .textfield__field;
-    }
-
-    &.mat-form-field-invalid .mat-form-field-flex {
-        @apply border-danger-primary;
-
-        input {
-            @apply text-danger-primary;
+        .mat-form-field-underline {
+            @apply hidden;
         }
-    }
 
-    &.mat-form-field-disabled {
+        .mat-form-field-wrapper {
+            @apply w-full p-0;
+        }
+
         .mat-form-field-flex {
-            @apply bg-grey-02 border-grey-04;
+            @apply items-center w-full;
+
+            @extend .textfield__field;
         }
-    }
 
-    .mat-form-field-infix {
-        @apply 
-            static
-            border-0
-            m-0
-            p-0;
-    }
+        &.mat-form-field-invalid .mat-form-field-flex {
+            @apply border-danger-primary;
 
-    .mat-form-field-label {
-        top: 17px;
-        left: 10px;
-    }
+            input {
+                @apply text-danger-primary;
+            }
+        }
 
-    &.mat-focused .mat-form-field-label,
-    .mat-form-field-label:not(.mat-form-field-empty) {
-        @apply hidden;
-    }
+        &.mat-form-field-disabled {
+            .mat-form-field-flex {
+                @apply bg-grey-02 border-grey-04;
+            }
+        }
 
-    .mat-icon-button .mat-button-wrapper {
-        @apply bg-transparent;
-    }
+        .mat-form-field-infix {
+            @apply
+                static
+                border-0
+                m-0
+                p-0;
+        }
 
-}
+        .mat-form-field-label {
+            top: 17px;
+            left: 10px;
+        }
+
+        &.mat-focused .mat-form-field-label,
+        .mat-form-field-label:not(.mat-form-field-empty) {
+            @apply hidden;
+        }
+
+        .mat-icon-button .mat-button-wrapper {
+            @apply bg-transparent;
+        }
+
+    }
+*/

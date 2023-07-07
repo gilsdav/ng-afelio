@@ -3,7 +3,7 @@
 */
 
 :root {
-    --container-gutter-x: 16px;
+    --container-gutter-x: 12px;
     --col-gutter-x: 12px;
 
     --container-sm: 580px;
@@ -41,3 +41,4 @@
 @import 'components/forms.radio';
 @import 'components/forms.textfield';
 @import 'components/forms';
+@import 'components/overlay';

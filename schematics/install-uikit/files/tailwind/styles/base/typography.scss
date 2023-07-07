@@ -4,16 +4,19 @@
     * {
         @apply font-body;
     }
-    
-    h1 {
+
+    h1,
+    .h1 {
+        @apply font-bold text-3xl leading-10;
+    }
+
+    h2,
+    .h2 {
         @apply font-bold text-2xl leading-8;
     }
 
-    h2 {
-        @apply font-medium text-lg leading-6;
-    }
-    
-    h3 {
+    h3,
+    .h3 {
         @apply font-medium text-xs text-grey-06 uppercase leading-5;
     }
 }

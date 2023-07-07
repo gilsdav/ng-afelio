@@ -1,5 +1,5 @@
 import fetch, { FetchError, HeadersInit } from 'node-fetch';
-import { copySync, readdirSync, removeSync } from 'fs-extra';
+import { copy, readdirSync, removeSync } from 'fs-extra';
 import { join } from 'path';
 import { Extract } from 'unzipper';
 import * as colors from 'colors';
@@ -34,6 +34,7 @@ export class GitlabConnector extends PluginConnector {
 
     }
     public async download(release: Release, tempPath: string): Promise<void> {
+        removeSync(tempPath);
         const res = await fetch(`${this.url}/repository/archive.zip?sha=${release.commitId}`, {
             headers: this.buildHeader(this.token)
         });
@@ -42,18 +43,26 @@ export class GitlabConnector extends PluginConnector {
             if (res && res.body) {
                 res.body.pipe(Extract({ path: tmpPath }))
                 res.body.on('error', reject);
-                res.body.on('end', resolve);
+                res.body.on('close', resolve);
             } else {
                 reject('No body on response.');
             }
         });
 
+        // Wait until extract is really ended
+        await new Promise(resolve => { setTimeout(() => resolve(null), 1000) });
+
         const elements = readdirSync(tmpPath, { withFileTypes: true });
         const tempExtractName = elements[0].name;
 
-        copySync(join(tmpPath, tempExtractName), `${tempPath}`);
-
-        await new Promise(resolve => { setTimeout(() => resolve(null), 100) });
+        await new Promise((resolve, reject) => {
+            copy(join(tmpPath, tempExtractName), `${tempPath}`, { recursive: true }, (error) => {
+                if (error) {
+                    reject(error);
+                }
+                resolve(null);
+            });
+        });
 
         removeSync(tmpPath);
 

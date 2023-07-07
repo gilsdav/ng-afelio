@@ -17,18 +17,16 @@ $root: ".checkbox";
     min-height: $size;
     user-select: none;
 
-    @apply w-fit m-0 relative cursor-pointer text-xl flex justify-start items-start;
-
-    &.-auto  {
-        @apply w-auto;
-    }
+    @apply m-0 w-fit relative cursor-pointer text-xl flex justify-start items-start;
 
     &:hover #{$root}__check {
         @apply border border-action-primary;
     }
 
+    &.width-full { @apply w-full; }
+
     #{$root}__label {
-        @apply block relative w-full text-sm leading-4 text-grey-08 pl-2;
+        @apply block relative w-full text-sm leading-4 text-grey-08 pl-4;
     }
 
     #{$root}__input {
@@ -36,20 +34,18 @@ $root: ".checkbox";
     }
 
     #{$root}__check {
-        @apply relative rounded-sm bg-grey-01 border border-grey-04 transition-colors;
+        @apply relative rounded bg-grey-01 border border-grey-03 transition-colors;
 
         min-height: $size;
         min-width: $size;
     }
 
     #{$root}__checker {
-        @apply absolute;
+        @apply absolute rounded;
         top: -1px;
         left: -1px;
         right: -1px;
         bottom: -1px;
-
-        border-radius: 3px;
     }
 
     #{$root}__input:checked~#{$root}__checker {
@@ -57,7 +53,7 @@ $root: ".checkbox";
 
         &:before {
             content: '';
-            mask-image: url('~assets/pictures/icons/check.svg');
+            mask-image: url('~assets/icons/ds/check.svg');
             mask-size: 1rem;
             @apply absolute bg-grey-00 w-4 h-4 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
         }
