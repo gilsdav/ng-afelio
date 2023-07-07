@@ -49,12 +49,11 @@ export class GitlabConnector extends PluginConnector {
             }
         });
 
+        // Wait until extract is really ended
         await new Promise(resolve => { setTimeout(() => resolve(null), 1000) });
 
         const elements = readdirSync(tmpPath, { withFileTypes: true });
         const tempExtractName = elements[0].name;
-
-        // copySync(join(tmpPath, tempExtractName), `${tempPath}`, { recursive: true });
 
         await new Promise((resolve, reject) => {
             copy(join(tmpPath, tempExtractName), `${tempPath}`, { recursive: true }, (error) => {
@@ -64,9 +63,6 @@ export class GitlabConnector extends PluginConnector {
                 resolve(null);
             });
         });
-
-
-        // await new Promise(resolve => { setTimeout(() => resolve(null), 100) });
 
         removeSync(tmpPath);
 
