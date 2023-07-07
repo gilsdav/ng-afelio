@@ -134,7 +134,7 @@ function addLinesToMainStyleFile(options: UIKitOptions): Rule {
 @tailwind utilities;
 
 @import '${relativeMainStylePath}';
-            `;
+`;
         const alreadyInstalled = sourceText.indexOf('@tailwind base') !== -1;
         if (!alreadyInstalled) {
             const newStyleContent = `${sourceText}${toInsert}`;
