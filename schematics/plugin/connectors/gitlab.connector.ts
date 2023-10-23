@@ -1,5 +1,7 @@
 import fetch, { FetchError, HeadersInit } from 'node-fetch';
-import { copy, readdirSync, removeSync } from 'fs-extra';
+import { copy, mkdirSync, readdirSync, removeSync } from 'fs-extra';
+import { writeFile } from 'fs/promises';
+import { createReadStream } from 'fs';
 import { join } from 'path';
 import { Extract } from 'unzipper';
 import * as colors from 'colors';
@@ -35,22 +37,35 @@ export class GitlabConnector extends PluginConnector {
     }
     public async download(release: Release, tempPath: string): Promise<void> {
         removeSync(tempPath);
+        mkdirSync(tempPath);
         const res = await fetch(`${this.url}/repository/archive.zip?sha=${release.commitId}`, {
             headers: this.buildHeader(this.token)
         });
+
         const tmpPath = join(tempPath, 'tmp');
-        await new Promise((resolve, reject) => {
-            if (res && res.body) {
-                res.body.pipe(Extract({ path: tmpPath }))
-                res.body.on('error', reject);
-                res.body.on('close', resolve);
-            } else {
-                reject('No body on response.');
-            }
-        });
+        // await new Promise((resolve, reject) => {
+        //     if (res && res.body) {
+        //         res.body.pipe(Extract({ path: tmpPath }))
+        //         res.body.on('error', reject);
+        //         res.body.on('close', resolve);
+        //     } else {
+        //         reject('No body on response.');
+        //     }
+        // });
+
+        const buffer = await res.buffer();
+        const tempZipFilename = join(tempPath, 'tmp.zip');
+        await writeFile(tempZipFilename, buffer);
+
+        await createReadStream(tempZipFilename)
+            .pipe(Extract({ path: tmpPath }))
+            .promise();
+        
+        removeSync(tempZipFilename);
+        
 
         // Wait until extract is really ended
-        await new Promise(resolve => { setTimeout(() => resolve(null), 1000) });
+        // await new Promise(resolve => { setTimeout(() => resolve(null), 1000) });
 
         const elements = readdirSync(tmpPath, { withFileTypes: true });
         const tempExtractName = elements[0].name;
