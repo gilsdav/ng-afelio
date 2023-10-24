@@ -87,7 +87,7 @@ export default function(options: PluginOptions): Rule {
             }
             const sourcePath = stringJoin(tempDirectoryPath, part.source);
             const destinationPath = join(projectAppPath as Path, options.path, part.destination);
-            const templateSource = apply(url(sourcePath), [
+            const templateSource = apply(url('file://' + sourcePath), [
                 filter(p => !p.endsWith('.stories.ts')),
                 template({
                   ...strings,
