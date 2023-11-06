@@ -270,6 +270,11 @@ function produceNgOptions(ngOptionsString) {
     return ngOptions;
 }
 
+const generateModelsFromGeneratedApi = async (folderSource, outputFolder, apiName ) => {
+    const generateModelsFromApi = require('./scripts/api-models-converter/model-converter');
+    return generateModelsFromApi(folderSource, outputFolder, apiName); 
+}
+
 // Export all methods
 module.exports = {
     // getAngularVersion,
@@ -283,5 +288,6 @@ module.exports = {
     generateApi,
     regenerateApi,
     checkFiles,
+    generateModelsFromGeneratedApi,
     generateI18n
 };

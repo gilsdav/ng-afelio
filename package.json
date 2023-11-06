@@ -39,6 +39,7 @@
     "node-fetch": "2.6.12",
     "node-sass-magic-importer": "^5.3.2",
     "postcss-scss": "3.0.4",
+    "mustache": "~4.2.0",
     "request": "2.88.2",
     "sass": "1.57.1",
     "scss-bundle": "3.1.2",
