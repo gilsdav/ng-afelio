@@ -46,11 +46,11 @@ pexec = (command, options) => new Promise(function (resolve, reject) {
 //     return await cli.default({ cliArgs: ['--version'] });
 // }
 
-const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString) => {
+const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString, angularVersion) => {
     if (isOpenApi) {
         console.info(`Creating project ${name}`);
         // await cli.default({ cliArgs: ['new', name, '--create-application=false', '--new-project-root=apis', '--skip-install', ...produceNgOptions(ngOptionsString)] });
-        await pexec(`npx @angular/cli@latest new ${name} --create-application=false --new-project-root=apis ${ngOptionsString || ''}`);
+        await pexec(`npx @angular/cli@${angularVersion} new ${name} --create-application=false --new-project-root=apis ${ngOptionsString || ''}`);
         console.info(`${colors.green('Project created')}`);
 
         process.chdir(`./${name}`);
@@ -67,7 +67,7 @@ const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString) => 
         console.info(`${colors.green('Library created')}`);
 
         console.info(`Install dependencies`);
-        await pexec('npm install ng-openapi-gen@0.23.0 gulp@4.0.2 gulp-replace@1.0.0  --save-dev');
+        await pexec('npm install ng-openapi-gen@latest gulp@4.0.2 gulp-replace@1.0.0 gulp-rename@2.0.0 minimist@1.2.8 --save-dev');
         console.info(`${colors.green('Dependencies installed')}`);
 
         console.info(`Apply template`);
@@ -82,7 +82,7 @@ const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString) => 
         const subPackageJson = 'apis/api/package.json.tmpl';
         fs.renameSync('apis/api/package.json', subPackageJson);
         const packageJsonFileContent = JSON.parse(fs.readFileSync(subPackageJson, { encoding: 'utf8' }));
-        packageJsonFileContent.name = `@${name}/\${apiName}`;
+        packageJsonFileContent.name = `\${scopeName}\${apiName}`;
         packageJsonFileContent.version = '${apiVersion}';
         packageJsonFileContent.publishConfig = { 'registry': '${apiVersion}' };
         fs.writeFileSync(subPackageJson, JSON.stringify(packageJsonFileContent, null, 2), { encoding: 'utf8' });
@@ -109,7 +109,7 @@ const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString) => 
 
     } else {
         // await cli.default({ cliArgs: ['new', name, '--routing', '--style=scss', '--skip-install', ...produceNgOptions(ngOptionsString)] });
-        await pexec(`npx @angular/cli@latest new ${name} --routing --style=scss ${ngOptionsString || ''}`);
+        await pexec(`npx @angular/cli@${angularVersion} new ${name} --routing --style=scss ${ngOptionsString || ''}`);
         process.chdir(`./${name}`);
         const ngAfelioSrc = config.production ? `ng-afelio@${version}` : __dirname;
         await pexec(`npx ng add ${ngAfelioSrc} --skip-confirmation --ui-kit=${uiKitType}`);
