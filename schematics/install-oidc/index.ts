@@ -6,10 +6,11 @@ import { buildRelativePath } from '@schematics/angular/utility/find-module';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import ts = require('typescript');
 
-import { addImportToModule, findNodes, insertImport } from '../util/ast-util';
-import { Change, InsertChange, applyChangesToHost } from '../util/change';
+import { addImportToModule, insertImport } from '../util/ast-util';
+import { Change, applyChangesToHost } from '../util/change';
 
 import { Schema as OIDCOptions } from './schema';
+import { appendIntoEnvironment } from '../util/environment';
 
 const buildPath = './core/modules/authentication';
 
@@ -60,69 +61,105 @@ function applyModuleImports(projectAppPath: string, options: OIDCOptions): Rule 
     };
 }
 
-function getEnvironmentNode(source: ts.SourceFile): ts.Node | undefined {
-    const keywords = findNodes(source, ts.SyntaxKind.VariableStatement);
-    for (const keyword of keywords) {
-        if (ts.isVariableStatement(keyword)) {
-            const [declaration] = keyword.declarationList.declarations;
-            if (
-                ts.isVariableDeclaration(declaration) &&
-                declaration.initializer &&
-                declaration.name.getText() === 'environment'
-            ) {
-                return declaration.initializer.getChildAt(1);
-            }
-        }
-    }
-}
+// function getEnvironmentNode(source: ts.SourceFile): ts.Node | undefined {
+//     const keywords = findNodes(source, ts.SyntaxKind.VariableStatement);
+//     for (const keyword of keywords) {
+//         if (ts.isVariableStatement(keyword)) {
+//             const [declaration] = keyword.declarationList.declarations;
+//             if (
+//                 ts.isVariableDeclaration(declaration) &&
+//                 declaration.initializer &&
+//                 declaration.name.getText() === 'environment'
+//             ) {
+//                 return declaration.initializer.getChildAt(1);
+//             }
+//         }
+//     }
+// }
 
 function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule {
-    const projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
-    return host => {
-        const text = host.read(projectEnvPath);
-        if (!text) {
-            throw new SchematicsException(`Environment file on ${projectName} project does not exist.`);
-        }
-        const sourceText = text.toString('utf8');
-        const source = ts.createSourceFile(
-            projectEnvPath,
-            sourceText,
-            ts.ScriptTarget.Latest,
-            true
-        );
-        const node = getEnvironmentNode(source);
-        const changes: Change[] = [];
-        if (node) {
-            const lastRouteNode = node.getLastToken();
-            if (lastRouteNode) {
-                changes.push(
-                    new InsertChange(
-                        projectEnvPath,
-                        lastRouteNode.getEnd(),
-                        `,
+    const envToAdd = `
     oidc: {
         issuer: 'http://keycloak:8080/auth/realms',
         redirectUri: 'http://localhost:4200',
         realm: 'myrealm',
         clientId: 'myapp',
         responseType: 'code',
-        scope: 'openid profile email offline_access roles',
+        scope: 'openid profile email roles',
         showDebugInformation: true,
         requireHttps: false,
         disableAtHashCheck: true,
         completeSecure: true,
         authErrorRoute: '/auth-error',
         storage: 'session' as const
-    }`
-                    )
+    }`;
+    return chain([
+        appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'oidc:', false),
+        appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'oidc:', true)
+    ]);
 
-
-                );
-            }
-        }
-        applyChangesToHost(host, projectEnvPath, changes);
-        return host;
-    };
+    // let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
+    // return host => {
+    //     let text = host.read(projectEnvPath);
+    //     if (!text) { // Fallback for old project version
+    //         projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
+    //         text = host.read(projectEnvPath);
+    //     }
+    //     if (!text) {
+    //         throw new SchematicsException(`Environment file on ${projectName} project does not exist.`);
+    //     }
+    //     const sourceText = text.toString('utf8');
+    //     const source = ts.createSourceFile(
+    //         projectEnvPath,
+    //         sourceText,
+    //         ts.ScriptTarget.Latest,
+    //         true
+    //     );
+    //     const node = getEnvironmentNode(source);
+    //     const changes: Change[] = [];
+    //     if (node) {
+    //         if (!node.getText().includes('oidc:')) {
+    //             const lastRouteNode = node.getLastToken();
+    //             const envToAdd = `
+    // oidc: {
+    //     issuer: 'http://keycloak:8080/auth/realms',
+    //     redirectUri: 'http://localhost:4200',
+    //     realm: 'myrealm',
+    //     clientId: 'myapp',
+    //     responseType: 'code',
+    //     scope: 'openid profile email roles',
+    //     showDebugInformation: true,
+    //     requireHttps: false,
+    //     disableAtHashCheck: true,
+    //     completeSecure: true,
+    //     authErrorRoute: '/auth-error',
+    //     storage: 'session' as const
+    // }`;
+    //             if (lastRouteNode) {
+    //                 changes.push(
+    //                     new InsertChange(
+    //                         projectEnvPath,
+    //                         lastRouteNode.getEnd(),
+    //                         `,${envToAdd}`
+    //                     )
+    //                 );
+    //             } else {
+    //                 changes.push(
+    //                     new InsertChange(
+    //                         projectEnvPath,
+    //                         node.getEnd(),
+    //                         `${envToAdd}\n`
+    //                     )
+    //                 );
+    //             }
+    //             console.log(`${colors.green('Changes will be applied to dev environment.')} ${colors.yellow('Please apply it to others.')}`)
+    //         }
+    //     } else {
+    //         throw new SchematicsException(`No "export const environment" found`);
+    //     }
+    //     applyChangesToHost(host, projectEnvPath, changes);
+    //     return host;
+    // };
 }
 
 export default function(options: OIDCOptions): Rule {

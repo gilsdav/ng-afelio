@@ -33,7 +33,8 @@
     }
   }
 
-  .f-#{$shortname}
+  .f-#{$shortname},
+  %f-#{$shortname}
   {
     font-family: $fontname,
                  Arial,

@@ -1,0 +1,159 @@
+$root: '.tag';
+
+#{$root} {
+    @apply rounded-full px-4 py-1 leading-4 text-xs w-fit font-medium uppercase flex items-center justify-between self-center h-6 transition-colors;
+
+    &--primary {
+
+        &#{$root}--action {
+            @apply bg-action-primary text-grey-00;
+
+            &#{$root}--clickable {
+                @apply shadow-md hover:shadow-none
+                    hover:bg-action-dark;
+            }
+        }
+
+        &#{$root}--success {
+            @apply bg-success-primary text-grey-00;
+
+            &#{$root}--clickable {
+                @apply shadow-md hover:shadow-none
+                    hover:bg-success-dark hover:text-grey-00;
+            }
+        }
+
+        &#{$root}--danger {
+            @apply bg-danger-primary text-grey-00;
+            &#{$root}--clickable {
+                @apply shadow-md hover:shadow-none
+                    hover:bg-danger-dark hover:text-grey-00;
+            }
+        }
+    }
+
+    &--secondary {
+
+        &#{$root}--action {
+            @apply bg-action-lighter text-action-primary;
+
+            &#{$root}--clickable {
+                @apply shadow-md hover:shadow-none
+                    hover:bg-action-primary hover:text-grey-00;
+
+                &:hover button{
+                    @apply text-grey-00
+                        bg-action-primary hover:bg-action-dark;
+                }
+            }
+        }
+
+        &#{$root}--success {
+            @apply bg-success-lighter text-success-primary;
+
+            &#{$root}--clickable {
+                @apply shadow-md hover:shadow-none
+                    hover:bg-success-primary hover:text-grey-00;
+
+                &:hover button{
+                    @apply text-grey-00
+                        bg-success-primary hover:bg-success-dark;
+                }
+            }
+        }
+
+        &#{$root}--danger {
+            @apply bg-danger-lighter text-danger-primary;
+            &#{$root}--clickable {
+                @apply shadow-md hover:shadow-none
+                    hover:bg-danger-primary hover:text-grey-00;
+
+                &:hover button{
+                    @apply text-grey-00
+                        bg-danger-primary hover:bg-danger-dark;
+                }
+            }
+        }
+
+        &#{$root}--neutral {
+            @apply bg-grey-02 text-grey-08;
+            &#{$root}--clickable {
+                @apply shadow-md hover:shadow-none
+                    hover:bg-grey-03;
+
+                &:hover button{
+                    @apply bg-grey-02 hover:bg-grey-03;
+                }
+            }
+        }
+    }
+
+    &--ternary {
+
+        &#{$root}--action {
+            @apply text-action-primary;
+
+            &#{$root}--clickable {
+                @apply hover:bg-action-lighter;
+
+                &:hover button{
+                    @apply hover:text-grey-00
+                        bg-action-lighter hover:bg-action-primary;
+                }
+            }
+        }
+
+        &#{$root}--success {
+            @apply text-success-primary;
+
+            &#{$root}--clickable {
+                @apply hover:bg-success-lighter;
+
+                &:hover button{
+                    @apply hover:text-grey-00
+                        bg-success-lighter hover:bg-success-primary;
+                }
+            }
+        }
+
+        &#{$root}--danger {
+            @apply text-danger-primary;
+            &#{$root}--clickable {
+                @apply hover:bg-danger-lighter;
+
+                &:hover button{
+                    @apply hover:text-grey-00
+                        bg-danger-lighter hover:bg-danger-primary;
+                }
+            }
+        }
+
+        &#{$root}--neutral {
+            @apply text-grey-08;
+            &#{$root}--clickable {
+                @apply hover:bg-grey-02;
+
+                &:hover button{
+                    @apply bg-grey-02 hover:bg-grey-03;
+                }
+            }
+        }
+    }
+
+    &--button {
+        button {
+            @apply h-4 w-4 ml-1 mr-0 rounded-full;
+
+            svg {
+                @apply h-5 w-5 mx-0;
+            }
+        }
+    }
+    &--clickable {
+        @apply cursor-pointer;
+    }
+
+    &--small {
+        @apply text-xs h-5;
+    }
+}

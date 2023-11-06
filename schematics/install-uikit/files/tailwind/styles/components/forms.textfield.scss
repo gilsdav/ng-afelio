@@ -1,0 +1,279 @@
+$root: ".textfield";
+
+#{$root} {
+    ////////////////////////////////////////////////////
+    //
+    //                  Global
+    //
+    ////////////////////////////////////////////////////
+
+    @apply
+        relative
+        flex align-middle
+        w-full
+        p-0
+        cursor-text;
+
+    &__field {
+        @apply
+            h-8 w-full
+            m-0 p-2
+            border border-grey-04
+            rounded
+            bg-grey-00
+            text-grey-08 text-sm
+            transition-colors;
+
+        &::-ms-clear {
+            @apply hidden;
+        }
+
+        &.-empty-mask,
+        &::placeholder {
+            @apply text-grey-03;
+        }
+
+    }
+
+    &__button~#{$root}__field {
+        @apply pr-6;
+    }
+
+    &__prefix,
+    &__suffix {
+        @apply
+            absolute
+            px-2
+            text-grey-06
+            text-center
+            top-1/2
+            -translate-y-1/2;
+    }
+
+    &__prefix {
+        @apply left-0;
+    }
+
+    &__suffix {
+        @apply right-0;
+    }
+
+    &__button {
+        @apply
+            absolute
+            right-2
+            top-1/2
+            -translate-y-1/2
+            cursor-pointer
+            text-action-primary;
+    }
+
+    textarea.textfield__field {
+        @apply
+            resize-none
+            h-40;
+    }
+
+
+    ////////////////////////////////////////////////////
+    //
+    //                  States
+    //
+    ////////////////////////////////////////////////////
+
+    #{$root}__field:hover,
+    #{$root}__field:focus-within,
+    #{$root}__field:active {
+        @apply border-action-primary;
+    }
+
+    #{$root}__field:focus-within,
+    #{$root}__field:active {
+        @apply border-2;
+    }
+
+    &.-error {
+        #{$root}__field:hover,
+        #{$root}__field:focus-within,
+        #{$root}__field:active {
+            @apply border-danger-primary;
+        }
+    }
+
+
+    ////////////////////////////////////////////////////
+    //
+    //                  Variation
+    //
+    ////////////////////////////////////////////////////
+
+    #{$root}__field:disabled,
+    &.-disabled #{$root}__field {
+        @apply border-grey-04 bg-grey-02;
+
+        &:hover,
+        &:focus-within,
+        &:active {
+            @apply border-grey-04;
+        }
+    }
+
+    &.-error #{$root}__field {
+        @apply border-danger-primary text-danger-primary;
+    }
+
+    &.-no-arrows {
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            @apply appearance-none m-0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    }
+
+    &.-search{
+        #{$root}__field{
+            @apply pr-8;
+        }
+        &::before{
+            content: '';
+            mask-image: url('~src/assets/icons/ds/search.svg');
+            mask-size: 1.5rem;
+            @apply absolute
+                top-1/2 -translate-y-1/2
+                right-2
+                w-6
+                h-6
+                bg-grey-04;
+        }
+    }
+}
+
+
+    ////////////////////////////////////////////////////
+    //
+    //                  With icon
+    //
+    ////////////////////////////////////////////////////
+/*
+    &.-pre,
+    &.-post {
+        #{$root}__icon {
+            @apply
+                absolute
+                top-1/2
+                -translate-y-1/2;
+
+            &.-pointer {
+                @apply cursor-pointer;
+            }
+        }
+
+        button#{$root}__icon {
+            @apply
+                appearance-none
+                w-auto
+                h-10
+                flex justify-center items-center
+                p-0
+                border-none
+                shadow-none
+                bg-transparent;
+
+
+            &:hover,
+            &:focus,
+            &.active {
+                @apply outline-none;
+            }
+        }
+    }
+
+    &.-pre {
+        #{$root}__field {
+            @apply pl-10;
+        }
+
+        #{$root}__icon {
+            @apply left-2;
+        }
+    }
+
+    &.-post {
+        #{$root}__field {
+            @apply pr-10;
+        }
+
+        #{$root}__icon {
+            @apply right-2;
+        }
+    }
+
+}
+
+
+    ////////////////////////////////////////////////////
+    //
+    //                  Material
+    //
+    ////////////////////////////////////////////////////
+
+    .mat-form-field.mat-form-field-type-mat-input {
+        @extend .textfield;
+
+        .mat-form-field-underline {
+            @apply hidden;
+        }
+
+        .mat-form-field-wrapper {
+            @apply w-full p-0;
+        }
+
+        .mat-form-field-flex {
+            @apply items-center w-full;
+
+            @extend .textfield__field;
+        }
+
+        &.mat-form-field-invalid .mat-form-field-flex {
+            @apply border-danger-primary;
+
+            input {
+                @apply text-danger-primary;
+            }
+        }
+
+        &.mat-form-field-disabled {
+            .mat-form-field-flex {
+                @apply bg-grey-02 border-grey-04;
+            }
+        }
+
+        .mat-form-field-infix {
+            @apply
+                static
+                border-0
+                m-0
+                p-0;
+        }
+
+        .mat-form-field-label {
+            top: 17px;
+            left: 10px;
+        }
+
+        &.mat-focused .mat-form-field-label,
+        .mat-form-field-label:not(.mat-form-field-empty) {
+            @apply hidden;
+        }
+
+        .mat-icon-button .mat-button-wrapper {
+            @apply bg-transparent;
+        }
+
+    }
+*/

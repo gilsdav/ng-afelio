@@ -1,0 +1,44 @@
+/**
+* CSS variables instanciation
+*/
+
+:root {
+    --container-gutter-x: 12px;
+    --col-gutter-x: 12px;
+
+    --container-sm: 580px;
+    --container-md: 640px;
+    --container-lg: 960px;
+    --container-xl: 1024px;
+    --container-2xl: 1280px;
+}
+
+/**
+* Base layer
+*/
+
+@import 'base/template';
+@import 'base/typography';
+@import 'base/bootstrap-grid';
+
+
+/**
+ * Components layer
+ */
+
+@import 'components/buttons';
+@import 'components/modal';
+@import 'components/tags';
+@import 'components/tables';
+
+@import 'components/page-header';
+@import 'components/page-footer';
+
+@import 'components/forms.checkbox';
+@import 'components/forms.dropdown';
+@import 'components/forms.datepicker';
+@import 'components/forms.fieldreadonly';
+@import 'components/forms.radio';
+@import 'components/forms.textfield';
+@import 'components/forms';
+@import 'components/overlay';

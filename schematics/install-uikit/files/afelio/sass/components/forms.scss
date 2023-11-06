@@ -7,11 +7,11 @@ form,
 
     label
     {
-        @extend .c-grey07;
-        @extend .f-s;
-        @extend .f-regular;
+        @extend %c-grey07;
+        @extend %f-s;
+        @extend %f-regular;
 
         line-height: 20px;
-        @extend .relative;
+        @extend %relative;
     }
 }

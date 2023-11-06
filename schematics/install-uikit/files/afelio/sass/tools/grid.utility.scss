@@ -8,7 +8,8 @@
 //
 @mixin margin-size ($name, $qty)
 {
-  .m-#{$name}
+  .m-#{$name},
+  %m-#{$name}
   {
     margin: $qty;
   }
@@ -24,7 +25,8 @@
 //
 @mixin margin-x-size ($name, $qty)
 {
-  .mx-#{$name}
+  .mx-#{$name},
+  %mx-#{$name}
   {
     margin-left: $qty;
     margin-right: $qty;
@@ -41,7 +43,8 @@
 //
 @mixin margin-y-size ($name, $qty)
 {
-  .my-#{$name}
+  .my-#{$name},
+  %my-#{$name}
   {
     margin-top: $qty;
     margin-bottom: $qty;
@@ -58,7 +61,8 @@
 //
 @mixin margin-top-size ($name, $qty)
 {
-  .mt-#{$name}
+  .mt-#{$name},
+  %mt-#{$name}
   {
     margin-top: $qty;
   }
@@ -74,7 +78,8 @@
 //
 @mixin margin-right-size ($name, $qty)
 {
-  .mr-#{$name}
+  .mr-#{$name},
+  %mr-#{$name}
   {
     margin-right: $qty;
   }
@@ -90,7 +95,8 @@
 //
 @mixin margin-bottom-size ($name, $qty)
 {
-  .mb-#{$name}
+  .mb-#{$name},
+  %mb-#{$name}
   {
     margin-bottom: $qty;
   }
@@ -106,7 +112,8 @@
 //
 @mixin margin-left-size ($name, $qty)
 {
-  .ml-#{$name}
+  .ml-#{$name},
+  %ml-#{$name}
   {
     margin-left: $qty;
   }
@@ -122,7 +129,8 @@
 //
 @mixin padding-size ($name, $qty)
 {
-  .p-#{$name}
+  .p-#{$name},
+  %p-#{$name}
   {
     padding: $qty;
   }
@@ -138,7 +146,8 @@
 //
 @mixin padding-x-size ($name, $qty)
 {
-  .px-#{$name}
+  .px-#{$name},
+  %px-#{$name}
   {
     padding-left: $qty;
     padding-right: $qty;
@@ -155,7 +164,8 @@
 //
 @mixin padding-y-size ($name, $qty)
 {
-  .py-#{$name}
+  .py-#{$name},
+  %py-#{$name}
   {
     padding-top: $qty;
     padding-bottom: $qty;
@@ -172,7 +182,8 @@
 //
 @mixin padding-top-size ($name, $qty)
 {
-  .pt-#{$name}
+  .pt-#{$name},
+  %pt-#{$name}
   {
     padding-top: $qty;
   }
@@ -188,7 +199,8 @@
 //
 @mixin padding-right-size ($name, $qty)
 {
-  .pr-#{$name}
+  .pr-#{$name},
+  %pr-#{$name}
   {
     padding-right: $qty;
   }
@@ -204,7 +216,8 @@
 //
 @mixin padding-bottom-size ($name, $qty)
 {
-  .pb-#{$name}
+  .pb-#{$name},
+  %pb-#{$name}
   {
     padding-bottom: $qty;
   }
@@ -220,7 +233,8 @@
 //
 @mixin padding-left-size ($name, $qty)
 {
-  .pl-#{$name}
+  .pl-#{$name},
+  %pl-#{$name}
   {
     padding-left: $qty;
   }

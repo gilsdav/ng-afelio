@@ -1,0 +1,22 @@
+form,
+.form
+{
+    label
+    {
+        @apply
+            text-grey-09
+            text-sm
+            leading-5
+            relative
+            block;
+        .required{
+            @apply text-xs text-danger-primary leading-8;
+        }
+    }
+    .error-msg {
+        @apply
+            text-xs
+            text-danger-primary
+            mt-1;
+    }
+}

@@ -1,0 +1,142 @@
+$root: '.button';
+
+#{$root} {
+    @apply
+        py-1 px-4
+        rounded
+        appearance-none
+        inline-block
+        text-center
+        text-sm leading-6 font-medium
+        h-8
+        w-full;
+
+        &#{$root}--auto{
+            @apply w-auto;
+        }
+
+    &:disabled,
+    &--disabled {
+        @apply opacity-75 pointer-events-none;
+    }
+
+    /*
+     * Styles
+     */
+
+    &.--primary {
+        @apply transition-colors;
+        &.--action{
+            @apply text-grey-00
+                bg-action-primary hover:bg-action-dark;
+        }
+        &.--success{
+            @apply text-grey-00
+                bg-success-primary hover:bg-success-dark;
+        }
+        &.--danger{
+            @apply text-grey-00
+                bg-danger-primary hover:bg-danger-dark;
+        }
+    }
+    &.--secondary{
+        @apply transition-colors;
+        &.--action{
+            @apply text-action-primary hover:text-grey-00
+                bg-action-lighter hover:bg-action-primary;
+        }
+        &.--success{
+            @apply text-success-primary hover:text-grey-00
+                bg-success-lighter hover:bg-success-primary;
+        }
+        &.--danger{
+            @apply text-danger-primary hover:text-grey-00
+                bg-danger-lighter hover:bg-danger-primary;
+        }
+        &.--neutral{
+            @apply text-grey-08
+                bg-grey-02 hover:bg-grey-03;
+        }
+    }
+    &.--ternary{
+        @apply transition-colors;
+        &.--action{
+            @apply text-action-primary hover:bg-action-lighter;
+        }
+        &.--success{
+            @apply text-success-primary hover:bg-success-lighter;
+        }
+        &.--danger{
+            @apply text-danger-primary hover:bg-danger-lighter;
+        }
+        &.--neutral{
+            @apply text-grey-08 hover:bg-grey-02;
+        }
+    }
+
+    &.--link {
+        @apply
+            text-action-primary hover:text-action-dark
+            transition-colors
+            bg-none
+            p-0;
+    }
+
+    &.--link-dark {
+        @apply
+            text-grey-10 hover:text-grey-08
+            transition-colors
+            bg-none
+            p-0;
+    }
+
+    &.--close{
+        @apply text-grey-04 hover:text-grey-06
+            w-6
+            h-6
+            p-0;
+    }
+
+    /*
+     * Specificities
+     */
+
+    &--icon {
+        @apply flex justify-between items-center;
+
+        svg {
+            @apply h-5 w-5;
+        }
+
+        &--only {
+            @apply p-1 w-8 h-8 justify-center;
+        }
+
+        &--pre {
+            svg {
+                @apply mr-2;
+            }
+        }
+        &--post {
+            svg {
+                @apply ml-2;
+            }
+        }
+    }
+
+    &--circle {
+        @apply rounded-full p-0 w-6 h-6 flex items-center justify-center text-sm;
+
+        svg {
+            @apply h-4 w-4;
+        }
+
+        &--small {
+            @apply w-4 h-4 text-xs;
+
+            svg {
+                @apply h-3 w-3;
+            }
+        }
+    }
+}

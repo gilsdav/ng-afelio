@@ -34,6 +34,7 @@ gulp.task('replace-package', function () {
         .pipe(replace('${apiOwner}', options.apiOwner))
         .pipe(replace('${registry}', options.registry || ''))
         .pipe(replace('${apiKey}', options.apiKey || ''))
+        .pipe(replace('${scopeName}', options.scopeName ? `@${options.scopeName}/` : ''))
         .pipe(rename(src.out))
         .pipe(gulp.dest(src.dirname));
 });

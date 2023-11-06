@@ -20,7 +20,7 @@ $root: '.dropdown';
     padding-top: compute-grid(math.div($grid-xxs, 2));
     padding-bottom: compute-grid(math.div($grid-xxs, 2));
 
-    @extend .c-pointer;
+    @extend %c-pointer;
 
     outline: none;
 
@@ -30,7 +30,7 @@ $root: '.dropdown';
         background-repeat: no-repeat;
         background-size: 10px;
         background-position: right 8px center;
-        @extend .c-pointer;
+        @extend %c-pointer;
         outline: none;
     }
 
@@ -43,7 +43,7 @@ $root: '.dropdown';
 
     #{$root}__field {
         @extend .textfield__field;
-        @extend .pr-xl;
+        @extend %pr-xl;
 
         appearance: none;
 
@@ -77,8 +77,8 @@ $root: '.dropdown';
 
         .select-container {
             @extend .textfield__field;
-            @extend .c-pointer;
-            @extend .pr-l;
+            @extend %c-pointer;
+            @extend %pr-l;
 
             padding-left: 0;
 
@@ -87,24 +87,24 @@ $root: '.dropdown';
             border: none;
 
             input[type="text"] {
-                @extend .f-s;
+                @extend %f-s;
                 height: 24px;
             }
 
             .ng-value-container {
-                @extend .pl-xs;
+                @extend %pl-xs;
 
                 .ng-input {
-                    @extend .pl-xs;
+                    @extend %pl-xs;
 
                     input {
-                        @extend .p-none;
+                        @extend %p-none;
                         height: 20px;
                     }
                 }
 
                 .ng-placeholder {
-                    @extend .c-grey03;
+                    @extend %c-grey03;
                     font-weight: 400;
                 }
             }
@@ -115,7 +115,7 @@ $root: '.dropdown';
         }
 
         .ng-clear-wrapper {
-            @extend .mr-m;
+            @extend %mr-m;
         }
 
         &.-no-searchable .select-container {
@@ -129,7 +129,7 @@ $root: '.dropdown';
         //
 
         .ng-dropdown-panel {
-            @extend .bg-grey00;
+            @extend %bg-grey00;
             border: 1px solid $grey02;
             box-shadow: none;
             width: 100% !important;
@@ -142,7 +142,7 @@ $root: '.dropdown';
 
                 .ng-dropdown-panel-items .option:last-child
                 {
-                    @extend .br-none;
+                    @extend %br-none;
                 }
             }
 
@@ -156,7 +156,7 @@ $root: '.dropdown';
             // Style for each item in panel
             .ng-dropdown-panel-items .option {
                 white-space: initial;
-                @extend .f-s;
+                @extend %f-s;
 
                 // If selected
                 &.option-selected,
@@ -166,7 +166,7 @@ $root: '.dropdown';
 
                 // If hover
                 &.option-marked:hover {
-                    @extend .bg-grey01;
+                    @extend %bg-grey01;
                 }
             }
         }
@@ -192,26 +192,26 @@ $root: '.dropdown';
         &.select-multiple  .select-container {
             min-height: 38px;
             height: auto !important;
-            @extend .pt-none;
+            @extend %pt-none;
             padding-bottom: compute-grid(math.div($grid-xxs, 2));
 
             .ng-value-container {
                 padding-top: compute-grid(math.div($grid-xxs, 2) + $grid-xxs);
 
                 .ng-input {
-                    @extend .pl-none;
+                    @extend %pl-none;
                 }
 
                 .ng-placeholder {
                     top: 50%;
                     transform: translateY(-50%);
-                    @extend .pt-xxs;
+                    @extend %pt-xxs;
                 }
 
                 .ng-value {
                     background-color: $primary01 !important;
-                    @extend .c-primary03;
-                    @extend .flex;
+                    @extend %c-primary03;
+                    @extend %flex;
                     flex-direction: row-reverse;
 
                     .ng-value-icon,

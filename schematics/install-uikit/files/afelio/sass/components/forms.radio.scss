@@ -18,20 +18,20 @@ $root: '.radio';
     //
     ////////////////////////////////////////////////////
 
-    @extend .relative;
-    @extend .block;
-    @extend .pl-xl;
+    @extend %relative;
+    @extend %block;
+    @extend %pl-xl;
     cursor: pointer;
-    @extend .py-xxs;
+    @extend %py-xxs;
 
     &__input {
-        @extend .absolute;
+        @extend %absolute;
         opacity: 0;
         cursor: pointer;
     }
 
     &__checker {
-        @extend .absolute;
+        @extend %absolute;
         top: 50%;
         left: compute-grid($grid-xxs);
         transform: translateY(-50%);
@@ -40,8 +40,8 @@ $root: '.radio';
         height: $size;
         width: $size;
 
-        @extend .bg-grey00;
-        @extend .br-circle;
+        @extend %bg-grey00;
+        @extend %br-circle;
         border: 1px solid $grey02;
 
         &:after {
@@ -51,14 +51,14 @@ $root: '.radio';
             height: $size;
             width: $size;
 
-            @extend .absolute;
+            @extend %absolute;
             top: 50%;
             left: 50%;
             transform:  translateY(-50%)
                         translateX(-50%);
 
-            @extend .bg-primary03;
-            @extend .br-circle;
+            @extend %bg-primary03;
+            @extend %br-circle;
 
             opacity: 0;
 
@@ -69,8 +69,8 @@ $root: '.radio';
     }
 
     &__label {
-        @extend .f-s;
-        @extend .c-grey08;
+        @extend %f-s;
+        @extend %c-grey08;
 
     }
 

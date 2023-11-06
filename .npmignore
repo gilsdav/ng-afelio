@@ -18,9 +18,6 @@ package-lock.json
 # node modules
 node_modules/
 
-# gulp
-gulpfile.js
-
 # visual studio code
 .vscode/
 
@@ -32,3 +29,5 @@ tslint.js
 !*.d.ts
 !schematics/*/files/**/*.ts
 *.back
+
+temp-files

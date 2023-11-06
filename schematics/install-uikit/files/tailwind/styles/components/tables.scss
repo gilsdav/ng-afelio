@@ -1,0 +1,415 @@
+.ds-table-list{
+    @apply bg-grey-00;
+
+    .-html-responsive-list,
+    .-material-responsive-list{
+        @apply overflow-x-auto
+            pb-[1px];
+    }
+    .mat-mdc-table{
+        @apply border-separate;
+    }
+    .mat-mdc-header-row,
+    .mat-mdc-row{
+        @apply min-h-0
+        h-fit;
+    }
+    .mat-mdc-header-cell,
+    .mat-mdc-cell{
+        @apply min-w-[140px]
+            border-b-[1px]
+            border-grey-03
+            overflow-visible;
+    }
+    .mat-mdc-header-cell:first-child{
+        @apply pl-4;
+    }
+    .mat-mdc-cell:first-child{
+        @apply pl-6;
+    }
+    .mat-mdc-header-cell:last-child,
+    .mat-mdc-cell:last-child{
+        @apply pr-4;
+    }
+    .mat-mdc-header-cell{
+        @apply min-h-0
+            py-2 px-4
+            text-grey-10 text-sm font-bold
+            leading-6;
+
+        .mat-sort-header-arrow{
+            @apply translate-x-0 opacity-100 #{!important};
+
+            .mat-sort-header-stem{
+                @apply hidden;
+            }
+            .mat-sort-header-indicator>div{
+                @apply hidden;
+            }
+            .mat-sort-header-indicator{
+                @apply relative
+                    w-4
+                    h-4
+                    translate-x-0 #{!important};
+            }
+            .mat-sort-header-indicator::before,
+            .mat-sort-header-indicator::after{
+                @apply scale-50
+                    w-6
+                    h-6
+                    absolute
+                    left-[-5px]
+                    opacity-25;
+            }
+            .mat-sort-header-indicator::before{
+                content: url('~src/assets/icons/ds/chevron-top.svg');
+                @apply bottom-0;
+            }
+            .mat-sort-header-indicator::after{
+                content: url('~src/assets/icons/ds/chevron-bottom.svg');
+                @apply top-[-2px];
+            }
+        }
+        .table-title{
+            @apply pl-2;
+        }
+        .icon{
+            @apply w-6
+                h-6
+                rounded-full
+                p-1
+                cursor-pointer
+                transition-colors
+                hover:text-action-light
+                hover:bg-action-lighter;
+            svg{
+                @apply max-w-full max-h-full;
+            }
+        }
+    }
+    .mat-mdc-header-cell[aria-sort="ascending"]{
+        .mat-sort-header-indicator::before{
+            @apply opacity-100;
+        }
+    }
+    .mat-mdc-header-cell[aria-sort="descending"]{
+        .mat-sort-header-indicator::after{
+            @apply opacity-100;
+        }
+    }
+    [mat-sort-header].cdk-keyboard-focused{
+        .mat-sort-header-container{
+            @apply border-action-primary
+                border-b-2
+                w-fit;
+        }
+    }
+    .mat-mdc-cell{
+        @apply py-2
+            pl-6
+            text-grey-10 text-sm
+            leading-6;
+    }
+
+    &__footer{
+        @apply flex justify-end
+            border-t-[1px]
+            border-grey-03;
+
+        &-columns-actions{
+            &-container{
+                @apply px-2
+                    text-xs
+                    flex
+                    items-center
+                    relative;
+            }
+            &-panel{
+                @apply absolute
+                    bottom-[38px]
+                    left-[8px]
+                    bg-grey-00
+                    shadow-md
+                    z-50
+                    px-4
+                    py-2
+                    max-h-[350px]
+                    overflow-y-auto;
+                &-item{
+                    @apply py-2
+                        flex
+                        justify-between
+                        items-center
+                        min-w-[200px]
+                        cursor-pointer;
+                    &:not(:last-child){
+                        @apply border-b-2
+                            border-grey-02;
+                    }
+                }
+            }
+            &-button{
+                @apply flex
+                    items-center
+                    pl-1
+                    rounded-md
+                    border-[1px] border-grey-03
+                    hover:bg-grey-02
+                    transition-colors;
+
+                .columns-count{
+                    &-total{
+                        @apply text-grey-06;
+                    }
+                }
+                .icon{
+                    @apply scale-75;
+                }
+            }
+        }
+
+
+
+        .mat-mdc-paginator{
+            .mat-mdc-paginator-container{
+                @apply px-4
+                    py-2;
+            }
+            .mat-mdc-paginator-page-size{
+                @apply items-center
+                    m-0;
+                &-label{
+                    @apply text-xs
+                        leading-6;
+                }
+                &-select{
+                    .mat-mdc-text-field-wrapper{
+                        @apply p-0;
+                        .mdc-notched-outline__leading,
+                        .mdc-notched-outline__trailing{
+                            @apply border-0;
+                        }
+                        .mat-mdc-form-field-infix{
+                            @apply w-auto;
+                        }
+                        .mat-mdc-select{
+                            @apply ml-0
+                                px-1
+                                m-0
+                                w-auto
+                                rounded-md
+                                border-2 border-transparent
+                                hover:bg-grey-02;
+                            &:focus-visible{
+                                @apply border-action-primary;
+                            }
+                        }
+                        .mat-mdc-select-value{
+                            @apply w-4
+                                flex justify-center
+                                text-xs;
+                        }
+                        .mat-mdc-select-arrow-wrapper{
+                            @apply relative
+                                w-4
+                                h-4;
+                            &::before{
+                                content: url('~src/assets/icons/ds/chevron-bottom.svg');
+                                @apply h-6
+                                    scale-[60%]
+                                    absolute top-1/2 left-1/2
+                                    translate-x-[-50%]
+                                    translate-y-[-50%];
+                            }
+                            .mat-mdc-select-arrow{
+                                @apply hidden;
+
+                            }
+                        }
+
+                    }
+                }
+            }
+            .mat-mdc-paginator-range-label{
+                @apply text-xs;
+            }
+            .mat-mdc-icon-button{
+                border:inherit;
+                @apply bg-grey-02 hover:bg-grey-03
+                    rounded-lg
+                    p-0
+                    pt-[1px]
+                    h-6
+                    w-6
+                    text-base
+                    border-2
+                    border-transparent;
+
+                @apply transition-colors #{!important};
+
+                svg{
+                    @apply fill-grey-10
+                        h-4
+                        w-4;
+                }
+                .mat-mdc-button-touch-target{
+                    @apply h-6
+                        w-6;
+                }
+                &[disabled]{
+                    svg{
+                        @apply fill-grey-03;
+                    }
+                }
+                &:not(last-child){
+                    @apply mr-1;
+                }
+                &:focus-visible{
+                    @apply border-action-primary;
+                }
+            }
+        }
+    }
+
+    &.-fixed{
+        @apply shadow-[1px_1px_0_0_#DEDFE0];
+    }
+
+    // Fixed columns
+
+    .mat-mdc-header-cell.-fixed-right,
+    .mat-mdc-header-cell.-fixed-left,
+    .-fixed-right,
+    .-fixed-left {
+        @apply bg-grey-00
+            sticky
+            z-[1];
+    }
+    .-fixed-right{
+        right: 0;
+    }
+    .-fixed-left {
+        left: 0;
+    }
+
+    // Fixed columns - Table-cell
+    th[data-pinned-column][data-pinned-column-last="true"].-fixed-left,
+    td[data-pinned-column][data-pinned-column-last="true"].-fixed-left {
+        &:before {
+            content: '';
+            @apply absolute
+            h-full
+            w-1
+            right-0
+            top-0
+            z-10
+            shadow-[2px_0_2px_0_rgba(0,0,0,0.1)];
+        }
+
+        &:after{
+            content:'';
+            @apply absolute
+            h-full
+            w-[1px]
+            right-0
+            top-0
+            z-10
+            bg-grey-03;
+        }
+    }
+
+    th[data-pinned-column].-fixed-right,
+    td[data-pinned-column].-fixed-right {
+        &:before {
+            content: '';
+            @apply absolute
+            h-full
+            w-1
+            left-0
+            top-0
+            z-10
+            shadow-[-2px_0_2px_0_rgba(0,0,0,0.1)];
+        }
+
+        &:after{
+            content:'';
+            @apply absolute
+            h-full
+            w-[1px]
+            left-0
+            top-0
+            z-10
+            bg-grey-03;
+        }
+    }
+
+    // Fixed columns - Mat-cell
+
+    mat-header-cell[data-pinned-column][data-pinned-column-last="true"].-fixed-left,
+    mat-cell[data-pinned-column][data-pinned-column-last="true"].-fixed-left {
+        @apply shadow-[2px_0_2px_0_rgba(0,0,0,0.1)]
+        border-r-[1px];
+    }
+
+    mat-header-cell[data-pinned-column].-fixed-right,
+    mat-cell[data-pinned-column].-fixed-right {
+        @apply shadow-[-2px_0_2px_0_rgba(0,0,0,0.1)]
+        border-l-[1px];
+    }
+}
+
+
+////////////////////////////////
+///
+///     Draggable table
+///
+////////////////////////////////
+
+.cdk-drag{
+    @apply cursor-pointer;
+    &:not(.cdk-drag-preview){
+        @apply transition-transform;
+    }
+    &-preview{
+        @apply shadow
+        bg-grey-00
+        px-2
+        border-0;
+    }
+    &-placeholder>*{
+        @apply opacity-25;
+    }
+
+    &.mat-mdc-header-cell.cdk-drag-preview{
+        @apply border-0
+        text-sm
+        font-bold
+        px-4
+        py-2
+        w-full
+        flex
+        items-center
+        relative;
+
+        .icon{
+            @apply w-6
+                h-6
+                p-1
+                mr-2;
+                svg{
+                    @apply max-w-full max-h-full;
+                }
+        }
+
+        &::after{
+            content: url('~src/assets/icons/ds/draggable.svg');
+            @apply scale-75
+                absolute
+                right-3
+                top-2;
+        }
+        .mat-sort-header-arrow{
+            @apply hidden;
+        }
+    }
+}

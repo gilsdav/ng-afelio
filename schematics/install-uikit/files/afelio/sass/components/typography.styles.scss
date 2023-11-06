@@ -1,53 +1,53 @@
 
 h1 {
-    @extend .f-medium;
+    @extend %f-medium;
     line-height: 40px;
     font-size: 32px;
-    @extend .my-none;
+    @extend %my-none;
 }
 
 h2 {
-    @extend .f-medium;
+    @extend %f-medium;
     line-height: 32px;
     font-size: 24px;
-    @extend .my-none;
+    @extend %my-none;
 }
 
 h3 {
-    @extend .f-regular;
+    @extend %f-regular;
     line-height: 32px;
     font-size: 20px;
-    @extend .my-none;
-    @extend .c-primary05;
+    @extend %my-none;
+    @extend %c-primary05;
 }
 
 h4 {
-    @extend .f-bold;
+    @extend %f-bold;
     line-height: 24px;
     font-size: 16px;
-    @extend .c-grey08;
-    @extend .my-none;
-    @extend .pb-xxs;
+    @extend %c-grey08;
+    @extend %my-none;
+    @extend %pb-xxs;
 }
 
 h5 {
-    @extend .f-medium;
+    @extend %f-medium;
     line-height: 20px;
     font-size: 14px;
-    @extend .uppercase;
-    @extend .c-grey08;
-    @extend .my-none;
+    @extend %uppercase;
+    @extend %c-grey08;
+    @extend %my-none;
 }
 
 p {
     line-height: 20px;
     font-size: 14px;
-    @extend .my-none;
-    @extend .c-grey08;
+    @extend %my-none;
+    @extend %c-grey08;
 }
 
 small {
-    @extend .f-regular;
+    @extend %f-regular;
     line-height: 20px;
     font-size: 14px;
 }

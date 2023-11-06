@@ -22,6 +22,8 @@ const {
   generateI18n
 } = require('./logic');
 
+const { version: ngAfelioVersion } = require('./package.json');
+
 const { getAllArgs } = require('./remainer-args');
 
 const uiKitTypes = require('./models/ui-kit-types.enum');
@@ -54,9 +56,10 @@ program
   .description('Generate new Angular project')
   .option('--ui-kit <uiKit>', 'Ui-kit type (' + Object.values(uiKitTypes).slice(1).join(', ') + ').', uiKitTypes.DEFAULT)
   .option('--open-api', 'Is OpenApi project', false)
+  .option('--ng-version <ngVersion>', 'Angular version', 'latest')
   .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--commit=false --directory=."')
   .action((name, options) => {
-    createNewProject(name, options.uiKit || false, options.openApi || false, options.ng).then(() => {
+    createNewProject(name, options.uiKit || false, options.openApi || false, options.ng, options.ngVersion).then(() => {
       console.info(`Please go to new directory "cd ./${name}"`);
       process.exit();
     });
@@ -73,33 +76,34 @@ program
   });
 
 program
-  .command('serve')
+  .command('serve [name]')
   .alias('ms')
   .description('Start dev server')
   .option('-e, --env <environment>', 'Change default environment')
   .option('-p, --port <port>', 'Change default port', 4200)
   .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
-  .action((options) => {
-    serveMain(options.env, options.port, options.ng);
+  .action((name, options) => {
+    serveMain(options.env, options.port, options.ng, name);
   });
 
 program
-  .command('start')
+  .command('start [name]')
   .alias('s')
   .description('Start all dev tools')
   .option('-e, --env <environment>', 'Change default environment')
   .option('-p, --port <port>', 'Change default port', 4200)
   .option('-u, --ui-port <uiPort>', 'Change default port of ui-kit', 5200)
-  .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
-  .action((options) => {
-    Promise.all([serveMain(options.env, options.port, options.ng), serveUIKit(options.uiPort, options.ng)]);
+  .option('--ng <ng>', 'Standard Angular CLI options for dev server (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
+  .option('--ui-ng <uiNg>', 'Standard Angular CLI options for ui-kit server (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
+  .action((name, options) => {
+    Promise.all([serveMain(options.env, options.port, options.ng, name), serveUIKit(options.uiPort, options.uiNg)]);
   });
 
 const generateCommand = program.command('generate [type] [name]')
 generateCommand
   .alias('g')
   .description(`Generates and/or modifies files based on angular schematics`, {
-    type: `One type from this list:\n    ${colors.cyan(Object.keys(schematics).filter(name => !name.startsWith('install-') && !name.startsWith('ng-')).join('\n    '))}`,
+    type: `One type from this list:\n    ${colors.cyan(Object.keys(schematics).filter(name => !name.startsWith('install-') && !name.startsWith('ng-') && !name.startsWith('private-')).join('\n    '))}`,
     name: 'Name of element to generate.'
   })
   .option('-h, --help', 'output help message')
@@ -131,6 +135,39 @@ installCommand
       });
     } else {
       return installCommand.outputHelp();
+    }
+  });
+
+const pluginCommand = program.command('plugin [repo] [name]');
+pluginCommand
+  .alias('p')
+  .description(`Add plugin from ng-afelio schematics`, {
+    repo: `One repo name from ${colors.cyan('plugins.repos')} into your ${colors.cyan('ng-afelio.json')} file`,
+    name: `The name of one plugin available into this chosen repo`,
+  })
+  .option('-h, --help', 'output help message')
+  .option('-l, --list', 'get the list of plugins from specific repo')
+  .option('-i, --ignored-parts <ignoredParts>', 'comma separated list of part names to ignore. Example: search,pagniation')
+  .option('-p, --path', 'The path to create the module, relative to project directory. Default: ./shared/modules')
+  .allowUnknownOption()
+  // .parse(process.argv)
+  .action((repo, name, options, command) => {
+    if (repo && name) {
+      const ignoredParts = options.ignoredParts ? [ '--ignored-parts=' + options.ignoredParts ] : [];
+      const path = options.path ? [ '--path=' + options.path ] : [];
+      generate(`private-plugin`, repo, [name, ...ignoredParts, ...path, ...getAllArgs(command, options.help)]).then(() => {
+        process.exit();
+      });
+    } else if (repo && options.list) {
+      const { ConnectorBuilder } = require('./schematics/plugin/connector.builder');
+      const connector = ConnectorBuilder.build(repo);
+      connector.getCompatiblePlugins(ngAfelioVersion).then(pluginNames => {
+        console.info(`Available plugins:`);
+        console.info(`${pluginNames.map(pn => `- ${colors.blue(pn)}`).join('\n')}`);
+        process.exit();
+      });
+    } else {
+      return pluginCommand.outputHelp();
     }
   });
 

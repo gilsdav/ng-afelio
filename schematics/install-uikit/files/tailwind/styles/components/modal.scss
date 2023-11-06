@@ -1,0 +1,123 @@
+$root: '.modal';
+
+.cdk-overlay-pane {
+    max-width: 100vw !important;
+
+    .mat-dialog-container {
+        @apply
+            bg-transparent
+            overflow-hidden
+            fixed
+            top-0
+            bottom-0
+            left-0
+            right-0
+            p-0;
+    }
+    .mat-dialog-content {
+        @apply overflow-visible;
+    }
+}
+
+.cdk-overlay-container {
+    @apply z-50;
+}
+
+.cdk-overlay-backdrop {
+    @apply
+        transition-none
+        bg-opacity-25;
+}
+
+
+#{$root} {
+    @apply
+        bg-grey-00
+        rounded-lg
+        fixed
+        top-1/2
+        left-1/2
+        -translate-x-1/2
+        -translate-y-1/2
+        w-[66vw]
+        lg:w-[59vw]
+        xl:w-[35vw];
+
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.25);
+
+    &.--small {
+        @apply
+            w-[95vw]
+            lg:w-[65vw]
+            xl:w-[40vw]
+    }
+
+    &-text {
+        @apply
+            py-1
+            text-center
+            min-w-[360px]
+            text-grey-09;
+    }
+
+    &__header{
+        @apply flex
+            justify-between
+            items-center
+            p-4;
+    }
+    &__body{
+        @apply min-h-[4rem]
+        px-4;
+        &>*{
+            @apply text-base
+                text-grey-09
+                leading-6
+                text-sm;
+        }
+    }
+    &__footer{
+        @apply p-4;
+        #{$root}__buttons{
+            @apply flex items-center;
+        }
+    }
+    &__title{
+        @apply font-bold
+            text-base
+            leading-6
+            text-grey-09
+            normal-case;
+    }
+
+    &.full-modal{
+        @apply rounded-none
+        w-[80vw];
+
+        #{$root}__header{
+            @apply relative
+            z-50
+            shadow-[0_4px_5px_-4px_#DEDFE0];
+        }
+        #{$root}__body{
+            @apply h-[80vh]
+            bg-grey-01
+            overflow-auto;
+            &-title{
+                @apply text-xs
+                    text-grey-06
+                    uppercase
+                    font-medium
+                    leading-8;
+            }
+        }
+        #{$root}__footer{
+            @apply relative
+            z-50
+            shadow-[0_-4px_5px_-4px_#DEDFE0];
+            #{$root}__buttons{
+                @apply justify-end;
+            }
+        }
+    }
+}

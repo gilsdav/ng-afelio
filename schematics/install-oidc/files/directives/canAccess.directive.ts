@@ -7,7 +7,7 @@ import { AuthenticationService } from '../services/authentication.service';
 /**
  * NgIf that take a list of permissions to compare with user token.
  *
- * Usage: `<ng-container [canAccess]="[...]" >...</ng-container>"`
+ * Usage: `<ng-container *canAccess="[...]" >...</ng-container>"`
  */
 @Directive({
     // tslint:disable-next-line: directive-selector
@@ -15,7 +15,7 @@ import { AuthenticationService } from '../services/authentication.service';
 })
 export class CanAccessDirective implements OnDestroy {
 
-    private destroy$ = new Subject();
+    private destroy$ = new Subject<void>();
 
     constructor(
         private authService: AuthenticationService,

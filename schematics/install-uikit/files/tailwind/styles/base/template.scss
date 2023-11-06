@@ -1,0 +1,18 @@
+@layer base {
+    body {
+        @apply bg-grey-01 h-screen;
+        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        scroll-behavior: smooth;
+        overflow-y: scroll;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .ds-tab{
+        @apply inline-block leading-10 mr-4 hover:text-action-primary transition-colors;
+        &.-active{
+            @apply text-action-primary relative before:block before:w-full before:h-[2px] before:bg-action-primary before:absolute before:bottom-[0rem];
+        }
+    }
+}
+

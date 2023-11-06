@@ -1,0 +1,42 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "SchematicsNgAfelioPlugin",
+    "title": "ng-afelio Plugin system to generate elements",
+    "type": "object",
+    "properties": {
+        "project": {
+            "type": "string",
+            "description": "The name of the project",
+            "$default": {
+              "$source": "projectName"
+            }
+        },
+        "path": {
+            "type": "string",
+            "format": "path",
+            "description": "The path to create the module, relative to project directory",
+            "default": "./shared/modules"
+          },
+        "pluginRepo": {
+            "type": "string",
+            "description": "The name of the repo available into ng-afelio.json",
+            "$default": {
+                "$source": "argv",
+                "index": 1
+            }
+        },
+        "pluginName": {
+            "type": "string",
+            "description": "The name of the plugin available in specified repo.",
+            "$default": {
+                "$source": "argv",
+                "index": 2
+            }
+        },
+        "ignoredParts": {
+            "type": "string",
+            "description": "Comma separated list of part names to ignore. Example: search,pagniation"
+        }
+    },
+    "required": ["pluginRepo", "pluginName"]
+}

@@ -1,0 +1,273 @@
+$root: '.dropdown';
+
+#{$root} {
+    ////////////////////////////////////////////////////
+    //
+    //         <select> HTML & <select> Angular common
+    //
+    ////////////////////////////////////////////////////
+
+    @extend .textfield;
+
+    @apply cursor-pointer outline-none min-h-[32px];
+
+    #{$root}__field {
+        background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='14px' height='8px' viewBox='0 0 14 8' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Ctitle%3EPath%3C/title%3E%3Cg id='icon' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E%3Cg id='icon/chevron-down-alt' transform='translate(-5.000000, -8.000000)' fill='%23B0C0C4' fill-rule='nonzero'%3E%3Cpath d='M5.29289322,8.29289322 C5.65337718,7.93240926 6.22060824,7.90467972 6.61289944,8.20970461 L6.70710678,8.29289322 L12,13.585 L17.2928932,8.29289322 C17.6533772,7.93240926 18.2206082,7.90467972 18.6128994,8.20970461 L18.7071068,8.29289322 C19.0675907,8.65337718 19.0953203,9.22060824 18.7902954,9.61289944 L18.7071068,9.70710678 L12.7071068,15.7071068 C12.3466228,16.0675907 11.7793918,16.0953203 11.3871006,15.7902954 L11.2928932,15.7071068 L5.29289322,9.70710678 C4.90236893,9.31658249 4.90236893,8.68341751 5.29289322,8.29289322 Z' id='Path'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A");
+        background-position: right 8px center;
+
+        @apply cursor-pointer outline-none bg-no-repeat py-1;
+    }
+
+
+
+
+    ////////////////////////////////////////////////////
+    //
+    //         <select> HTML component
+    //
+    ////////////////////////////////////////////////////
+
+    #{$root}__field {
+        @extend .textfield__field;
+
+        @apply pr-6 appearance-none;
+
+        &::-ms-expand {
+            @apply hidden;
+        }
+    }
+
+    #{$root}--error #{$root}__field {
+        @apply border-danger-primary;
+    }
+
+
+    ////////////////////////////////////////////////////
+    //
+    //         <select> Angular component
+    //
+    ////////////////////////////////////////////////////
+
+    &.ng-select {
+        @apply py-0;
+
+        &#{$root}--error,
+        &.ng-touched.ng-invalid {
+            .ng-select-container {
+                @apply border-danger-primary;
+            }
+        }
+
+        &.ng-select-disabled {
+            @apply cursor-default;
+
+            .ng-select-container {
+                @apply cursor-default bg-grey-02 border border-grey-04;
+            }
+
+            input {
+                cursor: default !important;
+            }
+        }
+
+        &.ng-select-focused:not(.ng-select-opened)>.ng-select-container,
+        &.ng-select-focused.ng-select-container {
+            box-shadow: none !important;
+        }
+
+        &.-search {
+            .ng-arrow-wrapper {
+                top: 2px;
+
+                .ng-arrow {
+                    background-image: url("data:image/svg+xml,%0A%3Csvg width='14px' height='14px' viewBox='0 0 14 14' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cg id='✅-Forms' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E%3Cg id='Form/Form/Input/Search/error' transform='translate(-269.000000, -5.000000)' fill='%23B0C0C4' fill-rule='nonzero'%3E%3Cg id='icon/search' transform='translate(269.333333, 5.333333)'%3E%3Cpath d='M5.33333333,-8.8817842e-16 C8.278852,-8.8817842e-16 10.6666667,2.38781467 10.6666667,5.33333333 C10.6666667,6.5657528 10.2486495,7.70053912 9.54666532,8.60364202 L13.1380712,12.1952621 C13.3984207,12.4556117 13.3984207,12.8777217 13.1380712,13.1380712 C12.8977485,13.3783938 12.5195945,13.3968802 12.258067,13.1935303 L12.1952621,13.1380712 L8.60364202,9.54666532 C7.70053912,10.2486495 6.5657528,10.6666667 5.33333333,10.6666667 C2.38781467,10.6666667 0,8.278852 0,5.33333333 C0,2.38781467 2.38781467,-8.8817842e-16 5.33333333,-8.8817842e-16 Z M5.33333333,1.33333333 C3.12419433,1.33333333 1.33333333,3.12419433 1.33333333,5.33333333 C1.33333333,7.54247233 3.12419433,9.33333333 5.33333333,9.33333333 C7.54247233,9.33333333 9.33333333,7.54247233 9.33333333,5.33333333 C9.33333333,3.12419433 7.54247233,1.33333333 5.33333333,1.33333333 Z' id='Combined-Shape'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+                }
+            }
+        }
+
+        .ng-select-container {
+            // @extend .textfield__field;
+            @apply h-8 w-full m-0 p-2 border border-grey-04 rounded bg-grey-00 text-grey-08 text-sm transition-colors cursor-pointer min-h-[32px] appearance-none shadow-none;
+
+            height: auto !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            border-radius: 4px !important;
+            z-index: 1 !important;
+
+            input[type="text"] {
+                @apply text-sm h-6;
+            }
+
+            .ng-value-container {
+                @apply w-[90%];
+
+                .ng-value {
+                    @apply break-words leading-7;
+
+                    white-space: normal !important;
+                    height: auto !important;
+                    overflow: visible !important;
+                    text-overflow: initial !important;
+                }
+
+                .ng-input {
+                    @apply px-1;
+
+                    input {
+                        @apply p-0 cursor-pointer h-5;
+                    }
+                }
+
+                .ng-placeholder {
+                    @apply text-grey-05 leading-7;
+                }
+            }
+        }
+
+        .ng-arrow-wrapper {
+            @apply absolute top-1/2 -translate-y-1/2 right-1;
+
+            .ng-arrow {
+                background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='14px' height='8px' viewBox='0 0 14 8' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Ctitle%3EPath%3C/title%3E%3Cg id='icon' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E%3Cg id='icon/chevron-down-alt' transform='translate(-5.000000, -8.000000)' fill='%23B0C0C4' fill-rule='nonzero'%3E%3Cpath d='M5.29289322,8.29289322 C5.65337718,7.93240926 6.22060824,7.90467972 6.61289944,8.20970461 L6.70710678,8.29289322 L12,13.585 L17.2928932,8.29289322 C17.6533772,7.93240926 18.2206082,7.90467972 18.6128994,8.20970461 L18.7071068,8.29289322 C19.0675907,8.65337718 19.0953203,9.22060824 18.7902954,9.61289944 L18.7071068,9.70710678 L12.7071068,15.7071068 C12.3466228,16.0675907 11.7793918,16.0953203 11.3871006,15.7902954 L11.2928932,15.7071068 L5.29289322,9.70710678 C4.90236893,9.31658249 4.90236893,8.68341751 5.29289322,8.29289322 Z' id='Path'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A");
+                background-size: 1rem;
+
+                @apply absolute top-1/2 -translate-y-1/2 right-1/2 -translate-x-1/2;
+
+                @apply cursor-pointer outline-none h-4 w-4 bg-center bg-no-repeat;
+
+                // Fix old style
+                border-color: initial;
+                border-style: initial;
+                border-width: initial;
+            }
+        }
+
+        &.ng-select-opened>.ng-select-container .ng-arrow {
+            // Fix old style
+            top: initial;
+            border-color: initial;
+            border-width: initial;
+        }
+
+        .ng-clear-wrapper {
+            @apply absolute top-1/2 right-8 -translate-y-1/2 w-6 h-6 flex justify-center items-center;
+            .ng-clear {
+                @apply text-2xl text-grey-04 leading-7;
+            }
+            &:hover{
+                @apply bg-action-light rounded-full;
+                .ng-clear{
+                    @apply text-grey-00 ;
+                }
+            }
+        }
+
+        &.-no-searchable .ng-select-container {
+            display: none;
+        }
+
+
+        //
+        //  Single choice select
+        //
+
+        &.ng-select-single {
+            .ng-select-container .ng-value-container .ng-input {
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+
+
+        //
+        //  Multiple choices select
+        //
+
+        &.ng-select-multiple .ng-select-container {
+            min-height: 32px;
+            height: auto !important;
+            @apply pt-0 pb-[2px];
+
+            .ng-value-container {
+                @apply pt-1;
+
+                .ng-input {
+                    @apply pl-0 my-1;
+                }
+
+                .ng-placeholder {
+                    @apply pt-1 top-1/2 -translate-y-1/2;
+                }
+
+                .ng-value {
+                    @apply flex flex-row-reverse items-center max-w-[90%] rounded-full px-2 text-grey-10 bg-action-lighter mr-1 mb-1;
+
+                    span {
+                        @apply leading-6 whitespace-normal text-xs max-w-full break-all;
+                    }
+
+                    .ng-value-icon,
+                    .ng-value-icon.left {
+                        @apply rounded-full
+                            ml-1
+                            w-4 h-4
+                            flex justify-center items-center
+                            text-grey-05
+                            text-base
+                            hover:bg-action-light
+                            hover:text-grey-00;
+                    }
+
+                    .ng-value-label {
+                        max-width: 100%;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+//
+// Panel showed when the select is open
+//
+
+.ng-dropdown-panel {
+    box-shadow: 0 2px 8px 0 rgba(#242626, 0.1);
+    border-radius: 4px !important;
+    z-index: 100 !important;
+
+    @apply bg-grey-00;
+
+    // Panel on bottom
+    &.ng-select-bottom {
+        @apply mt-1 border border-grey-04;
+    }
+
+    // Panel on top
+    &.ng-select-top {
+        @apply mb-1 border border-grey-04;
+    }
+
+    .ng-dropdown-panel-items {
+        max-height: 270px !important;
+        @apply rounded w-full;
+    }
+
+    // Style for each item in panel
+    .ng-dropdown-panel-items .ng-option {
+        white-space: initial !important;
+        @apply text-sm p-2;
+
+        // If hover
+        &.ng-option-marked {
+            @apply bg-action-lighter text-grey-08;
+        }
+
+        // If selected
+        &.ng-option-selected {
+            @apply bg-action-primary text-grey-00;
+        }
+    }
+}

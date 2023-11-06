@@ -1,0 +1,115 @@
+.mat-datepicker-toggle .mat-icon-button .mat-button-wrapper {
+    background-image: url('~assets/icons/ds/calendar.svg');
+
+    @apply bg-center bg-no-repeat w-6 h-6 absolute -top-[3px] right-0;
+
+    svg {
+        @apply hidden;
+    }
+}
+
+
+
+
+.mat-datepicker-content{
+    .mat-datepicker-content-container{
+        .mat-calendar {
+            @apply h-auto;
+            .mat-calendar-header{
+                .mat-calendar-controls{
+                    button{
+                        border:inherit;
+                        @apply border-2 border-transparent;
+                    }
+                    button:hover{
+                        @apply bg-action-light;
+                    }
+                    button[disabled="true"]:after{
+                        @apply border-grey-05;
+                    }
+                    button.cdk-keyboard-focused{
+                        @apply border-action-primary;
+                    }
+                    .mat-calendar-period-button{
+                        @apply bg-action-lighter hover:bg-action-primary
+                        text-action-primary hover:text-grey-00
+                        fill-action-primary hover:fill-grey-00
+                        transition-colors;
+                    }
+                    .mdc-icon-button{
+                        @apply h-8
+                            w-8
+                            p-1
+                            m-1;
+                        &:after{
+                            @apply m-2;
+                        }
+                    }
+                    .mdc-icon-button:not([disabled="true"]){
+                        @apply bg-action-lighter hover:bg-action-primary
+                            text-action-primary hover:text-grey-00
+                            transition-colors;
+                    }
+                }
+            }
+
+            .mat-calendar-content{
+                .mat-calendar-body-selected {
+                    @apply bg-action-primary
+                        text-grey-00;
+                }
+                .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover>.mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+                    @apply
+                        bg-action-lighter
+                        text-action-primary;
+                }
+                .mat-calendar-body-preview-start:before{
+                    @apply
+                        rounded-tl-full rounded-bl-full
+                        w-[95%]
+                        left-[5%]
+                }
+                .mat-calendar-body-preview-end:before{
+                    @apply
+                        rounded-tr-full rounded-br-full
+                        w-[95%]
+                        right-[5%]
+                }
+                .mat-calendar-body-in-preview:before{
+                    @apply bg-grey-03;
+                }
+                .mat-calendar-body-cell-preview{
+                    @apply border-0;
+                }
+                .mat-calendar-body-in-range::before {
+                    @apply bg-grey-03;
+                }
+                .mat-calendar-body-disabled{
+                    @apply
+                        bg-grey-02
+                        rounded-full
+                        text-grey-06;
+                }
+
+                &.cdk-keyboard-focused{
+                    .mat-calendar-body-active{
+                        .mat-focus-indicator{
+                            @apply bg-action-lighter
+                                text-action-primary
+                                border-2;
+                            &.mat-calendar-body-selected{
+                                @apply bg-action-primary
+                                    text-grey-00;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.ngx-mat-timepicker form .ngx-mat-timepicker-table .ngx-mat-timepicker-tbody tr td .mat-form-field {
+    width: 40px !important;
+    max-width: 40px !important;
+}

@@ -16,61 +16,61 @@
     ////////////////////////////////////////////////////
 
     appearance: none;
-    @extend .no-decoration;
-    @extend .text-center;
+    @extend %no-decoration;
+    @extend %text-center;
     width: auto;
     width: fit-content;
-    @extend .bg-transparent;
+    @extend %bg-transparent;
 
     // position
-    @extend .relative;
+    @extend %relative;
 
     // padding
-    @extend .px-none;
-    @extend .py-none;
+    @extend %px-none;
+    @extend %py-none;
 
     // borders
-    @extend .bw-none;
+    @extend %bw-none;
     border-radius: 2px;
 
     // cursor
-    @extend .c-pointer;
+    @extend %c-pointer;
 
     // typography
-    @extend .f-regular;
-    @extend .f-s;
+    @extend %f-regular;
+    @extend %f-s;
 
     // flex
-    @extend .flex;
-    @extend .flex-middle;
+    @extend %flex;
+    @extend %flex-middle;
 
 
     &.-inline
     {
-        @extend .inline;
+        @extend %inline;
     }
 
     #{$root}__label
     {
-        @extend .relative;
-        @extend .f-regular;
-        @extend .f-s;
+        @extend %relative;
+        @extend %f-regular;
+        @extend %f-s;
     }
 
     #{$root}__icon
     {
-        @extend .absolute;
+        @extend %absolute;
         top: 50%;
         transform: translateY(-12px);
 
         @extend .icon;
-        @extend .f-m;
-        @extend .pt-xxs;
+        @extend %f-m;
+        @extend %pt-xxs;
 
         &.icon-arrow-top,
         &.icon-arrow-bottom
         {
-            @extend .f-s;
+            @extend %f-s;
         }
     }
 
@@ -83,17 +83,17 @@
 
     &.-primary
     {
-        @extend .c-primary03;
+        @extend %c-primary03;
     }
 
     &.-secondary
     {
-        @extend .c-grey06;
-        @extend .f-medium;
+        @extend %c-grey06;
+        @extend %f-medium;
 
         #{$root}__icon
         {
-            @extend .c-primary03;
+            @extend %c-primary03;
         }
     }
 
@@ -101,7 +101,7 @@
     {
         #{$root}__label
         {
-            @extend .f-medium;
+            @extend %f-medium;
         }
     }
 
@@ -131,7 +131,7 @@
     {
         #{$root}__label
         {
-            @extend .f-l;
+            @extend %f-l;
         }
     }
 

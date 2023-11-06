@@ -4,10 +4,10 @@ import { buildRelativePath } from '@schematics/angular/utility/find-module';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import * as ts from 'typescript';
 
-import { addProviderToModule, findNodes, insertImport } from '../util/ast-util';
-import { Change, InsertChange, applyChangesToHost } from '../util/change';
-
+import { addProviderToModule, insertImport } from '../util/ast-util';
+import { Change, applyChangesToHost } from '../util/change';
 import { Schema as MocksOptions } from './schema';
+import { appendIntoEnvironment } from '../util/environment';
 
 function applyModuleImports(projectAppPath: string, mockPath: string, options: MocksOptions): Rule {
     return host => {
@@ -42,53 +42,77 @@ function applyModuleImports(projectAppPath: string, mockPath: string, options: M
     };
 }
 
-function getEnvironmentNode(source: ts.SourceFile): ts.Node | undefined {
-    const keywords = findNodes(source, ts.SyntaxKind.VariableStatement);
-    for (const keyword of keywords) {
-        if (ts.isVariableStatement(keyword)) {
-            const [declaration] = keyword.declarationList.declarations;
-            if (
-                ts.isVariableDeclaration(declaration) &&
-                declaration.initializer &&
-                declaration.name.getText() === 'environment'
-            ) {
-                return declaration.initializer.getChildAt(1);
-            }
-        }
-    }
-}
+// function getEnvironmentNode(source: ts.SourceFile): ts.Node | undefined {
+//     const keywords = findNodes(source, ts.SyntaxKind.VariableStatement);
+//     for (const keyword of keywords) {
+//         if (ts.isVariableStatement(keyword)) {
+//             const [declaration] = keyword.declarationList.declarations;
+//             if (
+//                 ts.isVariableDeclaration(declaration) &&
+//                 declaration.initializer &&
+//                 declaration.name.getText() === 'environment'
+//             ) {
+//                 return declaration.initializer.getChildAt(1);
+//             }
+//         }
+//     }
+// }
 
 function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule {
-    const projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
-    return host => {
-        const text = host.read(projectEnvPath);
-        if (!text) {
-            throw new SchematicsException(`Environment file on ${projectName} project does not exist.`);
-        }
-        const sourceText = text.toString('utf8');
-        const source = ts.createSourceFile(
-            projectEnvPath,
-            sourceText,
-            ts.ScriptTarget.Latest,
-            true
-        );
-        const node = getEnvironmentNode(source);
-        const changes: Change[] = [];
-        if (node) {
-            const lastRouteNode = node.getLastToken();
-            if (lastRouteNode) {
-                changes.push(
-                    new InsertChange(
-                        projectEnvPath,
-                        lastRouteNode.getEnd(),
-                        `,\n    mock: {\n        enable: true,\n        all: false,\n        services: {\n            getPets: true\n        }\n    }`
-                    )
-                );
-            }
-        }
-        applyChangesToHost(host, projectEnvPath, changes);
-        return host;
-    };
+    const envToAdd = `\n    mock: {\n        enable: true,\n        all: false,\n        services: {\n            getPets: true\n        }\n    }`;
+    const envToAddProd = `\n    mock: {\n        enable: false,\n        all: false,\n        services: {\n            getPets: false\n        }\n    }`;
+    return chain([
+        appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'mock:', false),
+        appendIntoEnvironment(projectAppPath, projectName, envToAddProd, 'mock:', true)
+    ]);
+    // let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
+    // return host => {
+    //     let text = host.read(projectEnvPath);
+    //     if (!text) { // Fallback for old project version
+    //         projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
+    //         text = host.read(projectEnvPath);
+    //     }
+    //     if (!text) {
+    //         throw new SchematicsException(`Environment file on ${projectName} project does not exist.`);
+    //     }
+    //     const sourceText = text.toString('utf8');
+    //     const source = ts.createSourceFile(
+    //         projectEnvPath,
+    //         sourceText,
+    //         ts.ScriptTarget.Latest,
+    //         true
+    //     );
+    //     const node = getEnvironmentNode(source);
+    //     const changes: Change[] = [];
+    //     if (node) {
+    //         if (!node.getText().includes('mock:')) {
+    //             const lastRouteNode = node.getLastToken();
+    //             const mocksToAdd = `\n    mock: {\n        enable: true,\n        all: false,\n        services: {\n            getPets: true\n        }\n    }`;
+    //             if (lastRouteNode) {
+    //                 changes.push(
+    //                     new InsertChange(
+    //                         projectEnvPath,
+    //                         lastRouteNode.getEnd(),
+    //                         `,${mocksToAdd}`
+    //                     )
+    //                 );
+    //             } else {
+    //                 changes.push(
+    //                     new InsertChange(
+    //                         projectEnvPath,
+    //                         node.getEnd(),
+    //                         `${mocksToAdd}\n`
+    //                     )
+    //                 );
+    //             }
+    //             console.log(`${colors.green('Changes will be applied to dev environment.')} ${colors.yellow('Please apply it to others.')}`)
+    //         }
+    //     } else {
+    //         throw new SchematicsException(`No "export const environment" found`);
+    //     }
+    //     applyChangesToHost(host, projectEnvPath, changes);
+    //     return host;
+    // };
 }
 
 export default function(options: MocksOptions): Rule {

@@ -4,9 +4,16 @@
     "title": "ng-afelio Generate UI Kit project",
     "type": "object",
     "properties": {
+        "project": {
+            "type": "string",
+            "description": "The name of the project",
+            "$default": {
+              "$source": "projectName"
+            }
+        },
         "type": {
             "type": "string",
-            "description": "UI Kit type `afelio` or `bootstrap`",
+            "description": "UI Kit type `tailwind`, `afelio` or `bootstrap`",
             "$default": {
                 "$source": "argv",
                 "index": 0
@@ -22,6 +29,10 @@
                     {
                         "value": "bootstrap",
                         "label": "bootstrap"
+                    },
+                    {
+                        "value": "tailwind",
+                        "label": "tailwind"
                     }
                 ]
             }

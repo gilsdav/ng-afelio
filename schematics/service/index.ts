@@ -2,7 +2,7 @@ import { Rule, SchematicsException, Tree, chain, externalSchematic } from '@angu
 import { parseName } from '@schematics/angular/utility/parse-name';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 
-import { addIntoIndex } from '../util/barrel';
+import { relativeCwdFromRelativeProjectPath, addIntoIndex } from '../util/barrel';
 import { validateName } from '../util/validation';
 
 import { Schema as ServiceOptions } from './schema';
@@ -22,7 +22,7 @@ export default function(options: ServiceOptions): Rule {
 
         const parsedPath = parseName(options.path as string, options.name);
         options.name = parsedPath.name;
-        options.path = parsedPath.path;
+        options.path = relativeCwdFromRelativeProjectPath(parsedPath.path);
 
         validateName(options.name);
 
