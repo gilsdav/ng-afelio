@@ -91,7 +91,7 @@ const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString, ang
         const packageJsonContent = JSON.parse(fs.readFileSync(packageJsonPath, { encoding: 'utf8' }));
         packageJsonContent.scripts = {
             'ng': 'ng',
-            'build': 'ng build --prod',
+            'build': 'ng build',
             'ng-afelio': 'ng-afelio',
             'ng-swagger-gen': 'ng-openapi-gen',
             'regenerate-api': 'ng-afelio api -r ng-swagger-gen-api.json',
