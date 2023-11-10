@@ -15,13 +15,13 @@ function installNgxTranslate(): Rule {
         const lib: NodeDependency = {
             type: NodeDependencyType.Default,
             name: '@ngx-translate/core',
-            version: '^14.0.0',
+            version: '^15.0.0',
             overwrite: false,
         };
         const loader: NodeDependency = {
             type: NodeDependencyType.Default,
             name: '@ngx-translate/http-loader',
-            version: '^7.0.0',
+            version: '^8.0.0',
             overwrite: false,
         };
         addPackageJsonDependency(host, lib);

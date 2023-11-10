@@ -109,7 +109,7 @@ const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString, ang
 
     } else {
         // await cli.default({ cliArgs: ['new', name, '--routing', '--style=scss', '--skip-install', ...produceNgOptions(ngOptionsString)] });
-        await pexec(`npx @angular/cli@${angularVersion} new ${name} --routing --style=scss ${ngOptionsString || ''}`);
+        await pexec(`npx @angular/cli@${angularVersion} new ${name} --routing --standalone=false --style=scss ${ngOptionsString || ''}`);
         process.chdir(`./${name}`);
         const ngAfelioSrc = config.production ? `ng-afelio@${version}` : __dirname;
         await pexec(`npx ng add ${ngAfelioSrc} --skip-confirmation --ui-kit=${uiKitType}`);
