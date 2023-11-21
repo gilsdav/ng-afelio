@@ -4,6 +4,7 @@ import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/work
 import { addPackageJsonDependency, NodeDependency, NodeDependencyType } from '@schematics/angular/utility/dependencies';
 import { removeSync, existsSync, mkdirSync } from 'fs-extra';
 import { join as stringJoin } from 'path';
+import * as loading from 'loading-cli';
 
 import { version as ngAfelioVersion } from '../../package.json';
 
@@ -58,6 +59,9 @@ export default function(options: PluginOptions): Rule {
 
         const connector = ConnectorBuilder.build(options.pluginRepo);
 
+        const loader = loading({ });
+        loader.start(`Checking repository "${options.pluginRepo}"`);
+
         // Get release
         let releases = await connector.getReleases();
         // Filter releases
@@ -79,7 +83,10 @@ export default function(options: PluginOptions): Rule {
         }
         mkdirSync(tempDirectoryPath);
 
+        loader.text = `Downloading plugin "${options.pluginName}"`;
         await connector.download(release, tempDirectoryPath);
+
+        loader.succeed('Plugin downloaded');
 
         const templates: Rule[] = release.config.parts.map(part => {
             if (ignoredParts.includes(part.name)) {

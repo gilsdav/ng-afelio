@@ -1,9 +1,10 @@
 import fetch, { FetchError, HeadersInit } from 'node-fetch';
 import { copy, mkdirSync, readdirSync, removeSync } from 'fs-extra';
 import { writeFile } from 'fs/promises';
-import { createReadStream } from 'fs';
+// import { createReadStream } from 'fs';
 import { join } from 'path';
-import { Extract } from 'unzipper';
+// import { Extract } from 'unzipper';
+import * as decompress from 'decompress';
 import * as colors from 'colors';
 
 import { Release } from '../release.model';
@@ -57,9 +58,11 @@ export class GitlabConnector extends PluginConnector {
         const tempZipFilename = join(tempPath, 'tmp.zip');
         await writeFile(tempZipFilename, buffer);
 
-        await createReadStream(tempZipFilename)
-            .pipe(Extract({ path: tmpPath }))
-            .promise();
+        // await createReadStream(tempZipFilename)
+        //     .pipe(Extract({ path: tmpPath }))
+        //     .promise();
+
+        await decompress(tempZipFilename, tmpPath);
         
         removeSync(tempZipFilename);
         
