@@ -137,6 +137,15 @@ async function buildUtils(config, bundlerBasePath) {
                 return Promise.resolve(false);
             }
             const toWrite = decomment.text(result.bundledContent/*, {safe: true}*/);
+
+            const sassModuleFound = [];
+            toWrite.match(/@use .+;/gi).forEach(value => {
+                if (!sassModuleFound.includes(value)) {
+                    sassModuleFound.push(value);
+                }
+            });
+            console.log('Found sass modules: ', sassModuleFound.join(', '));
+
             const options = {
                 css: toWrite,
                 filters: ['silent'],
@@ -146,7 +155,7 @@ async function buildUtils(config, bundlerBasePath) {
                 const outputPath = path.join(outputDirectory, output);
                 enforceDirectoryExistance(outputPath);
                 return new Promise((resolve, error) => {
-                    extractedCss = '@use "sass:math";\n' + extractedCss;
+                    extractedCss = sassModuleFound.join('\n') + '\n' + extractedCss;
                     fs.writeFile(outputPath, extractedCss, function (err) {
                         if (!err) {
                             console.info(`${colors.green('BUILD style utils')} was saved in "${outputPath}"`);
