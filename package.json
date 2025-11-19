@@ -1,6 +1,6 @@
 {
   "name": "ng-afelio",
-  "version": "2.3.21",
+  "version": "2.4.1",
   "description": "Extended Angular CLI",
   "main": "index.js",
   "bin": "./index.js",
@@ -39,10 +39,10 @@
     "inquirer": "8.0.0",
     "loading-cli": "^1.1.1",
     "node-fetch": "2.6.12",
-    "node-sass-magic-importer": "^5.3.2",
+    "node-sass-magic-importer": "^5.3.3",
     "postcss-scss": "3.0.4",
     "request": "2.88.2",
-    "sass": "1.57.1",
+    "sass": "1.92.0",
     "scss-bundle": "3.1.2",
     "watch": "^1.0.2"
   },
