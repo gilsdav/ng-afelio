@@ -230,7 +230,6 @@ function buildStyleFiles(config, bundlerBasePath) {
             await new Promise(async (resolve, error) => {
                 try {
                     const nodeModulesPath = resolveToNodeModules('', process.cwd(), '');
-
                     const compiledFile = sass.compileString(toWrite, {
                         importers: [
                             // Magic-importer
@@ -317,7 +316,23 @@ function buildStyleFiles(config, bundlerBasePath) {
                                 findFileUrl: function (url, options) {
                                     const tildeImporterResult = tildeImporter(url, process.cwd());
                                     const tildeImporterResultFile = tildeImporterResult ? tildeImporterResult.file : null;
-                                    return tildeImporterResultFile ? new URL( 'file://'  + tildeImporterResultFile) : null;
+                                    return tildeImporterResult ? new URL( 'file://'  + tildeImporterResultFile) : null;
+                                }
+                            },
+                            // @use importer
+                            {
+                                findFileUrl: function (url, options) {
+                                    const urlMatch = toWrite.search(new RegExp(url, 'm'));
+                                    // urlMatch is un number reflecting the position of the first character of the url
+                                    // the number must be bigger than 5 because '@use "'.length === 5 
+                                    if (urlMatch && urlMatch > 5) {
+                                        // check the 5 characters before urlMatch
+                                        const useImportString = toWrite.substring(url - 5, urlMatch + url.length);
+                                        if (useImportString.startsWith("@use ")) {
+                                            return new URL( 'file://'+ bundlerBasePath +'/' + url);
+                                        }
+                                    }
+                                    return null;
                                 }
                             }
                         ],
