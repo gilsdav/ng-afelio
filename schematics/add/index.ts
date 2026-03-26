@@ -35,26 +35,53 @@ function updateConfig(): Rule {
     //     target.options['plugin'] = 'ng-afelio/builders/plugin.js';
     // }
     return updateWorkspace((workspace: WorkspaceDefinition) => {
-        // for (const [, project] of workspace.projects) {
-        //     for (const [name, target] of project.targets) {
-        //         switch (name) {
-        //             case 'build':
-        //                 target.builder = 'ngx-build-plus:browser';
-        //                 setOption(target);
-        //                 break;
-        //             case 'serve':
-        //                 target.builder = 'ngx-build-plus:dev-server';
-        //                 setOption(target);
-        //                 break;
-        //             case 'test':
-        //                 target.builder = 'ngx-build-plus:karma';
-        //                 setOption(target);
-        //                 break;
-        //             default:
-        //                 break;
-        //         }
-        //     }
-        // }
+        for (const [, project] of workspace.projects) {
+            if (!project.extensions['schematics']) {
+                project.extensions['schematics'] = {};
+            }
+            project.extensions['schematics'] = {
+                "@schematics/angular:component": {
+                    "type": "component",
+                    "addTypeToClassName": true
+                },
+                "@schematics/angular:directive": {
+                    "type": "directive",
+                    "addTypeToClassName": true
+                },
+                "@schematics/angular:service": {
+                    "type": "service",
+                    "addTypeToClassName": true
+                },
+                "@schematics/angular:guard": {
+                    "typeSeparator": "."
+                },
+                "@schematics/angular:interceptor": {
+                    "typeSeparator": "."
+                },
+                "@schematics/angular:module": {
+                    "typeSeparator": "."
+                }
+            };
+                
+            // for (const [name, target] of project.targets) {
+            //     switch (name) {
+            //         case 'build':
+            //             target.builder = 'ngx-build-plus:browser';
+            //             setOption(target);
+            //             break;
+            //         case 'serve':
+            //             target.builder = 'ngx-build-plus:dev-server';
+            //             setOption(target);
+            //             break;
+            //         case 'test':
+            //             target.builder = 'ngx-build-plus:karma';
+            //             setOption(target);
+            //             break;
+            //         default:
+            //             break;
+            //     }
+            // }
+        }
         if (!workspace.extensions['cli']) {
             workspace.extensions['cli'] = {};
         }

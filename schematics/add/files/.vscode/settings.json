@@ -1,8 +1,8 @@
 {
-    "javascript.preferences.quoteStyle": "single",
-    "javascript.preferences.importModuleSpecifier": "relative",
-    "typescript.preferences.importModuleSpecifier": "relative",
-    "typescript.preferences.quoteStyle": "single",
+    "js.preferences.quoteStyle": "single",
+    "js.preferences.importModuleSpecifier": "relative",
+    "ts.preferences.importModuleSpecifier": "relative",
+    "ts.preferences.quoteStyle": "single",
     "commit-message-editor.staticTemplate": [
         "feat(scope): Short description (ticket number)",
         "",

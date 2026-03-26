@@ -1,5 +1,5 @@
 const uiKitTypes = {
-    DEFAULT: 'tailwind', // Keep it at first place
+    DEFAULT: 'none', // Keep it at first place
     BOOTSTRAP: 'bootstrap',
     AFELIO: 'afelio',
     AFELIO: 'tailwind',
