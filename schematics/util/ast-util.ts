@@ -538,6 +538,82 @@ export function addEntryComponentToModule(source: ts.SourceFile,
     );
 }
 
+export function addSymbolToAppConfig(
+    source: ts.SourceFile,
+    appConfigPath: string,
+    symbolName: string,
+    importPath: string | null = null
+): Change[] {
+    // 1. Trouver la variable exportée de type ApplicationConfig
+    const variableDeclaration = source.statements
+        .filter(ts.isVariableStatement)
+        .flatMap(s => s.declarationList.declarations)
+        .find(d => d.type?.getText() === 'ApplicationConfig' || d.name.getText() === 'appConfig');
+
+    if (!variableDeclaration || !variableDeclaration.initializer || !ts.isObjectLiteralExpression(variableDeclaration.initializer)) {
+        return [];
+    }
+
+    const configObject = variableDeclaration.initializer;
+    
+    // 2. Trouver la propriété 'providers' dans l'objet
+    const providersProperty = configObject.properties
+        .find(p => p.name?.getText() === 'providers') as ts.PropertyAssignment;
+
+    if (!providersProperty) {
+        // Si 'providers' n'existe pas, on l'ajoute à l'objet appConfig
+        const position = configObject.getEnd() - 1;
+        const toInsert = `  providers: [${symbolName}]\n`;
+        return buildChanges(source, appConfigPath, position, toInsert, symbolName, importPath);
+    }
+
+    // 3. Vérifier que c'est bien un tableau
+    if (!ts.isArrayLiteralExpression(providersProperty.initializer)) {
+        return [];
+    }
+
+    const providersArray = providersProperty.initializer;
+
+    // Éviter les doublons
+    if (providersArray.elements.some(el => el.getText() === symbolName)) {
+        return [];
+    }
+
+    // 4. Insérer le nouveau provider
+    let position: number;
+    let toInsert: string;
+
+    if (providersArray.elements.length === 0) {
+        position = providersArray.getEnd() - 1;
+        toInsert = symbolName;
+    } else {
+        const lastElement = providersArray.elements[providersArray.elements.length - 1];
+        position = lastElement.getEnd();
+        // Gérer l'indentation si présente
+        const text = lastElement.getFullText(source);
+        const matches = text.match(/^\r?\n\s*/);
+        toInsert = matches ? `,${matches[0]}${symbolName}` : `, ${symbolName}`;
+    }
+
+    return buildChanges(source, appConfigPath, position, toInsert, symbolName, importPath);
+}
+
+function buildChanges(source: ts.SourceFile, path: string, pos: number, text: string, symbol: string, importPath: string | null): Change[] {
+    const changes: Change[] = [new InsertChange(path, pos, text)];
+    if (importPath) {
+        // Nettoyer le nom du symbole pour l'import (ex: remove provider function call brackets)
+        const cleanSymbol = symbol.replace(/\(.*\)$/, '');
+        changes.push(insertImport(source, path, cleanSymbol, importPath));
+    }
+    return changes;
+}
+
+export function addProviderToConfig(source: ts.SourceFile,
+    appConfigPath: string, classifiedName: string,
+    importPath: string): Change[] {
+    return addSymbolToAppConfig(source, appConfigPath, classifiedName, importPath);
+}
+
 export function isImported(source: ts.SourceFile,
     classifiedName: string,
     importPath: string): boolean {

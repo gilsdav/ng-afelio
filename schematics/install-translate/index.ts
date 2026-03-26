@@ -5,7 +5,7 @@ import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@s
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import ts = require('typescript');
 
-import { addImportToModule, findNode, insertImport } from '../util/ast-util';
+import { addImportToModule, addProviderToConfig, findNode, insertImport } from '../util/ast-util';
 import { Change, applyChangesToHost } from '../util/change';
 
 import { Schema as TranslateOptions } from './schema';
@@ -15,13 +15,13 @@ function installNgxTranslate(): Rule {
         const lib: NodeDependency = {
             type: NodeDependencyType.Default,
             name: '@ngx-translate/core',
-            version: '^15.0.0',
+            version: '^17.0.0',
             overwrite: false,
         };
         const loader: NodeDependency = {
             type: NodeDependencyType.Default,
             name: '@ngx-translate/http-loader',
-            version: '^8.0.0',
+            version: '^17.0.0',
             overwrite: false,
         };
         addPackageJsonDependency(host, lib);
@@ -30,9 +30,9 @@ function installNgxTranslate(): Rule {
     };
 }
 
-function applyModuleImports(projectAppPath: string, options: TranslateOptions): Rule {
+function applyModuleImports(projectAppPath: string, options: TranslateOptions, isModuleMode: boolean): Rule {
     return host => {
-        if (options.appModule) {
+        if (isModuleMode) {
             const changes: Change[] = [];
             const modulePath = join(projectAppPath as Path, options.appModule);
             const text = host.read(modulePath);
@@ -62,14 +62,50 @@ function applyModuleImports(projectAppPath: string, options: TranslateOptions): 
             changes.push(...addImportToModule(source, modulePath, translateImport, null as any));
             // Save changes
             applyChangesToHost(host, modulePath, changes);
+        } else if (options.appConfig && host.exists(join(projectAppPath as Path, options.appConfig))) {
+            const changes: Change[] = [];
+            const configPagh = join(projectAppPath as Path, options.appConfig);
+            const text = host.read(configPagh);
+            if (!text) {
+                throw new SchematicsException(`Config file at ${configPagh} does not exist.`);
+            }
+            const sourceText = text.toString('utf8');
+            const source = ts.createSourceFile(
+                configPagh,
+                sourceText,
+                ts.ScriptTarget.Latest,
+                true
+            );
+            // Add ts imports
+            changes.push(insertImport(source, configPagh, 'provideTranslateService', '@ngx-translate/core'));
+            changes.push(insertImport(source, configPagh, 'provideTranslateHttpLoader', '@ngx-translate/http-loader'));
+            changes.push(insertImport(source, configPagh, 'provideHttpClient, withFetch, withInterceptors, withInterceptorsFromDi', '@angular/common/http'));
+            // Add ng imports
+            const translateProvider = `provideTranslateService({
+            loader: provideTranslateHttpLoader({
+                prefix: '/i18n/',
+                suffix: '.json'
+            }),
+            fallbackLang: 'fr',
+            lang: 'fr'
+        })`;
+            const httpClientProvider = `provideHttpClient(
+            withFetch(),
+            withInterceptors([]),
+            withInterceptorsFromDi()
+        )`;
+            changes.push(...addProviderToConfig(source, configPagh, httpClientProvider, null as any));
+            changes.push(...addProviderToConfig(source, configPagh, translateProvider, null as any));
+            // Save changes
+            applyChangesToHost(host, configPagh, changes);
         }
         return host;
     };
 }
 
-function addHttpLoader(projectAppPath: string, options: TranslateOptions): Rule {
+function addHttpLoader(projectAppPath: string, options: TranslateOptions, isModuleMode: boolean): Rule {
     return (host: Tree) => {
-        if (options.appModule) {
+        if (isModuleMode) {
             // const changes: Change[] = [];
             const modulePath = join(projectAppPath as Path, options.appModule);
             const text = host.read(modulePath);
@@ -118,7 +154,9 @@ export default function(options: TranslateOptions): Rule {
             throw new SchematicsException(`Project "${options.project}" not found.`);
         }
 
-        const parsedPath = join(projectAppPath as Path, '../assets');
+        const isModuleMode = !!options.appModule && host.exists(join(projectAppPath as Path, options.appModule));
+
+        const parsedPath = isModuleMode ? join(projectAppPath as Path, '../assets') : join(projectAppPath as Path, '../../public');
 
         const templateSource = apply(url('./files'), [
             template({
@@ -133,8 +171,8 @@ export default function(options: TranslateOptions): Rule {
                 chain([
                     mergeWith(templateSource),
                     installNgxTranslate(),
-                    applyModuleImports(projectAppPath, options),
-                    addHttpLoader(projectAppPath, options),
+                    applyModuleImports(projectAppPath, options, isModuleMode),
+                    addHttpLoader(projectAppPath, options, isModuleMode),
                 ])
             ),
         ]);
