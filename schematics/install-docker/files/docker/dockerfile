@@ -1,7 +1,7 @@
 ### STAGE 1: Build ###
 
 # We label our stage as 'builder'
-FROM node:12-slim as builder
+FROM node:24-slim AS builder
 ARG BUILD_ID
 LABEL project=front
 LABEL stage=builder
@@ -38,11 +38,13 @@ RUN npm run build
 
 
 ### STAGE 2: Runtime ###
-FROM nginx:1.19.1-alpine
+FROM nginxinc/nginx-unprivileged:1.29.5-alpine
 ARG BUILD_ID
 LABEL project=front
 LABEL stage=runtime
 LABEL build=$BUILD_ID
+
+USER root
 
 ## Copy our default nginx config
 COPY docker/default.conf /etc/nginx/conf.d/
@@ -51,11 +53,22 @@ COPY docker/default.conf /etc/nginx/conf.d/
 RUN rm -rf /usr/share/nginx/html/*
 
 ## From 'builder' stage copy over the artifacts in dist folder to default nginx public folder
-COPY --from=builder /ng-app/dist/<%= project %> /usr/share/nginx/html
+COPY --from=builder /ng-app/dist/<%= project %>/browser /usr/share/nginx/html
+
+RUN chgrp -R 0 /usr/share/nginx/html && \
+    chmod -R g=u /usr/share/nginx/html
 
 COPY docker/run.sh .
 # Fix when file comes from Windows
 RUN cat run.sh | tr -d '\r' >> run.sh.tmp
 RUN mv run.sh.tmp run.sh;
+RUN chmod +x run.sh
+
+RUN chgrp 0 run.sh && \
+    chmod g=u run.sh
+
+USER 101
+
+ENV BUILD_ID=$BUILD_ID
 
 ENTRYPOINT ["sh", "run.sh"]

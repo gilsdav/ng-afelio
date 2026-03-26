@@ -48,6 +48,14 @@
             "description": "Add Docker.",
             "schema": "./schematics/install-docker/schema.json"
         },
+        "install-proxy": {
+            "aliases": [
+                "i-proxy"
+            ],
+            "factory": "./schematics/install-proxy",
+            "description": "Add Proxy.",
+            "schema": "./schematics/install-proxy/schema.json"
+        },
         "install-oidc": {
             "aliases": [
                 "i-oidc"
