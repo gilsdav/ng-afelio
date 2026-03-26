@@ -8,13 +8,23 @@
             "type": "string",
             "description": "The name of the project",
             "$default": {
-              "$source": "projectName"
+                "$source": "projectName"
             }
         },
         "appModule": {
             "type": "string",
             "description": "The path of the AppModule (relativePath from project folder)",
             "default": "app.module.ts"
+        },
+        "appConfig": {
+            "type": "string",
+            "description": "The path of the AppConfig (relativePath from project folder)",
+            "default": "app.config.ts"
+        },
+        "auth": {
+            "type": "boolean",
+            "description": "Add auth mocks",
+            "default": true
         }
     },
     "required": []

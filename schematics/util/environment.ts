@@ -61,7 +61,7 @@ export function appendIntoEnvironment(projectAppPath: string, projectName: strin
                         new InsertChange(
                             projectEnvPath,
                             lastRouteNode.getEnd(),
-                            `,${toAppend}`
+                            `${lastRouteNode.getFullText().endsWith(',') ? '' : ','}${toAppend}`
                         )
                     );
                 } else {

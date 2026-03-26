@@ -10,5 +10,5 @@ const petsMock = (request: HttpRequest<any>) => new HttpResponse({
 });
 
 export const listeners: Mock[] = [
-    { url: '/store/inventory', methods: 'GET', name: 'getPets', response: petsMock }
+    { url: '/store/inventory', methods: 'GET', name: 'getPets', response: petsMock, angularPathMatcher: true, delay: 200 }
 ];
