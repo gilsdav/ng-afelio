@@ -92,7 +92,7 @@
     "style": {
       "description": "The file extension or preprocessor to use for style files, or 'none' to skip generating the style file.",
       "type": "string",
-      "default": "scss",
+      "default": "css",
       "enum": [
         "css",
         "scss",
@@ -105,7 +105,12 @@
     "type": {
       "type": "string",
       "description": "Adds a developer-defined type to the filename, in the format \"name.type.ts\".",
-      "default": "Component"
+      "default": "component"
+    },
+    "addTypeToClassName": {
+      "type": "boolean",
+      "default": true,
+      "description": "When true, the 'type' option will be appended to the generated class name. When false, only the file name will include the type."
     },
     "skipTests": {
       "type": "boolean",
@@ -145,6 +150,11 @@
       "description": "The declaring NgModule exports this component.",
       "x-user-analytics": 19
     },
+    "exportDefault": {
+      "type": "boolean",
+      "default": false,
+      "description": "Use a default export for the component in its TypeScript file instead of a named export."
+    },
     "barrel": {
       "type": "boolean",
       "description": "Flag to indicate if must be added into barrel",
@@ -156,6 +166,7 @@
     }
   },
   "required": [
-    "name"
+    "name",
+    "project"
   ]
 }
