@@ -1,6 +1,6 @@
 {
   "name": "ng-afelio",
-  "version": "3.0.0",
+  "version": "3.0.0-rc1",
   "description": "Extended Angular CLI",
   "main": "index.js",
   "bin": {
