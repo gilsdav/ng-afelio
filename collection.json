@@ -136,6 +136,14 @@
             "description": "Create an Angular service.",
             "schema": "./schematics/service/schema.json"
         },
+        "interceptor": {
+            "aliases": [
+                "int"
+            ],
+            "factory": "./schematics/interceptor",
+            "description": "Create an interceptor.",
+            "schema": "./schematics/interceptor/schema.json"
+        },
         "private-plugin": {
             "aliases": [
                 "plugin"

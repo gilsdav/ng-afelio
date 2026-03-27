@@ -5,4 +5,6 @@ export interface Schema {
     skipTests: boolean;
     flat: boolean;
     barrel?: boolean;
+    type: string;
+    addTypeToClassName: boolean;
 }

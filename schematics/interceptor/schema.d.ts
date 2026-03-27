@@ -5,6 +5,7 @@ export interface Schema {
     skipTests: boolean;
     flat: boolean;
     implements: string;
+    functional: boolean;
     barrel?: boolean;
     typeSeparator: boolean;
 }

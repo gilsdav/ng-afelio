@@ -7,4 +7,5 @@ export interface Schema {
     pipes?: boolean;
     stores?: boolean;
     directives?: boolean;
+    typeSeparator: boolean;
 }

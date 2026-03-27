@@ -45,7 +45,7 @@
       "uniqueItems": true,
       "minItems": 1,
       "items": {
-        "enum": ["CanActivate", "CanActivateChild", "CanDeactivate", "CanLoad"],
+        "enum": ["CanActivate", "CanActivateChild", "CanDeactivate", "CanMatch"],
         "type": "string"
       },
       "default": ["CanActivate"],
@@ -54,8 +54,14 @@
     "barrel": {
       "type": "boolean",
       "description": "Flag to indicate if must be added into barrel",
-      "default": true
+      "default": false
+    },
+    "typeSeparator": {
+      "type": "string",
+      "default": ".",
+      "enum": ["-", "."],
+      "description": "The separator character to use before the type within the generated file's name. For example, if you set the option to `.`, the file will be named `example.guard.ts`."
     }
   },
-  "required": ["name"]
+  "required": ["name", "project"]
 }

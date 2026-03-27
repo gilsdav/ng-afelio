@@ -10,4 +10,6 @@ export interface Schema {
     module?: string;
     export: boolean;
     barrel?: boolean;
+    type: string;
+    addTypeToClassName: boolean;
 }

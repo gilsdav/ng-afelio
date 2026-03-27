@@ -10,6 +10,7 @@ export interface Schema {
     prefix?: string;
     style: 'css' | 'scss' | 'sass' | 'less' | 'none';
     type: string;
+    addTypeToClassName: boolean;
     skipTests: boolean;
     flat: boolean;
     skipImport: boolean;
@@ -18,4 +19,6 @@ export interface Schema {
     module?: string;
     barrel?: boolean;
     barrelName?: string;
+    export: boolean;
+    exportDefault: boolean;
 }

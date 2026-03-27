@@ -88,7 +88,7 @@
     "barrel": {
       "type": "boolean",
       "description": "Flag to indicate if must be added into barrel",
-      "default": true
+      "default": false
     }
   },
   "required": ["name", "project"]
