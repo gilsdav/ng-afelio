@@ -43,6 +43,10 @@
         "type": "boolean",
         "description": "Flag to indicate if must be added into environment.ts",
         "default": true
+      },
+      "file": {
+        "type": "string",
+        "description": "File where you want your new mock is created"
       }
     },
     "required": [

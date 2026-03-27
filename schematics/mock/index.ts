@@ -170,7 +170,7 @@ function getListenersNode(source: ts.SourceFile): ts.Node | undefined {
 }
 
 function addListener(mockPath: string, node: ts.Node, mockName: string) {
-    const commat = node.getChildCount() > 0 ? ',' : '';
+    const commat = (node.getChildCount() > 0 && !node.getText().endsWith(',')) ? ',' : '';
     const position = node.getChildCount() > 0 ? node.getChildren()[node.getChildCount() - 1].getEnd() : node.getStart();
     return new InsertChange(
         mockPath,
@@ -257,7 +257,10 @@ export default function(options: MockOptions): Rule {
         ]);
 
         let steps = [];
-        const mockPath = join(options.path as Path, `${strings.dasherize(options.name)}.mock.ts`);
+        let mockPath = join(options.path as Path, `${strings.dasherize(options.name)}.mock.ts`);
+        if (options.file) {
+            mockPath = join(options.path as Path, options.file);
+        }
         const fileExists = !!host.read(mockPath);
         if (fileExists) {
             steps = [
