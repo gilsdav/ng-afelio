@@ -12,4 +12,5 @@ export interface Schema {
     barrel?: boolean;
     type: string;
     addTypeToClassName: boolean;
+    standalone: boolean;
 }

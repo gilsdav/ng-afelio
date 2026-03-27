@@ -54,6 +54,12 @@
       "default": false,
       "x-user-analytics": 18
     },
+    "standalone": {
+      "description": "Generate a standalone directive. Standalone directives are self-contained and don't need to be declared in an NgModule. They can be used independently or imported directly into other standalone components or directives.",
+      "type": "boolean",
+      "default": true,
+      "x-user-analytics": "ep.ng_standalone"
+    },
     "selector": {
       "type": "string",
       "format": "html-selector",
