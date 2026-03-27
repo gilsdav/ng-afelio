@@ -60,6 +60,9 @@ function updateConfig(): Rule {
                 },
                 "@schematics/angular:module": {
                     "typeSeparator": "."
+                },
+                "@schematics/angular:pipe": {
+                    "typeSeparator": "."
                 }
             };
                 

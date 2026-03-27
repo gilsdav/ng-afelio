@@ -8,4 +8,5 @@ export interface Schema {
     flat: boolean;
     export: boolean;
     barrel?: boolean;
+    typeSeparator: string;
 }
