@@ -15,6 +15,11 @@
         "type": "string",
         "description": "The path of the AppModule (relativePath from project folder)",
         "default": "app.module.ts"
+      },
+      "appConfig": {
+        "type": "string",
+        "description": "The path of the AppConfig (relativePath from project folder)",
+        "default": "app.config.ts"
       }
     },
     "required": []

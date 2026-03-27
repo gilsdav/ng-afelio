@@ -5,7 +5,7 @@ import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@s
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import ts = require('typescript');
 
-import { addImportToModule, insertImport } from '../util/ast-util';
+import { addImportToModule, addProviderToConfig, insertImport } from '../util/ast-util';
 import { Change, applyChangesToHost } from '../util/change';
 
 import { Schema as StoreOptions } from './schema';
@@ -16,13 +16,13 @@ function installNgxs(): Rule {
         const lib: NodeDependency = {
             type: NodeDependencyType.Default,
             name: '@ngxs/store',
-            version: '^3.7.1',
+            version: '^21.0.0',
             overwrite: false,
         };
         const plugin: NodeDependency = {
             type: NodeDependencyType.Dev,
             name: '@ngxs/devtools-plugin',
-            version: '^3.7.1',
+            version: '^21.0.0',
             overwrite: false,
         };
         addPackageJsonDependency(host, lib);
@@ -31,9 +31,9 @@ function installNgxs(): Rule {
     };
 }
 
-function applyModuleImports(projectAppPath: string, options: StoreOptions): Rule {
+function applyModuleImports(projectAppPath: string, options: StoreOptions, isModuleMode: boolean): Rule {
     return host => {
-        if (options.appModule) {
+        if (isModuleMode) {
             const changes: Change[] = [];
             const modulePath = join(projectAppPath as Path, options.appModule);
             const text = host.read(modulePath);
@@ -62,6 +62,32 @@ function applyModuleImports(projectAppPath: string, options: StoreOptions): Rule
             changes.push(...addImportToModule(source, modulePath, pluginImport, null as any));
             // Save changes
             applyChangesToHost(host, modulePath, changes);
+        } else if (options.appConfig && host.exists(join(projectAppPath as Path, options.appConfig))) {
+            const changes: Change[] = [];
+            const configPath = join(projectAppPath as Path, options.appConfig);
+            const text = host.read(configPath);
+            if (!text) {
+                throw new SchematicsException(`Config file at ${configPath} does not exist.`);
+            }
+            const sourceText = text.toString('utf8');
+            const source = ts.createSourceFile(
+                configPath,
+                sourceText,
+                ts.ScriptTarget.Latest,
+                true
+            );
+            // Add ts imports
+            changes.push(insertImport(source, configPath, 'provideStore', '@ngxs/store'));
+            changes.push(insertImport(source, configPath, 'withNgxsReduxDevtoolsPlugin', '@ngxs/devtools-plugin'));
+            changes.push(insertImport(source, configPath, 'environment', '../environments/environment'));
+            // Add ng imports
+            const storeProvider = `provideStore(
+            [],
+            withNgxsReduxDevtoolsPlugin({ disabled: !environment.enableStoreDebug })
+        )`;
+            changes.push(...addProviderToConfig(source, configPath, storeProvider, null as any));
+            // Save changes
+            applyChangesToHost(host, configPath, changes);
         }
         return host;
     };
@@ -85,8 +111,8 @@ function applyModuleImports(projectAppPath: string, options: StoreOptions): Rule
 
 function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule {
     return chain([
-        appendIntoEnvironment(projectAppPath, projectName, `\n    ngxsDebugger: true`, 'ngxsDebugger:', false),
-        appendIntoEnvironment(projectAppPath, projectName, `\n    ngxsDebugger: false`, 'ngxsDebugger:', true)
+        appendIntoEnvironment(projectAppPath, projectName, `\n    enableStoreDebug: true`, 'enableStoreDebug:', false),
+        appendIntoEnvironment(projectAppPath, projectName, `\n    enableStoreDebug: false`, 'enableStoreDebug:', true)
     ]);
     // let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
     // return host => {
@@ -154,12 +180,14 @@ export default function(options: StoreOptions): Rule {
             throw new SchematicsException(`Project "${options.project}" not found.`);
         }
 
+        const isModuleMode = !!options.appModule && host.exists(join(projectAppPath as Path, options.appModule));
+
         return chain([
             branchAndMerge(
                 chain([
                     installNgxs(),
                     applyIntoEnvironment(projectAppPath, options.project),
-                    applyModuleImports(projectAppPath, options),
+                    applyModuleImports(projectAppPath, options, isModuleMode),
                 ])
             ),
         ]);
