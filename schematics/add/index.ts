@@ -95,6 +95,16 @@ function updateConfig(): Rule {
     });
 }
 
+function installEverything(): Rule {
+    return chain([
+        schematic('install-translate', {}),
+        schematic('install-proxy', {}),
+        schematic('install-mocks', { auth: false }),
+        schematic('install-store', {}),
+        schematic('install-docker', {})
+    ]);
+}
+
 function updateScripts(): Rule {
     return (host: Tree) => {
         const packageFile = '/package.json';
@@ -118,6 +128,8 @@ function updateScripts(): Rule {
         return host;
     };
 }
+
+
 
 export default function (options: AddOptions): Rule {
     return async (host: Tree) => {
@@ -153,6 +165,9 @@ export default function (options: AddOptions): Rule {
                     ...(uiKitToInstall ? [
                         schematic('install-uikit', { type: options.uiKit }),
                     ] : []),
+                    ...(options.complete ? [
+                        installEverything()
+                    ] : []) 
                 ])
             ),
         ]);

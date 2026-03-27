@@ -46,7 +46,7 @@ pexec = (command, options) => new Promise(function (resolve, reject) {
 //     return await cli.default({ cliArgs: ['--version'] });
 // }
 
-const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString, angularVersion) => {
+const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString, angularVersion, complete) => {
     if (isOpenApi) {
         console.info(`Creating project ${name}`);
         // await cli.default({ cliArgs: ['new', name, '--create-application=false', '--new-project-root=apis', '--skip-install', ...produceNgOptions(ngOptionsString)] });
@@ -112,9 +112,8 @@ const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString, ang
         await pexec(`npx @angular/cli@${angularVersion} new ${name} --routing --style=tailwind ${ngOptionsString || ''}`);
         process.chdir(`./${name}`);
         const ngAfelioSrc = config.production ? `ng-afelio@${version}` : __dirname;
-        await pexec(`npx ng add ${ngAfelioSrc} --skip-confirmation --ui-kit=${uiKitType}`);
-
         await pexec(`npx ng generate @schematics/angular:environments`);
+        await pexec(`npx ng add ${ngAfelioSrc} --skip-confirmation --ui-kit=${uiKitType} --complete=${complete}`);
         // await cli.default({ cliArgs: ['add', ngAfelioSrc, '--skip-confirmation', `--ui-kit=${uiKitType}`] });
     }
 

@@ -14,6 +14,7 @@
       "uiKit": {
         "type": "string",
         "description": "UI Kit type `afelio` or `bootstrap`",
+        "default": "none",
         "x-prompt": {
             "message": "Which UI Kit would you like to use?",
             "type": "list",
@@ -36,7 +37,11 @@
               }
             ]
         }
+      },
+      "complete": {
+        "type": "boolean",
+        "description": "Install all ng-afelio modules",
+        "default": false
       }
-    },
-    "required": ["uiKit"]
+    }
 }

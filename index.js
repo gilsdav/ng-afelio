@@ -55,9 +55,10 @@ program
   .option('--ui-kit <uiKit>', 'Ui-kit type (' + Object.values(uiKitTypes).slice(1).join(', ') + ').', uiKitTypes.DEFAULT)
   .option('--open-api', 'Is OpenApi project', false)
   .option('--ng-version <ngVersion>', 'Angular version', 'latest')
+  .option('--complete <complete>', 'Install every modules', false)
   .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--commit=false --directory=."')
   .action((name, options) => {
-    createNewProject(name, options.uiKit || false, options.openApi || false, options.ng, options.ngVersion).then(() => {
+    createNewProject(name, options.uiKit || false, options.openApi || false, options.ng, options.ngVersion, options.complete).then(() => {
       console.info(`Please go to new directory "cd ./${name}"`);
       process.exit();
     });

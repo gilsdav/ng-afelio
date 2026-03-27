@@ -86,7 +86,9 @@ export interface Schema {
      */
     viewEncapsulation?: ViewEncapsulation;
 
-    uiKit?: string
+    uiKit?: string;
+
+    complete: boolean;
 }
 /**
  * Initial git repository commit information.
