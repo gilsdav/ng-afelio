@@ -63,7 +63,7 @@ export function HandleHttpErrors(errorCodesToExclude: number[] = [], prefixToExc
                                                 localExclusionReaction(error) :
                                                 localExclusionReaction;
                                         } else {
-                                            return throwError(error);
+                                            return throwError(() => error);
                                         }
                                     }, (error: HttpErrorResponse) => {
                                         return !codesToExclude.includes(error.status);

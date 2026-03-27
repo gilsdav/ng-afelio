@@ -16,13 +16,15 @@
             "description": "The path of the AppModule (relativePath from project folder)",
             "default": "app.module.ts"
         },
+        "appConfig": {
+            "type": "string",
+            "description": "The path of the AppConfig (relativePath from project folder)",
+            "default": "app.config.ts"
+        },
         "useNgxToastr": {
             "type": "boolean",
-            "description": "Use ngx-toastr to display error messages in a toast",
-            "x-prompt": "Do you want to use ngx-toastr to display error messages ?"
+            "default": true,
+            "description": "Use ngx-toastr to display error messages in a toast"
         }
-    },
-    "required": [
-        "useNgxToastr"
-    ]
+    }
 }

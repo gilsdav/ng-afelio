@@ -3,41 +3,45 @@ import { throwError, of } from 'rxjs';
 import { HandleHttpErrors, ExcludeHttpErrorsHandling } from './manage-http-errors.decorator';
 
 describe('http error handler decorator', () => {
-    it('should passThrow the error', (done) => {
+    it('should passThrow the error', () => new Promise<void>(done => {
         @HandleHttpErrors()
         class Test1 {
             test() {
-                return throwError(new HttpErrorResponse({status: 409}));
+                return throwError(() => new HttpErrorResponse({status: 409}));
             }
         }
         const test1 = new Test1();
-        test1.test().subscribe(() => {}, (error: HttpErrorResponse) => {
-            expect(error.status).toBe(409);
-            done();
+        test1.test().subscribe({
+            error: (error: HttpErrorResponse) => {
+                expect(error.status).toBe(409);
+                done();
+            }
         });
-    });
+    }));
 
-    it('should passThrow the error with simple exclude decorator', (done) => {
+    it('should passThrow the error with simple exclude decorator 409', () => new Promise<void>(done => {
         @HandleHttpErrors()
         class Test1 {
             @ExcludeHttpErrorsHandling([409])
             test() {
-                return throwError(new HttpErrorResponse({status: 409}));
+                return throwError(() => new HttpErrorResponse({status: 409}));
             }
         }
         const test1 = new Test1();
-        test1.test().subscribe(() => {}, (error: HttpErrorResponse) => {
-            expect(error.status).toBe(409);
-            done();
+        test1.test().subscribe({
+            error: (error: HttpErrorResponse) => {
+                expect(error.status).toBe(409);
+                done();
+            }
         });
-    });
+    }));
 
-    it('should return value with exclude and catch decorator', (done) => {
+    it('should return value with exclude and catch decorator', () => new Promise<void>(done => {
         @HandleHttpErrors()
         class Test1 {
             @ExcludeHttpErrorsHandling([409], 'value')
             test() {
-                return throwError(new HttpErrorResponse({status: 409}));
+                return throwError(() => new HttpErrorResponse({status: 409}));
             }
         }
         const test1 = new Test1();
@@ -45,14 +49,14 @@ describe('http error handler decorator', () => {
             expect(value).toBe('value');
             done();
         });
-    });
+    }));
 
-    it('should return value with exclude and catch decorator -> null', (done) => {
+    it('should return value with exclude and catch decorator -> null', () => new Promise<void>(done => {
         @HandleHttpErrors()
         class Test1 {
             @ExcludeHttpErrorsHandling([409], null)
             test() {
-                return throwError(new HttpErrorResponse({status: 409}));
+                return throwError(() => new HttpErrorResponse({status: 409}));
             }
         }
         const test1 = new Test1();
@@ -60,14 +64,14 @@ describe('http error handler decorator', () => {
             expect(value).toBe(null);
             done();
         });
-    });
+    }));
 
-    it('should return value with exclude and catch decorator -> observable', (done) => {
+    it('should return value with exclude and catch decorator -> observable', () => new Promise<void>(done => {
         @HandleHttpErrors()
         class Test1 {
             @ExcludeHttpErrorsHandling([409], of('value'))
             test() {
-                return throwError(new HttpErrorResponse({status: 409}));
+                return throwError(() => new HttpErrorResponse({status: 409}));
             }
         }
         const test1 = new Test1();
@@ -75,14 +79,14 @@ describe('http error handler decorator', () => {
             expect(value).toBe('value');
             done();
         });
-    });
+    }));
 
-    it('should return value with advanced exclude and catch decorator', (done) => {
+    it('should return value with advanced exclude and catch decorator', () => new Promise<void>(done => {
         @HandleHttpErrors()
         class Test1 {
             @ExcludeHttpErrorsHandling([409], () => 'value')
             test() {
-                return throwError(new HttpErrorResponse({status: 409}));
+                return throwError(() => new HttpErrorResponse({status: 409}));
             }
         }
         const test1 = new Test1();
@@ -90,14 +94,14 @@ describe('http error handler decorator', () => {
             expect(value).toBe('value');
             done();
         });
-    });
+    }));
 
-    it('should return value with advanced exclude and catch decorator -> null', (done) => {
+    it('should return value with advanced exclude and catch decorator -> null', () => new Promise<void>(done => {
         @HandleHttpErrors()
         class Test1 {
             @ExcludeHttpErrorsHandling([409], () => null)
             test() {
-                return throwError(new HttpErrorResponse({status: 409}));
+                return throwError(() => new HttpErrorResponse({status: 409}));
             }
         }
         const test1 = new Test1();
@@ -105,14 +109,14 @@ describe('http error handler decorator', () => {
             expect(value).toBe(null);
             done();
         });
-    });
+    }));
 
-    it('should return value with advanced exclude and catch decorator -> observable', (done) => {
+    it('should return value with advanced exclude and catch decorator -> observable', () => new Promise<void>(done => {
         @HandleHttpErrors()
         class Test1 {
             @ExcludeHttpErrorsHandling([409], () => of('value'))
             test() {
-                return throwError(new HttpErrorResponse({status: 409}));
+                return throwError(() => new HttpErrorResponse({status: 409}));
             }
         }
         const test1 = new Test1();
@@ -120,36 +124,40 @@ describe('http error handler decorator', () => {
             expect(value).toBe('value');
             done();
         });
-    });
+    }));
 
-    it('should return value with advanced exclude and catch decorator -> error', (done) => {
+    it('should return value with advanced exclude and catch decorator -> error', () => new Promise<void>(done => {
         @HandleHttpErrors()
         class Test1 {
-            @ExcludeHttpErrorsHandling([409], () => throwError('errorTest'))
+            @ExcludeHttpErrorsHandling([409], () => throwError(() => 'errorTest'))
             test() {
-                return throwError(new HttpErrorResponse({status: 409}));
+                return throwError(() => new HttpErrorResponse({status: 409}));
             }
         }
         const test1 = new Test1();
-        test1.test().subscribe(() => {}, error => {
-            expect(error).toBe('errorTest');
-            done();
+        test1.test().subscribe({
+            error: error => {
+                expect(error).toBe('errorTest');
+                done();
+            }
         });
-    });
+    }));
 
-    it('should passThrow the error with simple exclude decorator', (done) => {
+    it('should passThrow the error with simple exclude decorator 408', () => new Promise<void>(done => {
         @HandleHttpErrors()
         class Test1 {
             @ExcludeHttpErrorsHandling([408], 'value')
             test() {
-                return throwError(new HttpErrorResponse({status: 409}));
+                return throwError(() => new HttpErrorResponse({status: 409}));
             }
         }
         const test1 = new Test1();
-        test1.test().subscribe(() => {}, (error: HttpErrorResponse) => {
-            expect(error.status).toBe(409);
-            done();
+        test1.test().subscribe({
+            error: (error: HttpErrorResponse) => {
+                expect(error.status).toBe(409);
+                done();
+            }
         });
-    });
+    }));
 
 });

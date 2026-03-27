@@ -1,28 +1,23 @@
-import { CommonModule } from '@angular/common';
-import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core';
-import { ToastrModule } from 'ngx-toastr';
-import { ErrorHandlerService } from './services/error-handler.service';
-import { HttpErrorConfig } from './models/http-error-config';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { EnvironmentProviders, makeEnvironmentProviders, ModuleWithProviders, NgModule, Optional, Provider, SkipSelf } from '@angular/core';
 
-@NgModule({
-    imports: [
-        CommonModule,
-        ToastrModule
-    ]
-})
+import { BlobErrorInterceptor } from './interceptors/blob-error/blob-error.interceptor';
+import { HttpErrorConfig } from './models/http-error-config';
+import { ErrorHandlerService } from './services/error-handler.service';
+
+@NgModule({})
 export class HttpErrorModule {
 
     public static forRoot(config: HttpErrorConfig): ModuleWithProviders<HttpErrorModule> {
         return {
             ngModule: HttpErrorModule,
             providers: [
-                ...(config.enable ? [
-                    ErrorHandlerService,
-                    {
-                        provide: HttpErrorConfig,
-                        useValue: config
-                    }
-                ] : [])
+                ErrorHandlerService,
+                {
+                    provide: HttpErrorConfig,
+                    useValue: config
+                },
+                { provide: HTTP_INTERCEPTORS, useClass: BlobErrorInterceptor, multi: true }
             ]
         };
     }
@@ -35,4 +30,17 @@ export class HttpErrorModule {
             console.warn('The Global HTTP Error Handler is disabled');
         }
     }
+}
+
+export const provideHttpErrorHandler = (config: HttpErrorConfig = {}): EnvironmentProviders => {
+    const providers: Provider[] = [
+            ErrorHandlerService,
+            {
+                provide: HttpErrorConfig,
+                useValue: config
+            },
+            { provide: HTTP_INTERCEPTORS, useClass: BlobErrorInterceptor, multi: true }
+    ];
+
+    return makeEnvironmentProviders(providers);
 }

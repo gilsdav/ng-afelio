@@ -14,68 +14,68 @@ describe('catchErrorHandlerOperator', () => {
         messageChannel.close();
     });
 
-    it('shoud catch error with simple data', () => {
-        const errorEmitter = throwError(new HttpErrorResponse({status: 400}));
+    it('should catch error with simple data', () => {
+        const errorEmitter = throwError(() => new HttpErrorResponse({status: 400}));
         const operator = catchErrorHandlerOperator([]);
         operator(errorEmitter).subscribe(data => {
             expect(data).toEqual([]);
         });
     });
 
-    it('shoud catch error with null', () => {
-        const errorEmitter = throwError(new HttpErrorResponse({status: 400}));
+    it('should catch error with null', () => {
+        const errorEmitter = throwError(() => new HttpErrorResponse({status: 400}));
         const operator = catchErrorHandlerOperator(null!);
         operator(errorEmitter).subscribe(data => {
             expect(data).toEqual(null);
         });
     });
 
-    it('shoud catch error with observable', () => {
-        const errorEmitter = throwError(new HttpErrorResponse({status: 400}));
+    it('should catch error with observable', () => {
+        const errorEmitter = throwError(() => new HttpErrorResponse({status: 400}));
         const operator = catchErrorHandlerOperator(of([]));
         operator(errorEmitter).subscribe(data => {
             expect(data).toEqual([]);
         });
     });
 
-    it('shoud catch error with lambda', () => {
-        const errorEmitter = throwError(new HttpErrorResponse({status: 400}));
+    it('should catch error with lambda', () => {
+        const errorEmitter = throwError(() => new HttpErrorResponse({status: 400}));
         const operator = catchErrorHandlerOperator(() => []);
         operator(errorEmitter).subscribe(data => {
             expect(data).toEqual([]);
         });
     });
 
-    it('shoud catch error with lambda observable', () => {
-        const errorEmitter = throwError(new HttpErrorResponse({status: 400}));
+    it('should catch error with lambda observable', () => {
+        const errorEmitter = throwError(() => new HttpErrorResponse({status: 400}));
         const operator = catchErrorHandlerOperator(() => of([]));
         operator(errorEmitter).subscribe(data => {
             expect(data).toEqual([]);
         });
     });
 
-    it('shoud handle error', (done) => {
+    it('should handle error', () => new Promise<void>(done => {
         messageChannel.onmessage = message => {
             expect(JSON.parse(message.data).status).toBe(400);
             done();
         };
-        const errorEmitter = throwError(new HttpErrorResponse({status: 400}));
+        const errorEmitter = throwError(() => new HttpErrorResponse({status: 400}));
         const operator = catchErrorHandlerOperator([]);
         operator(errorEmitter).subscribe(response => {
             expect(response).toEqual([]);
         });
-    });
+    }));
 
-    it('should handle as pipe', (done) => {
+    it('should handle as pipe', () => new Promise<void>(done => {
         messageChannel.onmessage = message => {
             expect(JSON.parse(message.data).status).toBe(400);
             done();
         };
-        throwError(new HttpErrorResponse({status: 400})).pipe(
+        throwError(() => new HttpErrorResponse({status: 400})).pipe(
             catchErrorHandlerOperator([])
         ).subscribe(response => {
             expect(response).toEqual([]);
         });
-    });
+    }));
 
 });

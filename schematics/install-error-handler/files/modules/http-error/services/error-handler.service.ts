@@ -1,9 +1,30 @@
-import { Injectable, NgZone, OnDestroy } from '@angular/core';<% if(useNgxToastr) { %>
-import { ToastrService } from 'ngx-toastr';<% } %>
+import { HttpErrorResponse } from '@angular/common/http';
+import { Injectable, NgZone, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
+
+import { TranslateService } from '@ngx-translate/core';
+<% if (useNgxToastr) { %>
+import { ToastrService } from 'ngx-toastr';<% } %>
+
 import { Debounce } from '../../../decorators/debounce.decorator';
 import { HttpErrorConfig } from '../models/http-error-config';
 import { ERROR_MESSAGE_CHANNEL } from '../operators/catch-error-handler.operator';
+
+// import { ErrorResponseDto, ErrorTypeDto, BusinessErrorCodeDto } from 'api-project'
+
+// TODO: replace by imports
+enum ErrorTypeDto {
+    Technical = 'Technical',
+    Business = 'Business'
+}
+enum BusinessErrorCodeDto {
+}
+interface ErrorResponseDto {
+    errorType: ErrorTypeDto;
+    businessErrorCode: BusinessErrorCodeDto;
+    message: string
+}
+
 
 @Injectable()
 export class ErrorHandlerService implements OnDestroy {
@@ -14,7 +35,8 @@ export class ErrorHandlerService implements OnDestroy {
     constructor(<% if (useNgxToastr) { %>
         private toastr: ToastrService,<% } %>
         private config: HttpErrorConfig,
-        protected zone: NgZone
+        protected zone: NgZone,
+        private translate: TranslateService
     ) {
         zone.runOutsideAngular(() => {
             this.messageChannel = new BroadcastChannel(ERROR_MESSAGE_CHANNEL);
@@ -28,7 +50,11 @@ export class ErrorHandlerService implements OnDestroy {
         this.destroy$.complete();
     }
 
-    private messageHandler = (message: any) => {
+    public init(): void {
+        console.debug('Error Handler inited');
+    }
+
+    private readonly messageHandler = (message: any) => {
         const error: any = JSON.parse(message.data);
         this.zone.run(() => {
             this.handleError(error);
@@ -60,46 +86,65 @@ export class ErrorHandlerService implements OnDestroy {
      * Deux types d'erreurs distincts [TECHNICAL] et [BUSINESS]
      * @param error
      */
-    private displayServiceError(error: any): void {
-        // TODO: Improve error managing by adding logic for business error
-        this.displayErrorStatus(error);
+    private displayServiceError(error: HttpErrorResponse): void {
+        if (error.error) {
+            const logicError = error.error as ErrorResponseDto;
+            if (logicError.errorType === ErrorTypeDto.Technical) {
+                this.displayError('HTTP.ERROR.TECHNICAL');
+                return;
+            } else if (logicError.errorType === ErrorTypeDto.Business) {
+                this.displayErrorBusiness(logicError.businessErrorCode!, logicError.message!);
+                return;
+            }
+        }
+        this.displayErrorStatus(error.status);
     }
 
     /**
      * Méthode d'affichage des erreurs techniques
-     * @param error
+     * @param errorStatus
      */
-    private displayErrorStatus(error: any): void {
-        let code = error.status;
-        // TODO: Improve message to display with a translated string
-        this.displayError(code);
+    private displayErrorStatus(errorStatus: number): void {
+        this.displayError(`HTTP.ERROR.STATUS.${errorStatus}`);
     }
 
     private displayConnectionError(): void {
-        // TODO: Improve message to display with a translated string
-        this.displayError('HTTP_ERROR.LOCAL_ERROR');
+        this.displayError('HTTP.ERROR.LOCAL_ERROR');
+    }
+
+    private displayErrorBusiness(error: BusinessErrorCodeDto, message: string) {
+        // Implement logic in use of API
+        this.displayError(message);
     }
 
     @Debounce()
     public displayError(labelKey: string, data?: any): void {
-        // TODO: Improve message to display with a translated string
-        const title = 'Error';<% if (useNgxToastr) { %>
-        this.toastr.error(labelKey, title, {
+        const title = this.translate.instant('HTTP.ERROR.TITLE');
+        this.toastr.error(this.translate.instant(labelKey), title, {
             tapToDismiss: true,
-            timeOut: 15000
-        });<% } else { %>
-        console.log(`ErrorHandlerService - ${title} : ${labelKey}`);<% } %>
+            timeOut: 5000
+            // positionClass: 'toast-bottom-left'
+        });
     }
 
     @Debounce()
     public displaySuccess(labelKey: string, data?: any): void {
-        // TODO: Improve message to display with a translated string
-        const title = 'Success';<% if (useNgxToastr) { %>
-        this.toastr.success(labelKey, title, {
+        const title = this.translate.instant('HTTP.SUCCESS.TITLE');
+        this.toastr.success(this.translate.instant(labelKey), title, {
             timeOut: 5000,
-            tapToDismiss: true
-        });<% } else { %>
-        console.log(`ErrorHandlerService - ${title} : ${labelKey}`);<% } %>
+            tapToDismiss: true,
+            // positionClass: 'toast-bottom-left'
+        });
+    }
+
+    @Debounce()
+    public displayWarning(labelKey: string, data?: any): void {
+        const title = this.translate.instant('HTTP.WARNING.TITLE');
+        this.toastr.warning(this.translate.instant(labelKey), title, {
+            timeOut: 10000,
+            tapToDismiss: true,
+            positionClass: 'toast-bottom-left'
+        });
     }
 
 }

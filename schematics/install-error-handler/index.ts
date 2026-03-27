@@ -3,10 +3,10 @@ import { Rule, SchematicContext, SchematicsException, Tree, apply, branchAndMerg
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
-import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { buildDefaultPath, getWorkspace, updateWorkspace, WorkspaceDefinition } from '@schematics/angular/utility/workspace';
 import * as ts from 'typescript';
 
-import { addImportToModule, insertImport } from '../util/ast-util';
+import { addImportToModule, addProviderToConfig, insertImport } from '../util/ast-util';
 import { Change, InsertChange, applyChangesToHost } from '../util/change';
 
 import { Schema as ErrorHandlerOptions } from './schema';
@@ -19,7 +19,7 @@ function installNgxToastr(): Rule {
         const ngxToastr: NodeDependency = {
             type: NodeDependencyType.Default,
             name: 'ngx-toastr',
-            version: '^16.0.1',
+            version: '^20.0.5',
             overwrite: false,
         };
         addPackageJsonDependency(host, ngxToastr);
@@ -44,7 +44,7 @@ function installNgxToastr(): Rule {
 // }
 
 function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule {
-    const envToAdd = `\n    errorsHandler: {\n        enable: true,\n        codesToExclude: []\n    }`;
+    const envToAdd = `\n    errorsHandler: {\n        codesToExclude: []\n    }`;
     return chain([
         appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'errorsHandler:', false),
         appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'errorsHandler:', true)
@@ -100,10 +100,9 @@ function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule
     // };
 }
 
-function applyModuleImports(projectAppPath: string, options: ErrorHandlerOptions, useNgxToastr: boolean): Rule {
+function applyModuleImports(projectAppPath: string, options: ErrorHandlerOptions, useNgxToastr: boolean, isModuleMode: boolean): Rule {
     return host => {
-        if (options.appModule) {
-
+        if (isModuleMode) {
             const changes: Change[] = [];
             const modulePath = join(projectAppPath as Path, options.appModule);
 
@@ -143,32 +142,83 @@ function applyModuleImports(projectAppPath: string, options: ErrorHandlerOptions
 
             // Save changes
             applyChangesToHost(host, modulePath, changes);
+        } else if (options.appConfig && host.exists(join(projectAppPath as Path, options.appConfig))) {
+            const changes: Change[] = [];
+            const configPath = join(projectAppPath as Path, options.appConfig);
+
+            const text = host.read(configPath);
+            if (!text) {
+                throw new SchematicsException(`Config file at ${configPath} does not exist.`);
+            }
+            const sourceText = text.toString('utf8');
+            const source = ts.createSourceFile(
+                configPath,
+                sourceText,
+                ts.ScriptTarget.Latest,
+                true
+            );
+
+            const projectErrorHandlerPath = join(projectAppPath as Path, buildPath, 'modules', 'http-error', 'http-error.module');
+            const relativeErrorHandlerPath = buildRelativePath(configPath, projectErrorHandlerPath);
+
+            // Add ts imports
+            changes.push(insertImport(source, configPath, 'provideHttpErrorHandler', relativeErrorHandlerPath));
+            if (useNgxToastr) {
+                changes.push(insertImport(source, configPath, 'provideToastr', 'ngx-toastr'));
+            }
+
+            // Add environments ts import
+            const projectEnvPath = join(projectAppPath as Path, '../environments/environment');
+            const relativeEnvPath = buildRelativePath(configPath, projectEnvPath);
+            changes.push(insertImport(source, configPath, 'environment', relativeEnvPath));
+
+            // Add ng imports
+            changes.push(...addProviderToConfig(source, configPath, 'provideHttpErrorHandler(environment.errorsHandler)', null as any));
+            if (useNgxToastr) {
+                changes.push(...addProviderToConfig(source, configPath, 'provideToastr()', null as any));
+            }
+
+            // Save changes
+            applyChangesToHost(host, configPath, changes);
         }
         return host;
     };
 }
 
-function addNgxToastrStyle(projectAppPath: string): Rule {
-    return host => {
-        const changes: Change[] = [];
-        const stylePath = join(projectAppPath as Path, '../styles.scss');
-        const text = host.read(stylePath);
-        if (!text) {
-            throw new SchematicsException(`Can not add NgxStoastr style, ${stylePath} does not exist.`);
-        }
-
-        if (!text.includes('ngx-toastr/toastr')) {
-            changes.push(
-                new InsertChange(
-                    stylePath,
-                    text.length,
-                    `\n@import 'node_modules/ngx-toastr/toastr';\n`
-                )
-            );
-            applyChangesToHost(host, stylePath, changes);
-        }
-        return host;
-    };
+function addNgxToastrStyle(projectAppPath: string, isModule: boolean, options: ErrorHandlerOptions): Rule {
+    if (isModule) {
+        return host => {
+            const changes: Change[] = [];
+            const stylePath = join(projectAppPath as Path, '../styles.scss');
+            const text = host.read(stylePath);
+            if (!text) {
+                throw new SchematicsException(`Can not add NgxStoastr style, ${stylePath} does not exist.`);
+            }
+    
+            if (!text.includes('ngx-toastr/toastr')) {
+                changes.push(
+                    new InsertChange(
+                        stylePath,
+                        text.length,
+                        `\n@import 'node_modules/ngx-toastr/toastr';\n`
+                    )
+                );
+                applyChangesToHost(host, stylePath, changes);
+            }
+            return host;
+        };
+    } else {
+        return updateWorkspace((workspace: WorkspaceDefinition) => {
+            const project = workspace.projects.get(options.project);
+            const buildTarget = project?.targets.get('build');
+            if (!buildTarget) {
+                throw new SchematicsException('No build target found for the project ' + options.project);
+            }
+            buildTarget.options ??= {};
+            buildTarget.options['styles'] ??= {};
+            (buildTarget.options['styles'] as string[]).push('node_modules/ngx-toastr/toastr.css');
+        });
+    }
 }
 
 export default function(options: ErrorHandlerOptions): Rule {
@@ -191,6 +241,8 @@ export default function(options: ErrorHandlerOptions): Rule {
             throw new SchematicsException(`Project "${options.project}" not found.`);
         }
 
+        const isModuleMode = !!options.appModule && host.exists(join(projectAppPath as Path, options.appModule));
+
         const parsedPath = join(projectAppPath as Path, buildPath);
 
         const templateSource = apply(url('./files'), [
@@ -205,12 +257,12 @@ export default function(options: ErrorHandlerOptions): Rule {
             mergeWith(templateSource),
             applyIntoEnvironment(projectAppPath, options.project),
             // applyIntoEnvironment(projectAppPath, options.project, true),
-            applyModuleImports(projectAppPath, options, useNgxToastr),
+            applyModuleImports(projectAppPath, options, useNgxToastr, isModuleMode),
         ];
 
         if (useNgxToastr) {
             rules.push(installNgxToastr());
-            rules.push(addNgxToastrStyle(projectAppPath));
+            rules.push(addNgxToastrStyle(projectAppPath, isModuleMode, options));
         }
 
         return chain([branchAndMerge(chain(rules))]);
