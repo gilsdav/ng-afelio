@@ -4,5 +4,4 @@ export interface Schema {
     name: string;
     includes: boolean;
     environment: boolean;
-    file: string;
 }

@@ -1,6 +1,6 @@
 import { HttpRequest, HttpResponse } from '@angular/common/http';
 
-import { Mock } from './mockHttpInterceptor';
+import { Mock } from './mock.model';
 
 
 const <%= camelize(name) %>Mock = (request: HttpRequest<any>) => new HttpResponse({

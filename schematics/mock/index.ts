@@ -46,11 +46,11 @@ function includesIntoProject(path: string, options: MockOptions): Rule {
                 true
             );
              // Add Store to ts import
-            const mockPath = join(path as Path, options.file.replace('.ts', ''));
+            const mockPath = join(path as Path, `${strings.dasherize(options.name)}.mock`);
             const relativeMockPath = buildRelativePath(mockListPath, `${mockPath}.ts`).slice(0, -3);
-            const nameExtraction = options.file.match(/(\w*).mock.ts/);
-            if (nameExtraction) {
-                const mocksToAdd = `${nameExtraction[1]}Mocks`;
+            // const nameExtraction = options.file.match(/(\w*).mock.ts/);
+            if (options.name) {
+                const mocksToAdd = `${options.name}Mocks`;
                 changes.push(insertImport(source, mockListPath, `listeners as ${mocksToAdd}`, relativeMockPath));
                 // Add Store to Barrel array
                 const node = getMocksNode(source);
@@ -65,7 +65,7 @@ function includesIntoProject(path: string, options: MockOptions): Rule {
                     );
                 }
             } else {
-                throw new SchematicsException(`Can not extract name from file name ${options.file}`);
+                throw new SchematicsException(`Can not extract find name`);
             }
             
             // Save changes
@@ -100,45 +100,64 @@ function getEnvServiceMocksNode(source: ts.Node): ts.Node | undefined {
     return mockServices;
 }
 
-function addProperty(projectEnvPath: string, node: ts.Node, mockName: string) {
-    const commat = node.getChildCount() > 0 ? ',' : '';
+function addProperty(projectEnvPath: string, node: ts.Node, mockName: string, value: boolean) {
+    const commat = (node.getChildCount() > 0 && !node.getText().endsWith(',')) ? ',' : '';
     const position = node.getChildCount() > 0 ? node.getChildren()[node.getChildCount() - 1].getEnd() : node.getStart();
     return new InsertChange(
         projectEnvPath,
         position,
-        `${commat}\n            ${mockName}: true`
+        `${commat}\n            ${mockName}: ${value}`
     );
 }
 
 function addIntoEnvironment(projectAppPath: string, projectName: string, options: MockOptions): Rule {
-    const projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
+    let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
+    let prodProjectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
+
     return host => {
+            const legacyEnvironment = host.exists(join(projectAppPath as Path, '../environments/environment.prod.ts'));
+            if (legacyEnvironment) {
+                projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
+                prodProjectEnvPath = join(projectAppPath as Path, '../environments/environment.prod.ts');
+            }
+
         if (options.environment) {
-            const text = host.read(projectEnvPath);
-            if (!text) {
-                throw new SchematicsException(`Environment file in ${projectName} project does not exist.`);
-            }
-            const sourceText = text.toString('utf8');
-            const source = ts.createSourceFile(
-                projectEnvPath,
-                sourceText,
-                ts.ScriptTarget.Latest,
-                true
-            );
-            const envNode = getEnvironmentNode(source);
-            const changes: Change[] = [];
-            if (envNode) {
-                const serviceMockList = getEnvServiceMocksNode(envNode);
-                if (serviceMockList) {
-                    changes.push(addProperty(projectEnvPath, serviceMockList, strings.camelize(options.name)));
-                } else {
-                    throw new SchematicsException(`Can not find mock.services in ${projectName} project. Did you already add the mock system "${colors.cyan('ng-afelio install mocks')}" ?`);
+            function addToEnv(path: string, value: boolean) {
+                const text = host.read(path);
+                if (!text) {
+                    throw new SchematicsException(`Environment file in ${projectName} project does not exist.`);
                 }
+                const sourceText = text.toString('utf8');
+                const source = ts.createSourceFile(
+                    path,
+                    sourceText,
+                    ts.ScriptTarget.Latest,
+                    true
+                );
+                const envNode = getEnvironmentNode(source);
+                const changes: Change[] = [];
+                if (envNode) {
+                    const serviceMockList = getEnvServiceMocksNode(envNode);
+                    if (serviceMockList) {
+                        changes.push(addProperty(path, serviceMockList, strings.camelize(options.name), value));
+                    } else {
+                        throw new SchematicsException(`Can not find mock.services in ${projectName} project. Did you already add the mock system "${colors.cyan('ng-afelio install mocks')}" ?`);
+                    }
+                }
+                applyChangesToHost(host, path, changes);
             }
-            applyChangesToHost(host, projectEnvPath, changes);
+            addToEnv(projectEnvPath, true);
+            addToEnv(prodProjectEnvPath, false);
         }
         return host;
     };
+    // const envName = strings.camelize(options.name);
+    // const envToAdd = `\n  ${envName}: true`;
+    // const envToAddProd = `\n  ${envName}: false`;
+    // return chain([
+    //     appendIntoEnvironment(projectAppPath, projectName, envToAdd, `${envName}:`, false),
+    //     appendIntoEnvironment(projectAppPath, projectName, envToAddProd, `${envName}:`, true),
+    // ])
 }
 
 function getListenersNode(source: ts.SourceFile): ts.Node | undefined {
@@ -224,6 +243,7 @@ export default function(options: MockOptions): Rule {
 
         const parsedPath = parseName(options.path as string, options.name);
         options.name = parsedPath.name;
+        
         options.path = relativeCwdFromRelativeProjectPath(parsedPath.path);
 
         validateName(options.name);
@@ -237,7 +257,7 @@ export default function(options: MockOptions): Rule {
         ]);
 
         let steps = [];
-        const mockPath = join(options.path as Path, options.file);
+        const mockPath = join(options.path as Path, `${strings.dasherize(options.name)}.mock.ts`);
         const fileExists = !!host.read(mockPath);
         if (fileExists) {
             steps = [
