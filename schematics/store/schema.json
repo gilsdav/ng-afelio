@@ -8,7 +8,10 @@
         "type": "string",
         "format": "path",
         "description": "The path to create the module",
-        "visible": false
+        "visible": false,
+        "$default": {
+          "$source": "workingDirectory"
+        }
       },
       "project": {
         "type": "string",
@@ -34,7 +37,7 @@
       "barrel": {
         "type": "boolean",
         "description": "Flag to indicate if must be added into barrel",
-        "default": true
+        "default": false
       },
       "spec": {
         "type": "boolean",
