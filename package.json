@@ -1,11 +1,12 @@
 {
   "name": "ng-afelio",
-  "version": "3.0.0-rc1",
+  "version": "3.0.0-rc2",
   "description": "Extended Angular CLI",
   "main": "index.js",
   "bin": {
     "ng-afelio": "./index.js",
-    "ng-nrb": "./index.js"
+    "ng-nrb": "./index.js",
+    "ng-keyes": "./index.js"
   },
   "scripts": {
     "lint": "tslint --project tsconfig.json",
@@ -17,7 +18,8 @@
   "keywords": [
     "Angular",
     "CLI",
-    "Afelio"
+    "Afelio",
+    "Keyes"
   ],
   "author": "David Gilson <davgilson@live.fr>",
   "homepage": "https://github.com/gilsdav/ng-afelio",
@@ -32,7 +34,7 @@
     "url": "https://github.com/gilsdav/ng-afelio.git"
   },
   "dependencies": {
-    "colors": "1.4.0",
+    "ansis": "4.3.1",
     "commander": "7.2.0",
     "css-node-extract": "3.0.2",
     "decomment": "0.9.4",

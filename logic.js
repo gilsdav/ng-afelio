@@ -1,7 +1,7 @@
 // const util = require('util');
 // const exec = require('child_process').exec;
 const spawn = require('child_process').spawn;
-const colors = require('colors');
+const { colors } = require('./theme');
 const fs = require('fs');
 const fse = require('fs-extra');
 const { join, basename } = require('path');

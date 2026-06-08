@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { join, sep } = require('path');
-const colors = require('colors');
+const { colors } = require('../../theme');
 
 function traverseAndFlatten(currentNode, target, flattenedKey) {
     for (var key in currentNode) {
