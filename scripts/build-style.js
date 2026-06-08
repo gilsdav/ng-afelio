@@ -2,7 +2,7 @@ const { Bundler } = require('scss-bundle');
 const fs = require('fs');
 // const fse = require('fs-extra');
 const decomment = require('decomment');
-const colors = require('colors');
+const { colors } = require('../theme');
 
 const sass = require('sass');
 const magicImporter = require('node-sass-magic-importer');

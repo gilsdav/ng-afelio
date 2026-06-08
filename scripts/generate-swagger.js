@@ -1,7 +1,7 @@
 const util = require('util');
 const pexec = util.promisify(require('child_process').exec);
 const fs = require('fs');
-const colors = require('colors');
+const { colors } = require('../theme');
 const http = require('request');
 const path = require('path');
 const fse = require('fs-extra');

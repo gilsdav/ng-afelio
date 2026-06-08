@@ -4,7 +4,7 @@ import { buildRelativePath } from '@schematics/angular/utility/find-module';
 import { parseName } from '@schematics/angular/utility/parse-name';
 import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import ts = require('typescript');
-import * as colors from 'colors';
+import { colors } from '../../theme';
 
 import { findNode, findNodes, insertImport } from '../util/ast-util';
 import { Change, InsertChange, applyChangesToHost } from '../util/change';

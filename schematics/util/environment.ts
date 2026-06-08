@@ -1,7 +1,7 @@
 import { join, Path } from '@angular-devkit/core';
 import { Rule, SchematicsException } from '@angular-devkit/schematics';
 import * as ts from 'typescript';
-import * as colors from 'colors';
+import { colors } from '../../theme';
 
 import { findNodes } from "./ast-util";
 import { applyChangesToHost, Change, InsertChange } from './change';

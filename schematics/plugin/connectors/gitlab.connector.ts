@@ -5,7 +5,7 @@ import { writeFile } from 'fs/promises';
 import { join } from 'path';
 // import { Extract } from 'unzipper';
 import * as decompress from 'decompress';
-import * as colors from 'colors';
+import { colors } from '../../../theme';
 
 import { Release } from '../release.model';
 import { PluginConnector } from './connector';

@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const colors = require('colors');
+const { colors } = require('../../theme');
 const { flatten, diff, getConfig } = require('./util');
 
 const defaultFile = 'fr.json';
