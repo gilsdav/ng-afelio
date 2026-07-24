@@ -3,14 +3,15 @@ import { Rule, SchematicContext, SchematicsException, Tree, apply, branchAndMerg
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
-import { buildDefaultPath, getWorkspace, updateWorkspace, WorkspaceDefinition } from '@schematics/angular/utility/workspace';
+import { WorkspaceDefinition, getWorkspace, updateWorkspace } from '@schematics/angular/utility/workspace';
 import * as ts from 'typescript';
 
+import { buildDefaultPath } from '../util';
 import { addImportToModule, addProviderToConfig, insertImport } from '../util/ast-util';
 import { Change, InsertChange, applyChangesToHost } from '../util/change';
+import { appendIntoEnvironment } from '../util/environment';
 
 import { Schema as ErrorHandlerOptions } from './schema';
-import { appendIntoEnvironment } from '../util/environment';
 
 const buildPath = './core';
 
@@ -194,7 +195,7 @@ function addNgxToastrStyle(projectAppPath: string, isModule: boolean, options: E
             if (!text) {
                 throw new SchematicsException(`Can not add NgxStoastr style, ${stylePath} does not exist.`);
             }
-    
+
             if (!text.includes('ngx-toastr/toastr')) {
                 changes.push(
                     new InsertChange(
@@ -221,7 +222,7 @@ function addNgxToastrStyle(projectAppPath: string, isModule: boolean, options: E
     }
 }
 
-export default function(options: ErrorHandlerOptions): Rule {
+export default function (options: ErrorHandlerOptions): Rule {
     return async (host: Tree) => {
 
         const useNgxToastr: boolean = options.useNgxToastr;

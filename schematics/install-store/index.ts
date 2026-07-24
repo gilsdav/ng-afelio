@@ -2,14 +2,15 @@ import { Path, join } from '@angular-devkit/core';
 import { Rule, SchematicContext, SchematicsException, Tree, branchAndMerge, chain } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
-import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
 import ts = require('typescript');
 
+import { buildDefaultPath } from '../util';
 import { addImportToModule, addProviderToConfig, insertImport } from '../util/ast-util';
 import { Change, applyChangesToHost } from '../util/change';
+import { appendIntoEnvironment } from '../util/environment';
 
 import { Schema as StoreOptions } from './schema';
-import { appendIntoEnvironment } from '../util/environment';
 
 function installNgxs(): Rule {
     return (host: Tree, context: SchematicContext) => {
@@ -164,7 +165,7 @@ function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule
     // };
 }
 
-export default function(options: StoreOptions): Rule {
+export default function (options: StoreOptions): Rule {
     return async (host: Tree) => {
         if (!options.project) {
             throw new SchematicsException('Option (project) is required.');

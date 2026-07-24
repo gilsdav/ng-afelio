@@ -1,8 +1,9 @@
 import { join, Path, strings } from '@angular-devkit/core';
-import { Rule, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, template, url } from '@angular-devkit/schematics';
-import { buildDefaultPath, getWorkspace, updateWorkspace, WorkspaceDefinition } from '@schematics/angular/utility/workspace';
+import { apply, branchAndMerge, chain, mergeWith, move, Rule, SchematicsException, template, Tree, url } from '@angular-devkit/schematics';
+import { getWorkspace, updateWorkspace, WorkspaceDefinition } from '@schematics/angular/utility/workspace';
 
 // import { appendIntoEnvironment } from '../util/environment';
+import { buildDefaultPath } from '../util';
 
 import { Schema as ProxyOptions } from './schema';
 
@@ -29,7 +30,7 @@ function updateConfig(): Rule {
 }
 
 
-export default function(options: ProxyOptions): Rule {
+export default function (options: ProxyOptions): Rule {
     return async (host: Tree) => {
         const workspace = await getWorkspace(host);
         const project = workspace.projects.get(options.project);
@@ -43,8 +44,8 @@ export default function(options: ProxyOptions): Rule {
 
         const templateSource = apply(url('./files'), [
             template({
-              ...strings,
-              ...options,
+                ...strings,
+                ...options,
             }),
             move(join(projectAppPath as Path, '..')),
         ]);

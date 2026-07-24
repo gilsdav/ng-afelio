@@ -2,9 +2,10 @@ import { Path, join, strings } from '@angular-devkit/core';
 import { Rule, SchematicsException, Tree, apply, branchAndMerge, chain, filter, mergeWith, move, noop, template, url } from '@angular-devkit/schematics';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
 import { parseName } from '@schematics/angular/utility/parse-name';
-import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
 import ts = require('typescript');
 
+import { buildDefaultPath } from '../util';
 import { findNodes, insertImport } from '../util/ast-util';
 import { relativeCwdFromRelativeProjectPath } from '../util/barrel';
 import { Change, InsertChange, applyChangesToHost } from '../util/change';
@@ -44,7 +45,7 @@ function addIntoIndex(path: string, options: StoreOptions): Rule {
                 ts.ScriptTarget.Latest,
                 true
             );
-             // Add Store to ts import
+            // Add Store to ts import
             const storePath = join(path as Path, options.name, `${strings.dasherize(options.name)}.store`);
             const relativeStorePath = buildRelativePath(indexPath, `${storePath}.ts`).slice(0, -3);
             const stateName = `${strings.classify(options.name)}State`;
@@ -68,7 +69,7 @@ function addIntoIndex(path: string, options: StoreOptions): Rule {
     };
 }
 
-export default function(options: StoreOptions): Rule {
+export default function (options: StoreOptions): Rule {
     return async (host: Tree) => {
         if (!options.project) {
             throw new SchematicsException('Option (project) is required.');
@@ -89,8 +90,8 @@ export default function(options: StoreOptions): Rule {
         const templateSource = apply(url('./files'), [
             options.spec ? noop() : filter(p => !p.endsWith('.spec.ts')),
             template({
-              ...strings,
-              ...options,
+                ...strings,
+                ...options,
             }),
             move(parsedPath.path),
         ]);

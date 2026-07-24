@@ -79,8 +79,8 @@ function checkFiles(mainFile) {
             console.log(toConsoleText(diffs));
             resolve(diffs);
         } else {
-            console.error(colors.yellow(`Can not found "${mainFile}" in this directory. Go into the "environment" directory before using this command.`));
-            reject();
+            // console.error(colors.yellow(`Can not found "${mainFile}" in this directory. Go into the "environment" directory before using this command.`));
+            reject(new Error(`Can not found "${mainFile}" in this directory. Go into the "environment" directory before using this command.`));
         }
     });
 }

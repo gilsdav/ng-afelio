@@ -64,8 +64,8 @@ function checkFiles(mainFile) {
             console.log(toConsoleText(diffs));
             resolve(diffs);
         } else {
-            console.error(colors.red(`Can not found "${mainFile}" in this directory. Go into the "assets/locales" directory before using this command.`));
-            reject();
+            // console.error(colors.red(`Can not found "${mainFile}" in this directory. Go into the "assets/locales" directory before using this command.`));
+            reject(new Error(`Can not found "${mainFile}" in this directory. Go into the "assets/locales" directory before using this command.`));
         }
     });
 }

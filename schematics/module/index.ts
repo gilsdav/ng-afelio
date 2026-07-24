@@ -1,14 +1,15 @@
 import { strings } from '@angular-devkit/core';
 import { Rule, SchematicsException, Tree, apply, branchAndMerge, chain, filter, mergeWith, move, noop, template, url } from '@angular-devkit/schematics';
 import { parseName } from '@schematics/angular/utility/parse-name';
-import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
-import { relativeCwdFromRelativeProjectPath } from '../util/barrel';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
 
+import { buildDefaultPath } from '../util';
+import { relativeCwdFromRelativeProjectPath } from '../util/barrel';
 import { validateName } from '../util/validation';
 
 import { Schema as ModuleOptions } from './schema';
 
-export default function(options: ModuleOptions): Rule {
+export default function (options: ModuleOptions): Rule {
     return async (host: Tree) => {
         if (!options.project) {
             throw new SchematicsException('Option (project) is required.');
@@ -32,9 +33,9 @@ export default function(options: ModuleOptions): Rule {
             options.stores ? noop() : filter(p => !p.includes('/stores/')),
             options.directives ? noop() : filter(p => !p.includes('/directives/')),
             template({
-              ...strings,
-              'if-flat': (s: string) => (options.flat ? '' : s),
-              ...options,
+                ...strings,
+                'if-flat': (s: string) => (options.flat ? '' : s),
+                ...options,
             }),
             move(options.path),
         ]);

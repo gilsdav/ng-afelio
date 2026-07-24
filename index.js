@@ -45,6 +45,20 @@ Angular Development Accelerator: ${packageJson.version}
 
 const program = new Command();
 
+program.configureOutput({
+  writeErr: (str) => process.stderr.write(colors.red(str))
+});
+
+const runAction = (action) => async (...args) => {
+  try {
+    await action(...args);
+  } catch (error) {
+    const message = error?.message || error;
+    console.error(colors.red(`Error: ${message}`));
+    process.exitCode = 1;
+  }
+};
+
 program
   .version(version)
   .description(version);
@@ -60,12 +74,10 @@ program
   .option('--ng-version <ngVersion>', 'Angular version', 'latest')
   .option('--complete <complete>', 'Install every modules', false)
   .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--commit=false --directory=."')
-  .action((name, options) => {
-    createNewProject(name, options.uiKit || false, options.openApi || false, options.ng, options.ngVersion, options.complete).then(() => {
-      console.info(`Please go to new directory "cd ./${name}"`);
-      process.exit();
-    });
-  });
+  .action(runAction(async (name, options) => {
+    await createNewProject(name, options.uiKit || false, options.openApi || false, options.ng, options.ngVersion, options.complete);
+    console.info(`Please go to new directory "cd ./${name}"`);
+  }));
 
 program
   .command('uiServe')
@@ -73,9 +85,9 @@ program
   .description('Start UI Kit serve')
   .option('-p, --port <port>', 'Change default port', 5200)
   .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
-  .action((options) => {
-    serveUIKit(options.port, options.ng);
-  });
+  .action(runAction(async (options) => {
+    await serveUIKit(options.port, options.ng);
+  }));
 
 program
   .command('serve [name]')
@@ -84,9 +96,9 @@ program
   .option('-e, --env <environment>', 'Change default environment')
   .option('-p, --port <port>', 'Change default port', 4200)
   .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
-  .action((name, options) => {
-    serveMain(options.env, options.port, options.ng, name);
-  });
+  .action(runAction(async (name, options) => {
+    await serveMain(options.env, options.port, options.ng, name);
+  }));
 
 program
   .command('start [name]')
@@ -97,9 +109,9 @@ program
   .option('-u, --ui-port <uiPort>', 'Change default port of ui-kit', 5200)
   .option('--ng <ng>', 'Standard Angular CLI options for dev server (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
   .option('--ui-ng <uiNg>', 'Standard Angular CLI options for ui-kit server (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
-  .action((name, options) => {
-    Promise.all([serveMain(options.env, options.port, options.ng, name), serveUIKit(options.uiPort, options.uiNg)]);
-  });
+  .action(runAction(async (name, options) => {
+    await Promise.all([serveMain(options.env, options.port, options.ng, name), serveUIKit(options.uiPort, options.uiNg)]);
+  }));
 
 const generateCommand = program.command('generate [type] [name]')
 generateCommand
@@ -111,15 +123,13 @@ generateCommand
   .option('-h, --help', 'output help message')
   .allowUnknownOption()
   // .parse(process.argv)
-  .action((type, name, options, command) => {
+  .action(runAction(async (type, name, options, command) => {
     if (type) {
-      generate(type, name, getAllArgs(command, options.help)).then(() => {
-        process.exit();
-      });
+      await generate(type, name, getAllArgs(command, options.help));
     } else {
       return generateCommand.outputHelp();
     }
-  })
+  }))
 
 const installCommand = program.command('install [type]');
 installCommand
@@ -130,15 +140,13 @@ installCommand
   .option('-h, --help', 'output help message')
   .allowUnknownOption()
   // .parse(process.argv)
-  .action((type, options, command) => {
+  .action(runAction(async (type, options, command) => {
     if (type) {
-      generate(`install-${type}`, undefined, getAllArgs(command, options.help)).then(() => {
-        process.exit();
-      });
+      await generate(`install-${type}`, undefined, getAllArgs(command, options.help));
     } else {
       return installCommand.outputHelp();
     }
-  });
+  }));
 
 const pluginCommand = program.command('plugin [repo] [name]');
 pluginCommand
@@ -150,28 +158,24 @@ pluginCommand
   .option('-h, --help', 'output help message')
   .option('-l, --list', 'get the list of plugins from specific repo')
   .option('-i, --ignored-parts <ignoredParts>', 'comma separated list of part names to ignore. Example: search,pagniation')
-  .option('-p, --path', 'The path to create the module, relative to project directory. Default: ./shared/modules')
+  .option('-p, --path <path>', 'The path to create the module, relative to project directory. Default: ./shared/modules')
   .allowUnknownOption()
   // .parse(process.argv)
-  .action((repo, name, options, command) => {
+  .action(runAction(async (repo, name, options, command) => {
     if (repo && name) {
       const ignoredParts = options.ignoredParts ? [ '--ignored-parts=' + options.ignoredParts ] : [];
       const path = options.path ? [ '--path=' + options.path ] : [];
-      generate(`private-plugin`, repo, [name, ...ignoredParts, ...path, ...getAllArgs(command, options.help)]).then(() => {
-        process.exit();
-      });
+      await generate(`private-plugin`, repo, [name, ...ignoredParts, ...path, ...getAllArgs(command, options.help)]);
     } else if (repo && options.list) {
       const { ConnectorBuilder } = require('./schematics/plugin/connector.builder');
       const connector = ConnectorBuilder.build(repo);
-      connector.getCompatiblePlugins(ngAfelioVersion).then(pluginNames => {
-        console.info(`Available plugins:`);
-        console.info(`${pluginNames.map(pn => `- ${colors.blue(pn)}`).join('\n')}`);
-        process.exit();
-      });
+      const pluginNames = await connector.getCompatiblePlugins(ngAfelioVersion);
+      console.info(`Available plugins:`);
+      console.info(`${pluginNames.map(pn => `- ${colors.blue(pn)}`).join('\n')}`);
     } else {
       return pluginCommand.outputHelp();
     }
-  });
+  }));
 
 program
   .command('build')
@@ -181,30 +185,24 @@ program
   .option('-e, --env <environment>', 'Change default environment', 'production')
   .option('--base-href <href>', 'Base url for the application being built')
   .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--namedChunks=false --extractLicenses=true"')
-  .action((options) => {
-    build(options.env, options.ssr || false, options.baseHref, options.ng).then(() => {
-      process.exit();
-    });
-  });
+  .action(runAction(async (options) => {
+    await build(options.env, options.ssr || false, options.baseHref, options.ng);
+  }));
 
 program
   .command('style')
   .description('Build style from UI Kit')
   .option('-w, --watch <watch>', 'Folder path to watch. Example: "projects/ui-kit"')
-  .action((options) => {
-    buildStyle(options.watch).then(() => {
-      process.exit();
-    });
-  });
+  .action(runAction(async (options) => {
+    await buildStyle(options.watch);
+  }));
 
 program
   .command('mocks')
   .description('Generate mocks system')
-  .action(() => {
-    generate('install-mocks').then(() => {
-      process.exit();
-    });
-  });
+  .action(runAction(async () => {
+    await generate('install-mocks');
+  }));
 
 program
   .command('api <source>')
@@ -215,38 +213,33 @@ program
   .option('-r, --regenerate', 'Add this flag to use regenerate mode')
   .option('-s, --api-version <apiVersion>', 'Swagger version (available: 2 or 3)')
   .option('-p, --proxy <proxy>', 'Proxy url to get swagger file')
-  .action((source, options) => {
+  .action(runAction(async (source, options) => {
     if (options.regenerate) {
-      regenerateApi(source).then(() => {
-        process.exit();
-      });
+      await regenerateApi(source);
     } else {
       if (!options.apiVersion) {
         console.info(`${colors.blue('No api version given.')} Will use 2.`);
         options.apiVersion = 2;
       }
-      generateApi(source, options.name, options.apiKey, options.extract, options.apiVersion, options.proxy).then(() => {
-        process.exit();
-      });
+      await generateApi(source, options.name, options.apiKey, options.extract, options.apiVersion, options.proxy);
     }
-  });
+  }));
 
 program
   .command('check <type>')
   .description('Check alignement between files (type: environment or i18n)')
   .option('-m, --mainFile <mainFile>', 'Automaticaly align all files with the main.')
   .option('--fix', 'Generate i18n labels based on main file (default is fr.json).')
-  .action((type, options) => {
+  .action(runAction(async (type, options) => {
     if (type === 'i18n' && options.fix) {
-      generateI18n(options.mainFile);
+      await generateI18n(options.mainFile);
     } else if (type === 'environment' || type === 'i18n') {
-      checkFiles(type, options.mainFile).then(() => {
-        process.exit();
-      });
+      await checkFiles(type, options.mainFile);
     } else {
       console.error(`${colors.red(`Type "${type}" does not exist.`)}`);
+      process.exitCode = 1;
     }
-  });
+  }));
 
 program.on('command:*', () => {
   console.error(colors.red('Invalid command: %s') + '\nSee --help for a list of available commands.', program.args.join(' '));

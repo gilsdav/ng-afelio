@@ -1,6 +1,6 @@
 // const util = require('util');
 // const exec = require('child_process').exec;
-const spawn = require('child_process').spawn;
+const { spawn } = require('child_process');
 const { colors } = require('./theme');
 const fs = require('fs');
 const fse = require('fs-extra');
@@ -29,28 +29,39 @@ const currentPath = process.cwd();
 
 // pexec = (command, options) => promiseFromChildProcess(exec(command, options));
 
-pexec = (command, options) => new Promise(function (resolve, reject) {
-    const process = spawn(command, { stdio: 'inherit', shell: true, ...options });
-    process.on('close', function (code) {
-      resolve(code);
+const pexec = (command, args = [], options = {}) => new Promise(function (resolve, reject) {
+    const child = spawn(command, args, { stdio: 'inherit', shell: false, ...options });
+    child.on('close', function (code) {
+        if (code === 0) {
+            resolve(code);
+        } else {
+            reject(new Error(`Command failed (${code}): ${command} ${args.join(' ')}`));
+        }
     });
-    process.on('error', function (err) {
-        console.error(err);
-      reject(err);
+    child.on('error', function (err) {
+        reject(err);
     });
 });
 
-
+function produceNgOptions(ngOptionsString) {
+    if (!ngOptionsString?.trim()) {
+        return [];
+    }
+    const tokens = ngOptionsString.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g) || [];
+    return tokens.map(token => token.replace(/^(["'])|(["'])$/g, ''));
+}
 
 // const getAngularVersion = async () => {
 //     return await cli.default({ cliArgs: ['--version'] });
 // }
 
 const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString, angularVersion, complete) => {
+    const ngOptions = produceNgOptions(ngOptionsString);
+
     if (isOpenApi) {
         console.info(`Creating project ${name}`);
         // await cli.default({ cliArgs: ['new', name, '--create-application=false', '--new-project-root=apis', '--skip-install', ...produceNgOptions(ngOptionsString)] });
-        await pexec(`npx @angular/cli@${angularVersion} new ${name} --create-application=false --new-project-root=apis ${ngOptionsString || ''}`);
+        await pexec('npx', [`@angular/cli@${angularVersion}`, 'new', name, '--create-application=false', '--new-project-root=apis', ...ngOptions]);
         console.info(`${colors.green('Project created')}`);
 
         process.chdir(`./${name}`);
@@ -58,16 +69,16 @@ const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString, ang
         console.info(`Adding ng-afelio`);
         const ngAfelioSrc = config.production ? `ng-afelio@${version}` : __dirname;
         // await cli.default({ cliArgs: ['add', ngAfelioSrc, '--skip-confirmation', '--ui-kit=none'] });
-        await pexec(`npx ng add ${ngAfelioSrc} --skip-confirmation --ui-kit=none`);
+        await pexec('npx', ['ng', 'add', ngAfelioSrc, '--skip-confirmation', '--ui-kit=none']);
         console.info(`${colors.green('ng-afelio installed')}`);
 
         console.info(`Creating library project`);
         // await cli.default({ cliArgs: ['generate', 'library', 'api', '--prefix=lib'] });
-        await pexec(`npx ng generate library api --prefix=lib`);
+        await pexec('npx', ['ng', 'generate', 'library', 'api', '--prefix=lib']);
         console.info(`${colors.green('Library created')}`);
 
         console.info(`Install dependencies`);
-        await pexec('npm install ng-openapi-gen@latest gulp@4.0.2 gulp-replace@1.0.0 gulp-rename@2.0.0 minimist@1.2.8 --save-dev');
+        await pexec('npm', ['install', 'ng-openapi-gen@latest', 'gulp@4.0.2', 'gulp-replace@1.0.0', 'gulp-rename@2.0.0', 'minimist@1.2.8', '--save-dev']);
         console.info(`${colors.green('Dependencies installed')}`);
 
         console.info(`Apply template`);
@@ -99,21 +110,20 @@ const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString, ang
             'prepare-workspace': 'gulp',
             'package': 'npm run regenerate-api && npm run build',
             'publish': 'npm publish dist/api'
-        }
+        };
         fs.writeFileSync(packageJsonPath, JSON.stringify(packageJsonContent, null, 2), { encoding: 'utf8' });
 
-        const currentPath = process.cwd();
         const templatePath = join(__dirname, 'templates/generate-swagger');
         await fse.copy(templatePath, currentPath);
         console.info(`${colors.green('Template applied')}`);
 
     } else {
         // await cli.default({ cliArgs: ['new', name, '--routing', '--style=scss', '--skip-install', ...produceNgOptions(ngOptionsString)] });
-        await pexec(`npx @angular/cli@${angularVersion} new ${name} --routing --style=tailwind ${ngOptionsString || ''}`);
+        await pexec('npx', [`@angular/cli@${angularVersion}`, 'new', name, '--routing', '--style=tailwind', ...ngOptions]);
         process.chdir(`./${name}`);
         const ngAfelioSrc = config.production ? `ng-afelio@${version}` : __dirname;
-        await pexec(`npx ng generate @schematics/angular:environments`);
-        await pexec(`npx ng add ${ngAfelioSrc} --skip-confirmation --ui-kit=${uiKitType} --complete=${complete}`);
+        await pexec('npx', ['ng', 'generate', '@schematics/angular:environments']);
+        await pexec('npx', ['ng', 'add', ngAfelioSrc, '--skip-confirmation', `--ui-kit=${uiKitType}`, `--complete=${complete}`]);
         // await cli.default({ cliArgs: ['add', ngAfelioSrc, '--skip-confirmation', `--ui-kit=${uiKitType}`] });
     }
 
@@ -137,13 +147,13 @@ const serveUIKit = async (port, ngOptionsString) => {
     //     '--host=0.0.0.0',
     //     ...produceNgOptions(ngOptionsString)
     // ]});
-    return await pexec(`npx ng serve ui-kit --port=${port || '5200'} --host=0.0.0.0 ${produceNgOptions(ngOptionsString).join(' ')}`, { cwd: currentPath }).then(code => {
-        if (code > 0) {
-            console.log(colors.yellow('Do you have a ui-kit project ?'));
-        }
-        return code;
-    });
-}
+    try {
+        return await pexec('npx', ['ng', 'serve', 'ui-kit', `--port=${port || '5200'}`, '--host=0.0.0.0', ...produceNgOptions(ngOptionsString)], { cwd: currentPath });
+    } catch (error) {
+        console.log(colors.yellow('Do you have a ui-kit project ?'));
+        throw error;
+    }
+};
 
 const serveMain = async (environment, port, ngOptionsString, projectName) => {
     // return await cli.default({cliArgs: [
@@ -156,19 +166,35 @@ const serveMain = async (environment, port, ngOptionsString, projectName) => {
     if (!projectName) {
         projectName = getConfig('defaultProject');
     }
-    return await pexec(`npx ng serve ${projectName || ''} --port=${port || '4200'} --host=0.0.0.0 ${environment ? [`--configuration=${environment}`] : ''} ${produceNgOptions(ngOptionsString).join(' ')}`, { cwd: currentPath });
-}
+
+    const args = ['ng', 'serve'];
+    if (projectName) {
+        args.push(projectName);
+    }
+    args.push(`--port=${port || '4200'}`, '--host=0.0.0.0');
+    if (environment) {
+        args.push(`--configuration=${environment}`);
+    }
+    args.push(...produceNgOptions(ngOptionsString));
+
+    return await pexec('npx', args, { cwd: currentPath });
+};
 
 const generate = async (type, name, ngOptions) => {
-    type = `ng-afelio:${type}`
+    type = `ng-afelio:${type}`;
     // return await cli.default({ cliArgs: ['generate', type, ...(name ? [name] : []), ...ngOptions] });
-    return await pexec(`npx ng generate ${type} ${name || ''} ${ngOptions.join(' ')}`);
-}
+    const args = ['ng', 'generate', type];
+    if (name) {
+        args.push(name);
+    }
+    args.push(...ngOptions);
+    return await pexec('npx', args);
+};
 
 const generateApi = (source, moduleName, apiKey, extract, version, proxy) => {
     const { generateSwagger } = require('./scripts/generate-swagger');
     return generateSwagger(source, moduleName, apiKey, extract, version, proxy);
-}
+};
 
 const regenerateApi = (source) => {
     const { regenerateSwagger } = require('./scripts/generate-swagger');
@@ -186,10 +212,15 @@ const build = async (environment, ssr, baseHref, ngOptionsString) => {
     if (ssr) {
         console.warn(colors.underline(colors.yellow('Not implemented yet.')));
     } else {
-        return await pexec(`npx ng build --configuration=${environment} ${baseHref ? `--base-href=${baseHref}` : ''} ${produceNgOptions(ngOptionsString).join('')}`, { cwd: currentPath });
+        const args = ['ng', 'build', `--configuration=${environment}`];
+        if (baseHref) {
+            args.push(`--base-href=${baseHref}`);
+        }
+        args.push(...produceNgOptions(ngOptionsString));
+        return await pexec('npx', args, { cwd: currentPath });
         // return await cli.default({cliArgs: baseArgs});
     }
-}
+};
 
 const buildStyle = async (watchPath) => {
     try {
@@ -206,17 +237,17 @@ const buildStyle = async (watchPath) => {
                         ignoreUnreadableDir: true,
                         filter(path) {
                             const fileName = basename(path);
-                            return !fileName.includes('.') || fileName.endsWith('.scss') 
+                            return !fileName.includes('.') || fileName.endsWith('.scss');
                         },
                         ignoreDirectoryPattern: /node_modules/
                     },
-                    async function() {
+                    async function () {
                         if (!locked) {
                             locked = true;
                             try {
                                 await buildStyleFromUIKit(first);
                                 first = false;
-                            } catch(e){
+                            } catch (e) {
                                 console.error(e);
                             }
                             locked = false;
@@ -231,7 +262,7 @@ const buildStyle = async (watchPath) => {
         console.error(e);
         console.warn(colors.red('You must be in base folder of the application and have a "ui-kit" project to use this command.'));
     }
-}
+};
 
 // const generateMocks = async () => {
 //     if (currentPath.endsWith('/src')) {
@@ -251,23 +282,14 @@ const checkFiles = async (type, mainFile) => {
             return await checkI18nFiles(mainFile);
         }
     } catch (e) {
-        // console.error(colors.red('Unexpected error', e));
+        throw e;
     }
-}
+};
 
 const generateI18n = async (mainFile) => {
     const { fixI18n } = require('./scripts/check-files/check-i18n-files');
     return fixI18n(mainFile);
-}
-
-
-function produceNgOptions(ngOptionsString) {
-    let ngOptions = [];
-    if (ngOptionsString) {
-        ngOptions = ngOptionsString.split(' ');
-    }
-    return ngOptions;
-}
+};
 
 // Export all methods
 module.exports = {

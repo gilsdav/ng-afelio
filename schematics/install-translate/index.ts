@@ -2,9 +2,10 @@ import { Path, join, strings } from '@angular-devkit/core';
 import { Rule, SchematicContext, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, template, url } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
-import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
 import ts = require('typescript');
 
+import { buildDefaultPath } from '../util';
 import { addImportToModule, addProviderToConfig, findNode, insertImport } from '../util/ast-util';
 import { Change, applyChangesToHost } from '../util/change';
 
@@ -138,7 +139,7 @@ function addHttpLoader(projectAppPath: string, options: TranslateOptions, isModu
     };
 }
 
-export default function(options: TranslateOptions): Rule {
+export default function (options: TranslateOptions): Rule {
     return async (host: Tree) => {
         if (!options.project) {
             throw new SchematicsException('Option (project) is required.');
@@ -160,8 +161,8 @@ export default function(options: TranslateOptions): Rule {
 
         const templateSource = apply(url('./files'), [
             template({
-              ...strings,
-              ...options,
+                ...strings,
+                ...options,
             }),
             move(parsedPath),
         ]);

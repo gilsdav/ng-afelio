@@ -1,14 +1,16 @@
 import { Path, join, strings } from '@angular-devkit/core';
 import { Rule, SchematicsException, Tree, apply, branchAndMerge, chain, filter, mergeWith, move, template, url } from '@angular-devkit/schematics';
+import { getPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
-import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as ts from 'typescript';
 
+import { buildDefaultPath } from '../util';
 import { addProviderToConfig, addProviderToModule, insertImport } from '../util/ast-util';
 import { Change, applyChangesToHost } from '../util/change';
-import { Schema as MocksOptions } from './schema';
 import { appendIntoEnvironment } from '../util/environment';
-import { getPackageJsonDependency } from '@schematics/angular/utility/dependencies';
+
+import { Schema as MocksOptions } from './schema';
 
 function applyModuleImports(projectAppPath: string, mockPath: string, options: MocksOptions, isModuleMode: boolean): Rule {
     return host => {
@@ -144,7 +146,7 @@ function applyIntoEnvironment(projectAppPath: string, projectName: string, addAu
     // };
 }
 
-export default function(options: MocksOptions): Rule {
+export default function (options: MocksOptions): Rule {
     return async (host: Tree) => {
         const workspace = await getWorkspace(host);
         const project = workspace.projects.get(options.project);
@@ -162,7 +164,7 @@ export default function(options: MocksOptions): Rule {
             const dependency = getPackageJsonDependency(host, 'angular-auth-oidc-client');
             if (!dependency) {
                 throw new SchematicsException(`angular-auth-oidc-client library not found. Please start with "oidc" install before generate auth mock or add "--auth=false".`);
-            }   
+            }
         }
 
         const parsedPath = join(projectAppPath as Path, '../mocks');

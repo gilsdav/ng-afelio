@@ -1,17 +1,19 @@
 import { join, Path, strings } from '@angular-devkit/core';
-import { apply, branchAndMerge, chain, MergeStrategy, mergeWith, move, Rule, SchematicsException, template, Tree, url, noop, filter, SchematicContext } from '@angular-devkit/schematics';
-import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { apply, branchAndMerge, chain, filter, MergeStrategy, mergeWith, move, noop, Rule, SchematicContext, SchematicsException, template, Tree, url } from '@angular-devkit/schematics';
 import { addPackageJsonDependency, NodeDependency, NodeDependencyType } from '@schematics/angular/utility/dependencies';
-import { removeSync, existsSync, mkdirSync } from 'fs-extra';
-import { join as stringJoin } from 'path';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
+import { existsSync, mkdirSync, removeSync } from 'fs-extra';
 import * as loading from 'loading-cli';
+import { join as stringJoin } from 'path';
 
 import { version as ngAfelioVersion } from '../../package.json';
 
-import { Schema as PluginOptions } from './schema';
+import { buildDefaultPath } from '../util';
+import { parsePackageName } from '../util/name-parser';
 import { ConnectorBuilder } from './connector.builder';
 import { Release } from './release.model';
-import { parsePackageName } from '../util/name-parser';
+
+import { Schema as PluginOptions } from './schema';
 
 
 const tempDirectoryPath = stringJoin(__dirname, 'temp-files');
@@ -40,7 +42,7 @@ function addDeps(dependencies?: string[], dependenciesType: NodeDependencyType =
 }
 
 
-export default function(options: PluginOptions): Rule {
+export default function (options: PluginOptions): Rule {
     return async (host: Tree) => {
 
         if (!options.project) {
@@ -59,7 +61,7 @@ export default function(options: PluginOptions): Rule {
 
         const connector = ConnectorBuilder.build(options.pluginRepo);
 
-        const loader = loading({ });
+        const loader = loading({});
         loader.start(`Checking repository "${options.pluginRepo}"`);
 
         // Get release
@@ -97,8 +99,8 @@ export default function(options: PluginOptions): Rule {
             const templateSource = apply(url('file://' + sourcePath), [
                 filter(p => !p.endsWith('.stories.ts')),
                 template({
-                  ...strings,
-                  ...options,
+                    ...strings,
+                    ...options,
                 }),
                 move(destinationPath),
             ]);

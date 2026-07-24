@@ -3,7 +3,9 @@ import { MergeStrategy, Rule, SchematicContext, SchematicsException, Tree, apply
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
-import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
+
+import { buildDefaultPath } from '../util';
 import { installNpmSchematicPackage } from '../util/packages-util';
 
 import { Schema as UIKitOptionsExternal } from './schema';
@@ -148,15 +150,15 @@ function addLinesToMainStyleFile(options: UIKitOptions): Rule {
 async function applyUiKitTemplate(options: UIKitOptions, projectUiKitPath = '/projects/ui-kit/src'): Promise<Rule> {
     const templateSource = apply(url(join('./files' as Path, options.type)), [
         template({
-          ...strings,
-          ...options,
+            ...strings,
+            ...options,
         }),
         move(projectUiKitPath),
     ]);
     return mergeWith(templateSource, MergeStrategy.Overwrite);
 }
 
-export default function(options: UIKitOptions): Rule {
+export default function (options: UIKitOptions): Rule {
     return async (host: Tree) => {
 
         const workspaceConfigBuffer = host.read('angular.json');

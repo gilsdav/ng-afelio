@@ -1,7 +1,8 @@
 import { strings } from '@angular-devkit/core';
 import { Rule, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, template, url } from '@angular-devkit/schematics';
-import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
 
+import { buildDefaultPath } from '../util';
 import { appendIntoEnvironment } from '../util/environment';
 
 import { Schema as DockerOptions } from './schema';
@@ -63,7 +64,7 @@ function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule
     ]);
 }
 
-export default function(options: DockerOptions): Rule {
+export default function (options: DockerOptions): Rule {
     return async (host: Tree) => {
         const workspace = await getWorkspace(host);
         const project = workspace.projects.get(options.project);
@@ -77,8 +78,8 @@ export default function(options: DockerOptions): Rule {
 
         const templateSource = apply(url('./files'), [
             template({
-              ...strings,
-              ...options,
+                ...strings,
+                ...options,
             }),
             move('/'),
         ]);

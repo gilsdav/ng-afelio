@@ -2,16 +2,17 @@ import { Path, join, strings } from '@angular-devkit/core';
 import { Rule, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, template, url } from '@angular-devkit/schematics';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
 import { parseName } from '@schematics/angular/utility/parse-name';
-import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
-import ts = require('typescript');
+import { getWorkspace } from '@schematics/angular/utility/workspace';
 import { colors } from '../../theme';
+import ts = require('typescript');
 
+import { buildDefaultPath } from '../util';
 import { findNode, findNodes, insertImport } from '../util/ast-util';
+import { relativeCwdFromRelativeProjectPath } from '../util/barrel';
 import { Change, InsertChange, applyChangesToHost } from '../util/change';
 import { validateName } from '../util/validation';
 
 import { Schema as MockOptions } from './schema';
-import { relativeCwdFromRelativeProjectPath } from '../util/barrel';
 
 function getMocksNode(source: ts.SourceFile): ts.Node | undefined {
     const keywords = findNodes(source, ts.SyntaxKind.VariableStatement);
@@ -45,7 +46,7 @@ function includesIntoProject(path: string, options: MockOptions): Rule {
                 ts.ScriptTarget.Latest,
                 true
             );
-             // Add Store to ts import
+            // Add Store to ts import
             const mockPath = join(path as Path, `${strings.dasherize(options.name)}.mock`);
             const relativeMockPath = buildRelativePath(mockListPath, `${mockPath}.ts`).slice(0, -3);
             // const nameExtraction = options.file.match(/(\w*).mock.ts/);
@@ -67,7 +68,7 @@ function includesIntoProject(path: string, options: MockOptions): Rule {
             } else {
                 throw new SchematicsException(`Can not extract find name`);
             }
-            
+
             // Save changes
             applyChangesToHost(host, mockListPath, changes);
         }
@@ -115,11 +116,11 @@ function addIntoEnvironment(projectAppPath: string, projectName: string, options
     let prodProjectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
 
     return host => {
-            const legacyEnvironment = host.exists(join(projectAppPath as Path, '../environments/environment.prod.ts'));
-            if (legacyEnvironment) {
-                projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
-                prodProjectEnvPath = join(projectAppPath as Path, '../environments/environment.prod.ts');
-            }
+        const legacyEnvironment = host.exists(join(projectAppPath as Path, '../environments/environment.prod.ts'));
+        if (legacyEnvironment) {
+            projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
+            prodProjectEnvPath = join(projectAppPath as Path, '../environments/environment.prod.ts');
+        }
 
         if (options.environment) {
             function addToEnv(path: string, value: boolean) {
@@ -221,7 +222,7 @@ function addMockIntoExistingFile(mockPath: string, options: MockOptions): Rule {
     };
 }
 
-export default function(options: MockOptions): Rule {
+export default function (options: MockOptions): Rule {
     return async (host: Tree) => {
         if (!options.project) {
             throw new SchematicsException('Option (project) is required.');
@@ -243,15 +244,15 @@ export default function(options: MockOptions): Rule {
 
         const parsedPath = parseName(options.path as string, options.name);
         options.name = parsedPath.name;
-        
+
         options.path = relativeCwdFromRelativeProjectPath(parsedPath.path);
 
         validateName(options.name);
 
         const templateSource = apply(url('./files'), [
             template({
-              ...strings,
-              ...options,
+                ...strings,
+                ...options,
             }),
             move(parsedPath.path),
         ]);

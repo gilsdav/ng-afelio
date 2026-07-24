@@ -1,13 +1,14 @@
 import { Rule, SchematicsException, Tree, chain, externalSchematic } from '@angular-devkit/schematics';
 import { parseName } from '@schematics/angular/utility/parse-name';
-import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
 
-import { relativeCwdFromRelativeProjectPath, addIntoIndex } from '../util/barrel';
+import { buildDefaultPath } from '../util';
+import { addIntoIndex, relativeCwdFromRelativeProjectPath } from '../util/barrel';
 import { validateName } from '../util/validation';
 
 import { Schema as ServiceOptions } from './schema';
 
-export default function(options: ServiceOptions): Rule {
+export default function (options: ServiceOptions): Rule {
     return async (host: Tree) => {
 
         if (!options.project) {
