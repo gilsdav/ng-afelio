@@ -1,7 +1,8 @@
 import { strings } from '@angular-devkit/core';
 import { Rule, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, template, url } from '@angular-devkit/schematics';
-import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
 
+import { buildEnvironmentsPath } from '../util';
 import { appendIntoEnvironment } from '../util/environment';
 
 import { Schema as DockerOptions } from './schema';
@@ -22,7 +23,7 @@ import { Schema as DockerOptions } from './schema';
 //     }
 // }
 
-function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule {
+function applyIntoEnvironment(environmentsPath: string, projectName: string): Rule {
     // const projectEnvPath = join(projectAppPath as Path, path/*'../environments/environment.ts'*/);
     // return host => {
     //     const text = host.read(projectEnvPath);
@@ -58,8 +59,8 @@ function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule
 
 
     return chain([
-        appendIntoEnvironment(projectAppPath, projectName, `\n    baseUrls: {\n        main: 'http://localhost:4200/api'\n    }`, 'baseUrls:', false),
-        appendIntoEnvironment(projectAppPath, projectName, `\n    baseUrls: {\n        main: '\${BASE_URL}'\n    }`, 'baseUrls:', true)
+        appendIntoEnvironment(environmentsPath, projectName, `\n    baseUrls: {\n        main: 'http://localhost:4200/api'\n    }`, 'baseUrls:', false),
+        appendIntoEnvironment(environmentsPath, projectName, `\n    baseUrls: {\n        main: '\${BASE_URL}'\n    }`, 'baseUrls:', true)
     ]);
 }
 
@@ -68,10 +69,7 @@ export default function (options: DockerOptions): Rule {
         const workspace = await getWorkspace(host);
         const project = workspace.projects.get(options.project);
 
-        let projectAppPath: string;
-        if (project) {
-            projectAppPath = buildDefaultPath(project);
-        } else {
+        if (!project) {
             throw new SchematicsException(`Project "${options.project}" not found.`);
         }
 
@@ -87,7 +85,7 @@ export default function (options: DockerOptions): Rule {
             branchAndMerge(
                 chain([
                     mergeWith(templateSource),
-                    applyIntoEnvironment(projectAppPath, options.project),
+                    applyIntoEnvironment(buildEnvironmentsPath(project), options.project),
                 ])
             ),
         ]);

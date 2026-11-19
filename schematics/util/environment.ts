@@ -22,18 +22,17 @@ export function getEnvironmentNode(source: ts.SourceFile): ts.Node | undefined {
     }
 }
 
-export function appendIntoEnvironment(projectAppPath: string, projectName: string, toAppend: string, toCheck?: string, prod = false): Rule {
+export function appendIntoEnvironment(environmentsPath: string, projectName: string, toAppend: string, toCheck?: string, prod = false): Rule {
 
-    // const projectEnvPath = join(projectAppPath as Path, prodEnv ? '../environments/environment.prod.ts' : '../environments/environment.ts');
-    let devProjectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
-    let prodProjectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
+    let devProjectEnvPath = join(environmentsPath as Path, 'environment.development.ts');
+    let prodProjectEnvPath = join(environmentsPath as Path, 'environment.ts');
     let projectEnvPath = devProjectEnvPath;
 
     return host => {
-        const legacyEnvironment = host.exists(join(projectAppPath as Path, '../environments/environment.prod.ts'));
+        const legacyEnvironment = host.exists(join(environmentsPath as Path, 'environment.prod.ts'));
         if (legacyEnvironment) {
-            projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
-            prodProjectEnvPath = join(projectAppPath as Path, '../environments/environment.prod.ts');
+            projectEnvPath = join(environmentsPath as Path, 'environment.ts');
+            prodProjectEnvPath = join(environmentsPath as Path, 'environment.prod.ts');
         }
 
         if (prod) {

@@ -2,20 +2,23 @@ import { Path, join, strings } from '@angular-devkit/core';
 import { Rule, SchematicsException, Tree, apply, branchAndMerge, chain, filter, mergeWith, move, template, url } from '@angular-devkit/schematics';
 import { getPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
-import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as ts from 'typescript';
 
 import { addProviderToConfig, addProviderToModule, insertImport } from '../util/ast-util';
 import { Change, applyChangesToHost } from '../util/change';
 import { appendIntoEnvironment } from '../util/environment';
+import { buildDefaultPath, buildEnvironmentsPath, buildProjectSrcPath, resolveProjectFile } from '../util';
 
 import { Schema as MocksOptions } from './schema';
 
-function applyModuleImports(projectAppPath: string, mockPath: string, options: MocksOptions, isModuleMode: boolean): Rule {
+function applyModuleImports(projectSrcPath: string, projectAppPath: string, mockPath: string, environmentsPath: string, options: MocksOptions, isModuleMode: boolean): Rule {
     return host => {
-        if (isModuleMode) {
+        const modulePath = isModuleMode ? resolveProjectFile(host, projectSrcPath, projectAppPath, options.appModule) : undefined;
+        const configPath = isModuleMode ? undefined : (options.appConfig ? resolveProjectFile(host, projectSrcPath, projectAppPath, options.appConfig) : undefined);
+
+        if (isModuleMode && modulePath) {
             const changes: Change[] = [];
-            const modulePath = join(projectAppPath as Path, options.appModule);
             const text = host.read(modulePath);
             if (!text) {
                 throw new SchematicsException(`Module file at ${modulePath} does not exist.`);
@@ -32,16 +35,16 @@ function applyModuleImports(projectAppPath: string, mockPath: string, options: M
             const interceptorPath = join(relativeMockPath as Path, 'mockHttpInterceptor');
             changes.push(insertImport(source, modulePath, 'mockInterceptorProvider', interceptorPath));
             // Add environments ts import
-            const projectEnvPath = join(projectAppPath as Path, '../environments/environment');
+            const projectEnvPath = join(environmentsPath as Path, 'environment');
             const relativeEnvPath = buildRelativePath(modulePath, projectEnvPath);
             changes.push(insertImport(source, modulePath, 'environment', relativeEnvPath));
             // Add provider
             changes.push(...addProviderToModule(source, modulePath, '...(environment.mock.enable ? [mockInterceptorProvider] : [])', null as any));
             // Save changes
             applyChangesToHost(host, modulePath, changes);
-        } else if (options.appConfig && host.exists(join(projectAppPath as Path, options.appConfig))) {
+        } else if (configPath) {
             const changes: Change[] = [];
-            const configPagh = join(projectAppPath as Path, options.appConfig);
+            const configPagh = configPath;
             const text = host.read(configPagh);
             if (!text) {
                 throw new SchematicsException(`Config file at ${configPagh} does not exist.`);
@@ -54,11 +57,12 @@ function applyModuleImports(projectAppPath: string, mockPath: string, options: M
                 true
             );
             // Add ts imports
+            const relativeMockDirPath = buildRelativePath(configPagh, mockPath);
             if (options.auth) {
-                changes.push(insertImport(source, configPagh, 'mockAuthenticationProviders', '../mocks/authentication.mock'));
+                changes.push(insertImport(source, configPagh, 'mockAuthenticationProviders', join(relativeMockDirPath as Path, 'authentication.mock')));
             }
-            changes.push(insertImport(source, configPagh, 'mockInterceptorProvider', '../mocks/mockHttpInterceptor'));
-            changes.push(insertImport(source, configPagh, 'environment', '../environments/environment'));
+            changes.push(insertImport(source, configPagh, 'mockInterceptorProvider', join(relativeMockDirPath as Path, 'mockHttpInterceptor')));
+            changes.push(insertImport(source, configPagh, 'environment', buildRelativePath(configPagh, join(environmentsPath as Path, 'environment'))));
             // Add ng imports
             let mockProviders = `...(environment.mock.enable ? [mockInterceptorProvider] : [])`;
             if (options.auth) {
@@ -88,12 +92,12 @@ function applyModuleImports(projectAppPath: string, mockPath: string, options: M
 //     }
 // }
 
-function applyIntoEnvironment(projectAppPath: string, projectName: string, addAuth: boolean): Rule {
+function applyIntoEnvironment(environmentsPath: string, projectName: string, addAuth: boolean): Rule {
     const envToAdd = `\n    mock: {\n        enable: true,${addAuth ? '\n        auth: true,' : ''}\n        all: false,\n        services: {\n            getPets: true\n        }\n    }`;
     const envToAddProd = `\n    mock: {\n        enable: false,${addAuth ? '\n        auth: false,' : ''}\n        all: false,\n        services: {\n            getPets: false\n        }\n    }`;
     return chain([
-        appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'mock:', false),
-        appendIntoEnvironment(projectAppPath, projectName, envToAddProd, 'mock:', true)
+        appendIntoEnvironment(environmentsPath, projectName, envToAdd, 'mock:', false),
+        appendIntoEnvironment(environmentsPath, projectName, envToAddProd, 'mock:', true)
     ]);
     // let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
     // return host => {
@@ -150,14 +154,16 @@ export default function (options: MocksOptions): Rule {
         const workspace = await getWorkspace(host);
         const project = workspace.projects.get(options.project);
 
+        let projectSrcPath: string;
         let projectAppPath: string;
         if (project) {
+            projectSrcPath = buildProjectSrcPath(project);
             projectAppPath = buildDefaultPath(project);
         } else {
             throw new SchematicsException(`Project "${options.project}" not found.`);
         }
 
-        const isModuleMode = !!options.appModule && host.exists(join(projectAppPath as Path, options.appModule));
+        const isModuleMode = !!options.appModule && !!resolveProjectFile(host, projectSrcPath, projectAppPath, options.appModule);
 
         if (options.auth) {
             const dependency = getPackageJsonDependency(host, 'angular-auth-oidc-client');
@@ -166,7 +172,7 @@ export default function (options: MocksOptions): Rule {
             }
         }
 
-        const parsedPath = join(projectAppPath as Path, 'mocks');
+        const parsedPath = join(projectSrcPath as Path, 'mocks');
         const templateSource = apply(url('./files'), [
             filter(path => !path.endsWith('authentication.mock.ts') || options.auth),
             template({
@@ -179,9 +185,9 @@ export default function (options: MocksOptions): Rule {
         return chain([
             branchAndMerge(
                 chain([
-                    applyIntoEnvironment(projectAppPath, options.project, (options.auth && !isModuleMode)),
+                    applyIntoEnvironment(buildEnvironmentsPath(project), options.project, (options.auth && !isModuleMode)),
                     mergeWith(templateSource),
-                    applyModuleImports(projectAppPath, parsedPath, options, isModuleMode),
+                    applyModuleImports(projectSrcPath, projectAppPath, parsedPath, buildEnvironmentsPath(project), options, isModuleMode),
                 ])
             ),
         ]);

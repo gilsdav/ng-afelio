@@ -3,12 +3,13 @@ import { Rule, SchematicContext, SchematicsException, Tree, apply, branchAndMerg
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
-import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
 import ts = require('typescript');
 
 import { addImportToModule, insertImport } from '../util/ast-util';
 import { Change, applyChangesToHost } from '../util/change';
 import { appendIntoEnvironment } from '../util/environment';
+import { buildDefaultPath, buildEnvironmentsPath, buildProjectSrcPath, resolveProjectFile } from '../util';
 
 import { Schema as OIDCOptions } from './schema';
 
@@ -27,11 +28,14 @@ function installOAuth(): Rule {
     };
 }
 
-function applyModuleImports(projectAppPath: string, options: OIDCOptions): Rule {
+function applyModuleImports(projectSrcPath: string, projectAppPath: string, environmentsPath: string, options: OIDCOptions): Rule {
     return host => {
         if (options.appModule) {
             const changes: Change[] = [];
-            const modulePath = join(projectAppPath as Path, options.appModule);
+            const modulePath = resolveProjectFile(host, projectSrcPath, projectAppPath, options.appModule);
+            if (!modulePath) {
+                throw new SchematicsException(`Module file "${options.appModule}" not found.`);
+            }
             const text = host.read(modulePath);
             if (!text) {
                 throw new SchematicsException(`Module file at ${modulePath} does not exist.`);
@@ -49,7 +53,7 @@ function applyModuleImports(projectAppPath: string, options: OIDCOptions): Rule 
             changes.push(insertImport(source, modulePath, 'HttpClientModule', '@angular/common/http'));
             changes.push(insertImport(source, modulePath, 'OAuthModule', 'angular-oauth2-oidc'));
             changes.push(insertImport(source, modulePath, 'AuthenticationModule', relativeAuthPath));
-            changes.push(insertImport(source, modulePath, 'environment', '../environments/environment'));
+            changes.push(insertImport(source, modulePath, 'environment', buildRelativePath(modulePath, join(environmentsPath as Path, 'environment'))));
             // Add ng imports
             changes.push(...addImportToModule(source, modulePath, 'HttpClientModule', null as any));
             changes.push(...addImportToModule(source, modulePath, 'OAuthModule.forRoot()', null as any));
@@ -77,7 +81,7 @@ function applyModuleImports(projectAppPath: string, options: OIDCOptions): Rule 
 //     }
 // }
 
-function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule {
+function applyIntoEnvironment(environmentsPath: string, projectName: string): Rule {
     const envToAdd = `
     oidc: {
         issuer: 'http://keycloak:8080/auth/realms',
@@ -94,8 +98,8 @@ function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule
         storage: 'session' as const
     }`;
     return chain([
-        appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'oidc:', false),
-        appendIntoEnvironment(projectAppPath, projectName, envToAdd, 'oidc:', true)
+        appendIntoEnvironment(environmentsPath, projectName, envToAdd, 'oidc:', false),
+        appendIntoEnvironment(environmentsPath, projectName, envToAdd, 'oidc:', true)
     ]);
 
     // let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
@@ -178,6 +182,8 @@ export default function (options: OIDCOptions): Rule {
             throw new SchematicsException(`Project "${options.project}" not found.`);
         }
 
+        const environmentsPath = buildEnvironmentsPath(project);
+
         const parsedPath = join(projectAppPath as Path, buildPath);
 
         const templateSource = apply(url('./files'), [
@@ -193,8 +199,8 @@ export default function (options: OIDCOptions): Rule {
                 chain([
                     mergeWith(templateSource),
                     installOAuth(),
-                    applyModuleImports(projectAppPath, options),
-                    applyIntoEnvironment(projectAppPath, options.project)
+                    applyModuleImports(buildProjectSrcPath(project), projectAppPath, environmentsPath, options),
+                    applyIntoEnvironment(environmentsPath, options.project)
                 ])
             ),
         ]);

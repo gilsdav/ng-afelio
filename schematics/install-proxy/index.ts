@@ -1,6 +1,8 @@
-import { join, Path, strings } from '@angular-devkit/core';
+import { strings } from '@angular-devkit/core';
 import { apply, branchAndMerge, chain, mergeWith, move, Rule, SchematicsException, template, Tree, url } from '@angular-devkit/schematics';
-import { buildDefaultPath, getWorkspace, updateWorkspace, WorkspaceDefinition } from '@schematics/angular/utility/workspace';
+import { WorkspaceDefinition, getWorkspace, updateWorkspace } from '@schematics/angular/utility/workspace';
+
+import { buildProjectSrcPath } from '../util';
 
 // import { appendIntoEnvironment } from '../util/environment';
 
@@ -27,9 +29,9 @@ export default function (options: ProxyOptions): Rule {
         const workspace = await getWorkspace(host);
         const project = workspace.projects.get(options.project);
 
-        let projectAppPath: string;
+        let projectSrcPath: string;
         if (project) {
-            projectAppPath = buildDefaultPath(project);
+            projectSrcPath = buildProjectSrcPath(project);
         } else {
             throw new SchematicsException(`Project "${options.project}" not found.`);
         }
@@ -39,7 +41,7 @@ export default function (options: ProxyOptions): Rule {
                 ...strings,
                 ...options,
             }),
-            move(join(projectAppPath as Path, '..')),
+            move(projectSrcPath),
         ]);
 
         return chain([

@@ -5,7 +5,7 @@ import { parseName } from '@schematics/angular/utility/parse-name';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import ts = require('typescript');
 
-import { buildDefaultPath } from '../util';
+import { buildProjectSrcPath } from '../util';
 import { findNodes, insertImport } from '../util/ast-util';
 import { relativeCwdFromRelativeProjectPath } from '../util/barrel';
 import { Change, InsertChange, applyChangesToHost } from '../util/change';
@@ -78,7 +78,7 @@ export default function (options: StoreOptions): Rule {
         const workspace = await getWorkspace(host);
         const project = workspace.projects.get(options.project);
         if (project && options.path === undefined) {
-            options.path = buildDefaultPath(project);
+            options.path = buildProjectSrcPath(project);
         }
 
         const parsedPath = parseName(options.path as string, options.name);

@@ -1,6 +1,6 @@
 {
-  "name": "ng-afelio",
-  "version": "3.0.0-rc2",
+  "name": "ng-keyes",
+  "version": "3.0.0-rc3",
   "description": "Extended Angular CLI",
   "main": "index.js",
   "bin": {

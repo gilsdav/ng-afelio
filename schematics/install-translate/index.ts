@@ -2,7 +2,9 @@ import { Path, join, strings } from '@angular-devkit/core';
 import { Rule, SchematicContext, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, template, url } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
-import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
+
+import { buildDefaultPath, buildProjectSrcPath, resolveProjectFile } from '../util';
 import ts = require('typescript');
 
 import { addImportToModule, addProviderToConfig, findNode, insertImport } from '../util/ast-util';
@@ -30,11 +32,13 @@ function installNgxTranslate(): Rule {
     };
 }
 
-function applyModuleImports(projectAppPath: string, options: TranslateOptions, isModuleMode: boolean): Rule {
+function applyModuleImports(projectSrcPath: string, projectAppPath: string, options: TranslateOptions, isModuleMode: boolean): Rule {
     return host => {
-        if (isModuleMode) {
+        const modulePath = isModuleMode ? resolveProjectFile(host, projectSrcPath, projectAppPath, options.appModule) : undefined;
+        const configPathResolved = isModuleMode ? undefined : (options.appConfig ? resolveProjectFile(host, projectSrcPath, projectAppPath, options.appConfig) : undefined);
+
+        if (isModuleMode && modulePath) {
             const changes: Change[] = [];
-            const modulePath = join(projectAppPath as Path, options.appModule);
             const text = host.read(modulePath);
             if (!text) {
                 throw new SchematicsException(`Module file at ${modulePath} does not exist.`);
@@ -62,9 +66,9 @@ function applyModuleImports(projectAppPath: string, options: TranslateOptions, i
             changes.push(...addImportToModule(source, modulePath, translateImport, null as any));
             // Save changes
             applyChangesToHost(host, modulePath, changes);
-        } else if (options.appConfig && host.exists(join(projectAppPath as Path, options.appConfig))) {
+        } else if (configPathResolved) {
             const changes: Change[] = [];
-            const configPagh = join(projectAppPath as Path, options.appConfig);
+            const configPagh = configPathResolved;
             const text = host.read(configPagh);
             if (!text) {
                 throw new SchematicsException(`Config file at ${configPagh} does not exist.`);
@@ -102,11 +106,14 @@ function applyModuleImports(projectAppPath: string, options: TranslateOptions, i
     };
 }
 
-function addHttpLoader(projectAppPath: string, options: TranslateOptions, isModuleMode: boolean): Rule {
+function addHttpLoader(projectSrcPath: string, projectAppPath: string, options: TranslateOptions, isModuleMode: boolean): Rule {
     return (host: Tree) => {
         if (isModuleMode) {
             // const changes: Change[] = [];
-            const modulePath = join(projectAppPath as Path, options.appModule);
+            const modulePath = resolveProjectFile(host, projectSrcPath, projectAppPath, options.appModule);
+            if (!modulePath) {
+                throw new SchematicsException(`Module file "${options.appModule}" not found.`);
+            }
             const text = host.read(modulePath);
             if (!text) {
                 throw new SchematicsException(`Module file at ${modulePath} does not exist.`);
@@ -153,7 +160,7 @@ export default function (options: TranslateOptions): Rule {
             throw new SchematicsException(`Project "${options.project}" not found.`);
         }
 
-        const isModuleMode = !!options.appModule && host.exists(join(projectAppPath as Path, options.appModule));
+        const isModuleMode = !!options.appModule && !!resolveProjectFile(host, buildProjectSrcPath(project), projectAppPath, options.appModule);
 
         const parsedPath = isModuleMode ? join(projectAppPath as Path, '../assets') : join(projectAppPath as Path, '../../public');
 
@@ -170,8 +177,8 @@ export default function (options: TranslateOptions): Rule {
                 chain([
                     mergeWith(templateSource),
                     installNgxTranslate(),
-                    applyModuleImports(projectAppPath, options, isModuleMode),
-                    addHttpLoader(projectAppPath, options, isModuleMode),
+                    applyModuleImports(buildProjectSrcPath(project), projectAppPath, options, isModuleMode),
+                    addHttpLoader(buildProjectSrcPath(project), projectAppPath, options, isModuleMode),
                 ])
             ),
         ]);

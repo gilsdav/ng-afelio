@@ -67,7 +67,7 @@ const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString, ang
         process.chdir(`./${name}`);
 
         console.info(`Adding ng-keyes`);
-        const ngAfelioSrc = config.production ? `ng-keyes@${version}` : __dirname;
+        const ngAfelioSrc = config.production ? `${config.packageName}@${version}` : __dirname;
         // await cli.default({ cliArgs: ['add', ngAfelioSrc, '--skip-confirmation', '--ui-kit=none'] });
         await pexec('npx', ['ng', 'add', ngAfelioSrc, '--skip-confirmation', '--ui-kit=none']);
         console.info(`${colors.green('ng-keyes installed')}`);
@@ -122,7 +122,7 @@ const createNewProject = async (name, uiKitType, isOpenApi, ngOptionsString, ang
         // await cli.default({ cliArgs: ['new', name, '--routing', '--style=scss', '--skip-install', ...produceNgOptions(ngOptionsString)] });
         await pexec('npx', [`@angular/cli@${angularVersion}`, 'new', name, '--routing', '--style=tailwind', ...ngOptions]);
         process.chdir(`./${name}`);
-        const ngAfelioSrc = config.production ? `ng-keyes@${version}` : __dirname;
+        const ngAfelioSrc = config.production ? `${config.packageName}@${version}` : __dirname;
         await pexec('npx', ['ng', 'generate', '@schematics/angular:environments']);
         await pexec('npx', ['ng', 'add', ngAfelioSrc, '--skip-confirmation', `--ui-kit=${uiKitType}`, `--complete=${complete}`]);
         // await cli.default({ cliArgs: ['add', ngAfelioSrc, '--skip-confirmation', `--ui-kit=${uiKitType}`] });
@@ -182,7 +182,7 @@ const serveMain = async (environment, port, ngOptionsString, projectName) => {
 };
 
 const generate = async (type, name, ngOptions) => {
-    type = `ng-keyes:${type}`;
+    type = `${config.packageName}:${type}`;
     // return await cli.default({ cliArgs: ['generate', type, ...(name ? [name] : []), ...ngOptions] });
     const args = ['ng', 'generate', type];
     if (name) {

@@ -6,7 +6,7 @@ import { getWorkspace } from '@schematics/angular/utility/workspace';
 import { colors } from '../../theme';
 import ts = require('typescript');
 
-import { buildDefaultPath } from '../util';
+import { buildEnvironmentsPath, buildProjectSrcPath } from '../util';
 import { findNode, findNodes, insertImport } from '../util/ast-util';
 import { relativeCwdFromRelativeProjectPath } from '../util/barrel';
 import { Change, InsertChange, applyChangesToHost } from '../util/change';
@@ -111,15 +111,15 @@ function addProperty(projectEnvPath: string, node: ts.Node, mockName: string, va
     );
 }
 
-function addIntoEnvironment(projectAppPath: string, projectName: string, options: MockOptions): Rule {
-    let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
-    let prodProjectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
+function addIntoEnvironment(environmentsPath: string, projectName: string, options: MockOptions): Rule {
+    let projectEnvPath = join(environmentsPath as Path, 'environment.development.ts');
+    let prodProjectEnvPath = join(environmentsPath as Path, 'environment.ts');
 
     return host => {
-        const legacyEnvironment = host.exists(join(projectAppPath as Path, '../environments/environment.prod.ts'));
+        const legacyEnvironment = host.exists(join(environmentsPath as Path, 'environment.prod.ts'));
         if (legacyEnvironment) {
-            projectEnvPath = join(projectAppPath as Path, '../environments/environment.ts');
-            prodProjectEnvPath = join(projectAppPath as Path, '../environments/environment.prod.ts');
+            projectEnvPath = join(environmentsPath as Path, 'environment.ts');
+            prodProjectEnvPath = join(environmentsPath as Path, 'environment.prod.ts');
         }
 
         if (options.environment) {
@@ -231,15 +231,15 @@ export default function (options: MockOptions): Rule {
         const workspace = await getWorkspace(host);
         const project = workspace.projects.get(options.project);
 
-        let projectAppPath: string;
+        let projectSrcPath: string;
         if (project) {
-            projectAppPath = buildDefaultPath(project);
+            projectSrcPath = buildProjectSrcPath(project);
         } else {
             throw new SchematicsException(`Project "${options.project}" not found.`);
         }
 
         if (project && options.path === undefined) {
-            options.path = projectAppPath;
+            options.path = join(projectSrcPath as Path, 'mocks');
         }
 
         const parsedPath = parseName(options.path as string, options.name);
@@ -278,7 +278,7 @@ export default function (options: MockOptions): Rule {
             branchAndMerge(
                 chain([
                     ...steps,
-                    addIntoEnvironment(projectAppPath, options.project, options)
+                    addIntoEnvironment(buildEnvironmentsPath(project), options.project, options)
                 ])
             ),
         ]);

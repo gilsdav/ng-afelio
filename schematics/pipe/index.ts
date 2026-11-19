@@ -2,7 +2,7 @@ import { Rule, SchematicsException, Tree, chain, externalSchematic } from '@angu
 import { parseName } from '@schematics/angular/utility/parse-name';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 
-import { buildDefaultPath } from '../util';
+import { buildProjectSrcPath } from '../util';
 import { addIntoIndex, relativeCwdFromRelativeProjectPath } from '../util/barrel';
 import { validateName } from '../util/validation';
 
@@ -18,7 +18,7 @@ export default function (options: PipeOptions): Rule {
         const workspace = await getWorkspace(host);
         const project = workspace.projects.get(options.project);
         if (project && options.path === undefined) {
-            options.path = buildDefaultPath(project);
+            options.path = buildProjectSrcPath(project);
         }
 
         const parsedPath = parseName(options.path as string, options.name);

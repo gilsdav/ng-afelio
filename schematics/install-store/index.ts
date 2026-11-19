@@ -2,10 +2,11 @@ import { Path, join } from '@angular-devkit/core';
 import { Rule, SchematicContext, SchematicsException, Tree, branchAndMerge, chain } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
-import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
+import { buildRelativePath } from '@schematics/angular/utility/find-module';
+import { getWorkspace } from '@schematics/angular/utility/workspace';
 import ts = require('typescript');
 
-import { getLatestVersion } from '../util';
+import { buildDefaultPath, buildEnvironmentsPath, buildProjectSrcPath, getLatestVersion, resolveProjectFile } from '../util';
 import { addImportToModule, addProviderToConfig, insertImport } from '../util/ast-util';
 import { Change, applyChangesToHost } from '../util/change';
 import { appendIntoEnvironment } from '../util/environment';
@@ -32,11 +33,13 @@ function installNgxs(ngxsVersion: string, ngxsDevtoolsVersion: string): Rule {
     };
 }
 
-function applyModuleImports(projectAppPath: string, options: StoreOptions, isModuleMode: boolean): Rule {
+function applyModuleImports(projectSrcPath: string, projectAppPath: string, environmentsPath: string, options: StoreOptions, isModuleMode: boolean): Rule {
     return host => {
-        if (isModuleMode) {
+        const modulePath = isModuleMode ? resolveProjectFile(host, projectSrcPath, projectAppPath, options.appModule) : undefined;
+        const configPath = isModuleMode ? undefined : (options.appConfig ? resolveProjectFile(host, projectSrcPath, projectAppPath, options.appConfig) : undefined);
+
+        if (isModuleMode && modulePath) {
             const changes: Change[] = [];
-            const modulePath = join(projectAppPath as Path, options.appModule);
             const text = host.read(modulePath);
             if (!text) {
                 throw new SchematicsException(`Module file at ${modulePath} does not exist.`);
@@ -51,7 +54,7 @@ function applyModuleImports(projectAppPath: string, options: StoreOptions, isMod
             // Add ts imports
             changes.push(insertImport(source, modulePath, 'NgxsModule', '@ngxs/store'));
             changes.push(insertImport(source, modulePath, 'NgxsReduxDevtoolsPluginModule', '@ngxs/devtools-plugin'));
-            changes.push(insertImport(source, modulePath, 'environment', '../environments/environment'));
+            changes.push(insertImport(source, modulePath, 'environment', buildRelativePath(modulePath, join(environmentsPath as Path, 'environment'))));
             // Add ng imports
             const translateImport = `NgxsModule.forRoot([], {
             developmentMode: environment.ngxsDebugger
@@ -63,9 +66,8 @@ function applyModuleImports(projectAppPath: string, options: StoreOptions, isMod
             changes.push(...addImportToModule(source, modulePath, pluginImport, null as any));
             // Save changes
             applyChangesToHost(host, modulePath, changes);
-        } else if (options.appConfig && host.exists(join(projectAppPath as Path, options.appConfig))) {
+        } else if (configPath) {
             const changes: Change[] = [];
-            const configPath = join(projectAppPath as Path, options.appConfig);
             const text = host.read(configPath);
             if (!text) {
                 throw new SchematicsException(`Config file at ${configPath} does not exist.`);
@@ -80,7 +82,7 @@ function applyModuleImports(projectAppPath: string, options: StoreOptions, isMod
             // Add ts imports
             changes.push(insertImport(source, configPath, 'provideStore', '@ngxs/store'));
             changes.push(insertImport(source, configPath, 'withNgxsReduxDevtoolsPlugin', '@ngxs/devtools-plugin'));
-            changes.push(insertImport(source, configPath, 'environment', '../environments/environment'));
+            changes.push(insertImport(source, configPath, 'environment', buildRelativePath(configPath, join(environmentsPath as Path, 'environment'))));
             // Add ng imports
             const storeProvider = `provideStore(
             [],
@@ -110,10 +112,10 @@ function applyModuleImports(projectAppPath: string, options: StoreOptions, isMod
 //     }
 // }
 
-function applyIntoEnvironment(projectAppPath: string, projectName: string): Rule {
+function applyIntoEnvironment(environmentsPath: string, projectName: string): Rule {
     return chain([
-        appendIntoEnvironment(projectAppPath, projectName, `\n    enableStoreDebug: true`, 'enableStoreDebug:', false),
-        appendIntoEnvironment(projectAppPath, projectName, `\n    enableStoreDebug: false`, 'enableStoreDebug:', true)
+        appendIntoEnvironment(environmentsPath, projectName, `\n    enableStoreDebug: true`, 'enableStoreDebug:', false),
+        appendIntoEnvironment(environmentsPath, projectName, `\n    enableStoreDebug: false`, 'enableStoreDebug:', true)
     ]);
     // let projectEnvPath = join(projectAppPath as Path, '../environments/environment.development.ts');
     // return host => {
@@ -181,7 +183,9 @@ export default function (options: StoreOptions): Rule {
             throw new SchematicsException(`Project "${options.project}" not found.`);
         }
 
-        const isModuleMode = !!options.appModule && host.exists(join(projectAppPath as Path, options.appModule));
+        const environmentsPath = buildEnvironmentsPath(project);
+
+        const isModuleMode = !!options.appModule && !!resolveProjectFile(host, buildProjectSrcPath(project), projectAppPath, options.appModule);
 
         const ngxsVersion = await getLatestVersion('@ngxs/store');
         const ngxsDevtoolsVersion = await getLatestVersion('@ngxs/devtools-plugin');
@@ -190,8 +194,8 @@ export default function (options: StoreOptions): Rule {
             branchAndMerge(
                 chain([
                     installNgxs(ngxsVersion, ngxsDevtoolsVersion),
-                    applyIntoEnvironment(projectAppPath, options.project),
-                    applyModuleImports(projectAppPath, options, isModuleMode),
+                    applyIntoEnvironment(environmentsPath, options.project),
+                    applyModuleImports(buildProjectSrcPath(project), projectAppPath, environmentsPath, options, isModuleMode),
                 ])
             ),
         ]);
