@@ -2,28 +2,28 @@ import { Path, join } from '@angular-devkit/core';
 import { Rule, SchematicContext, SchematicsException, Tree, branchAndMerge, chain } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
-import { getWorkspace } from '@schematics/angular/utility/workspace';
+import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import ts = require('typescript');
 
-import { buildDefaultPath } from '../util';
+import { getLatestVersion } from '../util';
 import { addImportToModule, addProviderToConfig, insertImport } from '../util/ast-util';
 import { Change, applyChangesToHost } from '../util/change';
 import { appendIntoEnvironment } from '../util/environment';
 
 import { Schema as StoreOptions } from './schema';
 
-function installNgxs(): Rule {
+function installNgxs(ngxsVersion: string, ngxsDevtoolsVersion: string): Rule {
     return (host: Tree, context: SchematicContext) => {
         const lib: NodeDependency = {
             type: NodeDependencyType.Default,
             name: '@ngxs/store',
-            version: '^21.0.0',
+            version: `^${ngxsVersion}`,
             overwrite: false,
         };
         const plugin: NodeDependency = {
             type: NodeDependencyType.Dev,
             name: '@ngxs/devtools-plugin',
-            version: '^21.0.0',
+            version: `^${ngxsDevtoolsVersion}`,
             overwrite: false,
         };
         addPackageJsonDependency(host, lib);
@@ -183,10 +183,13 @@ export default function (options: StoreOptions): Rule {
 
         const isModuleMode = !!options.appModule && host.exists(join(projectAppPath as Path, options.appModule));
 
+        const ngxsVersion = await getLatestVersion('@ngxs/store');
+        const ngxsDevtoolsVersion = await getLatestVersion('@ngxs/devtools-plugin');
+
         return chain([
             branchAndMerge(
                 chain([
-                    installNgxs(),
+                    installNgxs(ngxsVersion, ngxsDevtoolsVersion),
                     applyIntoEnvironment(projectAppPath, options.project),
                     applyModuleImports(projectAppPath, options, isModuleMode),
                 ])

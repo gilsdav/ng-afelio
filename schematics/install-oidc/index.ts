@@ -3,10 +3,9 @@ import { Rule, SchematicContext, SchematicsException, Tree, apply, branchAndMerg
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
-import { getWorkspace } from '@schematics/angular/utility/workspace';
+import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import ts = require('typescript');
 
-import { buildDefaultPath } from '../util';
 import { addImportToModule, insertImport } from '../util/ast-util';
 import { Change, applyChangesToHost } from '../util/change';
 import { appendIntoEnvironment } from '../util/environment';

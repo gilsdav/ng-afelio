@@ -2,10 +2,9 @@ import { Path, join, strings } from '@angular-devkit/core';
 import { Rule, SchematicsException, Tree, apply, branchAndMerge, chain, filter, mergeWith, move, template, url } from '@angular-devkit/schematics';
 import { getPackageJsonDependency } from '@schematics/angular/utility/dependencies';
 import { buildRelativePath } from '@schematics/angular/utility/find-module';
-import { getWorkspace } from '@schematics/angular/utility/workspace';
+import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import * as ts from 'typescript';
 
-import { buildDefaultPath } from '../util';
 import { addProviderToConfig, addProviderToModule, insertImport } from '../util/ast-util';
 import { Change, applyChangesToHost } from '../util/change';
 import { appendIntoEnvironment } from '../util/environment';
@@ -167,7 +166,7 @@ export default function (options: MocksOptions): Rule {
             }
         }
 
-        const parsedPath = join(projectAppPath as Path, '../mocks');
+        const parsedPath = join(projectAppPath as Path, 'mocks');
         const templateSource = apply(url('./files'), [
             filter(path => !path.endsWith('authentication.mock.ts') || options.auth),
             template({

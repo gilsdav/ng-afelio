@@ -2,10 +2,9 @@ import { Path, join, strings } from '@angular-devkit/core';
 import { Rule, SchematicContext, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, template, url } from '@angular-devkit/schematics';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { NodeDependency, NodeDependencyType, addPackageJsonDependency } from '@schematics/angular/utility/dependencies';
-import { getWorkspace } from '@schematics/angular/utility/workspace';
+import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 import ts = require('typescript');
 
-import { buildDefaultPath } from '../util';
 import { addImportToModule, addProviderToConfig, findNode, insertImport } from '../util/ast-util';
 import { Change, applyChangesToHost } from '../util/change';
 
@@ -80,7 +79,7 @@ function applyModuleImports(projectAppPath: string, options: TranslateOptions, i
             // Add ts imports
             changes.push(insertImport(source, configPagh, 'provideTranslateService', '@ngx-translate/core'));
             changes.push(insertImport(source, configPagh, 'provideTranslateHttpLoader', '@ngx-translate/http-loader'));
-            changes.push(insertImport(source, configPagh, 'provideHttpClient, withFetch, withInterceptors, withInterceptorsFromDi', '@angular/common/http'));
+            changes.push(insertImport(source, configPagh, 'provideHttpClient, withInterceptors, withInterceptorsFromDi', '@angular/common/http'));
             // Add ng imports
             const translateProvider = `provideTranslateService({
             loader: provideTranslateHttpLoader({
@@ -91,7 +90,6 @@ function applyModuleImports(projectAppPath: string, options: TranslateOptions, i
             lang: 'fr'
         })`;
             const httpClientProvider = `provideHttpClient(
-            withFetch(),
             withInterceptors([]),
             withInterceptorsFromDi()
         )`;

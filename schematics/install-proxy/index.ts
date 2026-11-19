@@ -1,9 +1,8 @@
 import { join, Path, strings } from '@angular-devkit/core';
 import { apply, branchAndMerge, chain, mergeWith, move, Rule, SchematicsException, template, Tree, url } from '@angular-devkit/schematics';
-import { getWorkspace, updateWorkspace, WorkspaceDefinition } from '@schematics/angular/utility/workspace';
+import { buildDefaultPath, getWorkspace, updateWorkspace, WorkspaceDefinition } from '@schematics/angular/utility/workspace';
 
 // import { appendIntoEnvironment } from '../util/environment';
-import { buildDefaultPath } from '../util';
 
 import { Schema as ProxyOptions } from './schema';
 

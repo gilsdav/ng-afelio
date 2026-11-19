@@ -1,8 +1,7 @@
 import { strings } from '@angular-devkit/core';
 import { Rule, SchematicsException, Tree, apply, branchAndMerge, chain, mergeWith, move, template, url } from '@angular-devkit/schematics';
-import { getWorkspace } from '@schematics/angular/utility/workspace';
+import { buildDefaultPath, getWorkspace } from '@schematics/angular/utility/workspace';
 
-import { buildDefaultPath } from '../util';
 import { appendIntoEnvironment } from '../util/environment';
 
 import { Schema as DockerOptions } from './schema';
