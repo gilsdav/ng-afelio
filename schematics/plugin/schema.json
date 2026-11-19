@@ -19,7 +19,7 @@
           },
         "pluginRepo": {
             "type": "string",
-            "description": "The name of the repo available into ng-afelio.json",
+            "description": "The name of the repo available into ng-keyes.json",
             "$default": {
                 "$source": "argv",
                 "index": 1

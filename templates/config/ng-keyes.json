@@ -1,5 +1,5 @@
 {
-    "$schema": "./node_modules/ng-afelio/schema.json",
+    "$schema": "./node_modules/ng-keyes/schema.json",
     "i18n": {
         "mainFile": "fr.json"
     },

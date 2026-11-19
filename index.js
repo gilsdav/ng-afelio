@@ -63,7 +63,7 @@ program
   .version(version)
   .description(version);
 
-// program.option('-v, --version-full', 'output the version number of ng-afelio and ng');
+// program.option('-v, --version-full', 'output the version number of ng-keyes and ng');
 
 program
   .command('new <name>')
@@ -73,7 +73,7 @@ program
   .option('--open-api', 'Is OpenApi project', false)
   .option('--ng-version <ngVersion>', 'Angular version', 'latest')
   .option('--complete <complete>', 'Install every modules', false)
-  .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--commit=false --directory=."')
+  .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-keyes) Example: --ng="--commit=false --directory=."')
   .action(runAction(async (name, options) => {
     await createNewProject(name, options.uiKit || false, options.openApi || false, options.ng, options.ngVersion, options.complete);
     console.info(`Please go to new directory "cd ./${name}"`);
@@ -84,7 +84,7 @@ program
   .alias('us')
   .description('Start UI Kit serve')
   .option('-p, --port <port>', 'Change default port', 5200)
-  .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
+  .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-keyes) Example: --ng="--open --baseHref=/folder/"')
   .action(runAction(async (options) => {
     await serveUIKit(options.port, options.ng);
   }));
@@ -95,7 +95,7 @@ program
   .description('Start dev server')
   .option('-e, --env <environment>', 'Change default environment')
   .option('-p, --port <port>', 'Change default port', 4200)
-  .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
+  .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-keyes) Example: --ng="--open --baseHref=/folder/"')
   .action(runAction(async (name, options) => {
     await serveMain(options.env, options.port, options.ng, name);
   }));
@@ -107,8 +107,8 @@ program
   .option('-e, --env <environment>', 'Change default environment')
   .option('-p, --port <port>', 'Change default port', 4200)
   .option('-u, --ui-port <uiPort>', 'Change default port of ui-kit', 5200)
-  .option('--ng <ng>', 'Standard Angular CLI options for dev server (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
-  .option('--ui-ng <uiNg>', 'Standard Angular CLI options for ui-kit server (Only use not available options in ng-afelio) Example: --ng="--open --baseHref=/folder/"')
+  .option('--ng <ng>', 'Standard Angular CLI options for dev server (Only use not available options in ng-keyes) Example: --ng="--open --baseHref=/folder/"')
+  .option('--ui-ng <uiNg>', 'Standard Angular CLI options for ui-kit server (Only use not available options in ng-keyes) Example: --ng="--open --baseHref=/folder/"')
   .action(runAction(async (name, options) => {
     await Promise.all([serveMain(options.env, options.port, options.ng, name), serveUIKit(options.uiPort, options.uiNg)]);
   }));
@@ -134,7 +134,7 @@ generateCommand
 const installCommand = program.command('install [type]');
 installCommand
   .alias('i')
-  .description(`Add libs from ng-afelio schematics`, {
+  .description(`Add libs from ng-keyes schematics`, {
     type: `One type from this list:\n    ${colors.cyan(Object.keys(schematics).filter(name => name.startsWith('install-')).map(name => name.replace('install-', '')).join('\n    '))}`
   })
   .option('-h, --help', 'output help message')
@@ -151,8 +151,8 @@ installCommand
 const pluginCommand = program.command('plugin [repo] [name]');
 pluginCommand
   .alias('p')
-  .description(`Add plugin from ng-afelio schematics`, {
-    repo: `One repo name from ${colors.cyan('plugins.repos')} into your ${colors.cyan('ng-afelio.json')} file`,
+  .description(`Add plugin from ng-keyes schematics`, {
+    repo: `One repo name from ${colors.cyan('plugins.repos')} into your ${colors.cyan('ng-keyes.json')} file`,
     name: `The name of one plugin available into this chosen repo`,
   })
   .option('-h, --help', 'output help message')
@@ -184,7 +184,7 @@ program
   // .option('-u, --ssr', 'Server Side Rendering / Universal')
   .option('-e, --env <environment>', 'Change default environment', 'production')
   .option('--base-href <href>', 'Base url for the application being built')
-  .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-afelio) Example: --ng="--namedChunks=false --extractLicenses=true"')
+  .option('--ng <ng>', 'Standard Angular CLI options (Only use not available options in ng-keyes) Example: --ng="--namedChunks=false --extractLicenses=true"')
   .action(runAction(async (options) => {
     await build(options.env, options.ssr || false, options.baseHref, options.ng);
   }));

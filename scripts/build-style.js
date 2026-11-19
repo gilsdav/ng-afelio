@@ -12,9 +12,10 @@ const postcssScssSyntax = require('postcss-scss');
 
 const path = require('path');
 const findParentDir = require('find-parent-dir');
+const { findConfigFile } = require('./check-files/util');
 
-const baseConfig = require('../templates/config/ng-afelio.json');
-const configPath = 'ng-afelio.json';
+const baseConfig = require('../templates/config/ng-keyes.json');
+let configPath = findConfigFile();
 
 let outputDirectory = '../../styles';
 let inputDirectory = './projects/ui-kit';
@@ -86,7 +87,8 @@ function enforceDirectoryExistance(currentPath) {
 }
 
 function readConfig() {
-    if (!fs.existsSync(configPath)) {
+    if (!configPath) {
+        configPath = path.join(process.cwd(), 'ng-keyes.json');
         writeConfig(baseConfig);
     }
     const fileContent = fs.readFileSync(configPath, 'utf8');

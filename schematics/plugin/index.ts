@@ -74,7 +74,7 @@ export default function (options: PluginOptions): Rule {
         if (releases.length > 0) {
             release = releases[0];
         } else {
-            throw new SchematicsException(`No compatible version of this plugin ("${options.pluginName}") into selected repo ("${options.pluginRepo}") for this ng-afelio version.`);
+            throw new SchematicsException(`No compatible version of this plugin ("${options.pluginName}") into selected repo ("${options.pluginRepo}") for this ng-keyes version.`);
         }
 
         const ignoredParts = options.ignoredParts ? options.ignoredParts.split(',') : [];

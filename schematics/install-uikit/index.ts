@@ -102,15 +102,15 @@ function updateScripts(): Rule {
             throw new SchematicsException(`Can not find "package.json" file in your project.`);
         }
         const sourceText = text.toString('utf8');
-        const toInsert = `"style": "ng-afelio style"`;
+        const toInsert = `"style": "ng-keyes style"`;
         const alreadyInstalled = sourceText.indexOf(toInsert) !== -1;
         if (!alreadyInstalled) {
             const toReplaceMatch = sourceText.match(/"start": "(.+)"/);
             if (toReplaceMatch) {
                 const jsonContent = JSON.parse(sourceText);
-                jsonContent.scripts['start'] = 'ng-afelio start';
-                jsonContent.scripts['style'] = 'ng-afelio style';
-                jsonContent.scripts['style-watch'] = 'ng-afelio style --watch projects/ui-kit';
+                jsonContent.scripts['start'] = 'ng-keyes start';
+                jsonContent.scripts['style'] = 'ng-keyes style';
+                jsonContent.scripts['style-watch'] = 'ng-keyes style --watch projects/ui-kit';
                 host.overwrite(packageFile, JSON.stringify(jsonContent, null, 2));
             }
         }

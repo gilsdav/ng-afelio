@@ -5,7 +5,7 @@
                 "add"
             ],
             "factory": "./schematics/add",
-            "description": "Adds ng-afelio",
+            "description": "Adds ng-keyes",
             "schema": "./schematics/add/schema.json"
         },
         "install-mocks": {
@@ -149,7 +149,7 @@
                 "plugin"
             ],
             "factory": "./schematics/plugin",
-            "description": "Use ng-afelio plugin generator",
+            "description": "Use ng-keyes plugin generator",
             "schema": "./schematics/plugin/schema.json"
         },
         "ng-new": {
@@ -157,7 +157,7 @@
                 "new"
             ],
             "factory": "./schematics/new",
-            "description": "Create project with ng-afelio included",
+            "description": "Create project with ng-keyes included",
             "schema": "./schematics/new/schema.json"
         }
     }

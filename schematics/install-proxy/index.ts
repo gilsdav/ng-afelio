@@ -18,13 +18,6 @@ function updateConfig(): Rule {
                 }
             }
         }
-        if (!workspace.extensions['cli']) {
-            workspace.extensions['cli'] = {};
-        }
-        (workspace.extensions['cli'] as any)['schematicCollections'] = [
-            'ng-afelio',
-            '@schematics/angular'
-        ];
     });
 }
 

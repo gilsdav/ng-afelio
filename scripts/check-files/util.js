@@ -39,14 +39,17 @@ function findConfigFile() {
         decomposedCurrentPath[0] = '/';
     }
     while (decomposedCurrentPath.length > 1 && decomposedCurrentPath.join('/')) {
-        const pathToTest = join(...decomposedCurrentPath, 'ng-afelio.json');
-        if(fs.existsSync(pathToTest)) {
-            return pathToTest;
+        const afelioPathToTest = join(...decomposedCurrentPath, 'ng-afelio.json');
+        const keyesPathToTest = join(...decomposedCurrentPath, 'ng-keyes.json');
+        if(fs.existsSync(afelioPathToTest)) {
+            return afelioPathToTest;
+        } else if (fs.existsSync(keyesPathToTest)) {
+            return keyesPathToTest;
         } else {
             decomposedCurrentPath.pop();
         }
     }
-    console.warn(colors.yellow('No `ng-afelio.json` file found.'));
+    console.warn(colors.yellow('No `ng-keyes.json` file found.'));
 }
 
 function getConfig(type) {
@@ -60,5 +63,6 @@ function getConfig(type) {
 module.exports = {
     flatten,
     diff,
-    getConfig
+    getConfig,
+    findConfigFile
 };

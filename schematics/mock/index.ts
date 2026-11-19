@@ -142,7 +142,7 @@ function addIntoEnvironment(projectAppPath: string, projectName: string, options
                     if (serviceMockList) {
                         changes.push(addProperty(path, serviceMockList, strings.camelize(options.name), value));
                     } else {
-                        throw new SchematicsException(`Can not find mock.services in ${projectName} project. Did you already add the mock system "${colors.cyan('ng-afelio install mocks')}" ?`);
+                        throw new SchematicsException(`Can not find mock.services in ${projectName} project. Did you already add the mock system "${colors.cyan('ng-keyes install mocks')}" ?`);
                     }
                 }
                 applyChangesToHost(host, path, changes);

@@ -89,7 +89,7 @@ function updateConfig(): Rule {
             workspace.extensions['cli'] = {};
         }
         (workspace.extensions['cli'] as any)['schematicCollections'] = [
-            'ng-afelio',
+            'ng-keyes',
             '@schematics/angular'
         ];
     });
@@ -113,15 +113,16 @@ function updateScripts(): Rule {
             throw new SchematicsException(`Can not find "package.json" file in your project.`);
         }
         const sourceText = text.toString('utf8');
-        const toInsert = `"start": "ng-afelio start"`;
+        const toInsert = `"start": "ng-keyes start"`;
         const alreadyInstalled = sourceText.indexOf(toInsert) !== -1;
         if (!alreadyInstalled) {
             const toReplaceMatch = sourceText.match(/"start": "(.+)"/);
             if (toReplaceMatch) {
                 const jsonContent = JSON.parse(sourceText);
                 jsonContent.scripts['ng-afelio'] = 'ng-afelio';
-                jsonContent.scripts['start'] = 'ng-afelio serve';
-                jsonContent.scripts['build'] = 'ng-afelio build';
+                jsonContent.scripts['ng-keyes'] = 'ng-keyes';
+                jsonContent.scripts['start'] = 'ng-keyes serve';
+                jsonContent.scripts['build'] = 'ng-keyes build';
                 host.overwrite(packageFile, JSON.stringify(jsonContent, null, 2));
             }
         }

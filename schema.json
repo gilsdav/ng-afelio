@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "ng-afelio://schema.json",
-    "title": "Ng Afelio Configuration",
+    "$id": "ng-keyes://schema.json",
+    "title": "Ng Keyes Configuration",
     "type": "object",
     "properties": {
         "$schema": {

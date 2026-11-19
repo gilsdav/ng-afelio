@@ -31,7 +31,7 @@ export class ConnectorBuilder {
         const pluginRepoConfig = pluginRepoConfigs?.repos.find(pr => pr.name === repoName);
 
         if (!pluginRepoConfig) {
-            throw new SchematicsException(`Plugin repo "${repoName}" not found into your "ng-afelio.json" file.`);
+            throw new SchematicsException(`Plugin repo "${repoName}" not found into your "ng-keyes.json" file.`);
         }
 
         return pluginRepoConfig;

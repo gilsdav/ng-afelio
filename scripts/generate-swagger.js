@@ -36,7 +36,7 @@ function installSwaggerGen(scriptName, configFileName) {
     jsonContent.scripts = {
         ...jsonContent.scripts,
         'ng-swagger-gen': 'ng-swagger-gen',
-        [scriptName]: `ng-afelio api -r ${configFileName}`
+        [scriptName]: `ng-keyes api -r ${configFileName}`
     }
 
     fs.writeFileSync(filePath, JSON.stringify(jsonContent, null, 2), 'utf8');
@@ -57,7 +57,7 @@ function installOpenapiGen(scriptName, configFileName) {
     jsonContent.scripts = {
         ...jsonContent.scripts,
         'ng-swagger-gen': 'ng-openapi-gen',
-        [scriptName]: `ng-afelio api -r ${configFileName}`
+        [scriptName]: `ng-keyes api -r ${configFileName}`
     }
 
     fs.writeFileSync(filePath, JSON.stringify(jsonContent, null, 2), 'utf8');
