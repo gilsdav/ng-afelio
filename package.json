@@ -1,6 +1,6 @@
 {
   "name": "ng-afelio",
-  "version": "3.0.0-rc3",
+  "version": "3.1.0-rc1",
   "description": "Extended Angular CLI",
   "main": "index.js",
   "bin": {
@@ -34,6 +34,7 @@
     "url": "https://github.com/gilsdav/ng-afelio.git"
   },
   "dependencies": {
+    "@devcontainers/cli": "^0.90.0",
     "ansis": "4.3.1",
     "commander": "7.2.0",
     "css-node-extract": "3.0.2",

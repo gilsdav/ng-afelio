@@ -20,7 +20,13 @@ const {
   generateApi,
   regenerateApi,
   checkFiles,
-  generateI18n
+  generateI18n,
+  aiStart,
+  aiShell,
+  aiStop,
+  aiRm,
+  aiStatus,
+  aiExec
 } = require('./logic');
 
 const { version: ngAfelioVersion } = require('./package.json');
@@ -239,6 +245,58 @@ program
       console.error(`${colors.red(`Type "${type}" does not exist.`)}`);
       process.exitCode = 1;
     }
+  }));
+
+const aiCommand = program.command('ai').description('Manage the AI devcontainer');
+
+aiCommand
+  .command('start')
+  .alias('s')
+  .description('Start the AI devcontainer (creates .devcontainer if missing)')
+  .action(runAction(async () => {
+    await aiStart();
+  }));
+
+aiCommand
+  .command('shell')
+  .alias('sh')
+  .description('Open a shell inside the AI devcontainer')
+  .action(runAction(async () => {
+    await aiShell();
+  }));
+
+aiCommand
+  .command('stop')
+  .alias('st')
+  .description('Stop the AI devcontainer')
+  .action(runAction(async () => {
+    await aiStop();
+  }));
+
+aiCommand
+  .command('status')
+  .alias('stat')
+  .description('Show the status of the AI devcontainer')
+  .action(runAction(async () => {
+    await aiStatus();
+  }));
+
+aiCommand
+  .command('exec <cmd...>')
+  .alias('x')
+  .description('Run a command inside the AI devcontainer (e.g. ng-afelio ai exec pi update --all)')
+  .allowUnknownOption()
+  .action(runAction(async (cmdArgs) => {
+    await aiExec(cmdArgs);
+  }));
+
+aiCommand
+  .command('rm')
+  .alias('d')
+  .description('Remove the AI devcontainer')
+  .option('-f, --force', 'Remove the container even if it is running')
+  .action(runAction(async (options) => {
+    await aiRm(options.force);
   }));
 
 program.on('command:*', () => {

@@ -1,0 +1,17 @@
+{
+  "name": "keyes-ai",
+  "image": "",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "workspaceFolder": "/workspace",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "pi0.pi-vscode"
+      ]
+    }
+  },
+  "containerEnv": {
+    "KEYES_API_KEY": "${env:KEYES_API_KEY}"
+  },
+  "keyesAI.generatedBy": "keyes-ai"
+}

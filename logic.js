@@ -292,7 +292,206 @@ const generateI18n = async (mainFile) => {
     return fixI18n(mainFile);
 };
 
-// Export all methods
+// ---------------------------------------------------------------------------
+// AI devcontainer commands (ng-afelio ai start / shell / stop)
+// ---------------------------------------------------------------------------
+
+const isCommandAvailable = (command) => {
+    const check = process.platform === 'win32' ? 'where' : 'which';
+    try {
+        require('child_process').execSync(`${check} ${command}`, { stdio: 'ignore' });
+        return true;
+    } catch {
+        return false;
+    }
+};
+
+const checkDocker = async () => {
+    if (!isCommandAvailable('docker')) {
+        throw new Error('Docker is not installed or not in PATH. Please install Docker: https://docs.docker.com/get-docker/');
+    }
+    await pexec('docker', ['info']);
+};
+
+// @devcontainers/cli is a dependency: run its CLI entry point with node,
+// no global install required.
+const devcontainerCliPath = join(__dirname, 'node_modules', '@devcontainers', 'cli', 'devcontainer.js');
+
+const runDevcontainer = (args) => pexec('node', [devcontainerCliPath, ...args]);
+
+const checkApiKey = () => {
+    if (!process.env.KEYES_API_KEY) {
+        throw new Error(
+            `KEYES_API_KEY is missing in your environment.\n` +
+            `Export it before starting: export KEYES_API_KEY=xxx`
+        );
+    }
+};
+
+const checkImage = () => {
+    if (!process.env.KEYES_AI_IMAGE) {
+        throw new Error(
+            `KEYES_AI_IMAGE is missing in your environment.\n` +
+            `Export it before starting: export KEYES_AI_IMAGE=<imageName>:<tag>`
+        );
+    }
+};
+
+const ensureDevcontainer = () => {
+    const target = join(currentPath, '.devcontainer', 'devcontainer.json');
+    if (fse.existsSync(target)) {
+        console.log(colors.cyan('.devcontainer/devcontainer.json already exists, leaving it untouched.'));
+        return;
+    }
+    const template = join(__dirname, 'templates', 'devcontainer', 'devcontainer.json');
+    // The image is required via the KEYES_AI_IMAGE env variable
+    checkImage();
+    const devcontainerConfig = JSON.parse(fse.readFileSync(template, 'utf8').replace(/\/\/[^\n]*/g, ''));
+    devcontainerConfig.image = process.env.KEYES_AI_IMAGE;
+    fse.ensureDirSync(join(currentPath, '.devcontainer'));
+    fse.writeJsonSync(target, devcontainerConfig, { spaces: 2 });
+    console.log(colors.green(`.devcontainer/devcontainer.json created (image: ${devcontainerConfig.image}).`));
+};
+
+const aiStart = async () => {
+    console.log(colors.blue('Checking prerequisites...'));
+    await checkDocker();
+    checkApiKey();
+    ensureDevcontainer();
+
+    const hasCode = isCommandAvailable('code');
+    if (!hasCode) {
+        console.log(colors.yellow('VS Code (code) not found. Starting the container in the background...'));
+    } else {
+        console.log(colors.blue('Starting the devcontainer...'));
+    }
+
+    // devcontainer up is idempotent: if the container already exists, it reuses it.
+    await runDevcontainer(['up', '--workspace-folder', currentPath]);
+
+    if (hasCode) {
+        console.log(colors.green(
+            `Devcontainer is up. Reopen this folder in VS Code to enter the container\n` +
+            `(or use "Dev Containers: Reopen in Container" from the command palette).`));
+    } else {
+        console.log(colors.green(
+            `Container started in the background.\n` +
+            `Enter the container with:   ng-afelio ai shell\n` +
+            `Stop it with:               ng-afelio ai stop`));
+    }
+};
+
+const isContainerRunning = () => {
+    const { execSync } = require('child_process');
+    const ids = execSync(
+        'docker ps --filter label=devcontainer.local_folder="' + currentPath + '" --format "{{.ID}}"',
+        { encoding: 'utf8' }
+    ).trim().split('\n').filter(Boolean);
+    return ids.length > 0;
+};
+
+const aiExec = async (cmdArgs) => {
+    await checkDocker();
+    if (!isContainerRunning()) {
+        throw new Error(
+            `No devcontainer is currently running for ${currentPath}.\n` +
+            `Start it first with: ng-afelio ai start`);
+    }
+    console.log(colors.blue(`Running in devcontainer: ${cmdArgs.join(' ')}\n`));
+    await runDevcontainer(['exec', '--workspace-folder', currentPath, '--', ...cmdArgs]);
+};
+
+const aiShell = async () => {
+    await checkDocker();
+    if (!isContainerRunning()) {
+        throw new Error(
+            `No devcontainer is currently running for ${currentPath}.\n` +
+            `Start it first with: ng-afelio ai start`);
+    }
+    console.log(colors.blue('Entering the devcontainer shell...'));
+    await runDevcontainer(['exec', '--workspace-folder', currentPath, '--', 'bash']);
+};
+
+const aiStatus = async () => {
+    await checkDocker();
+    const { execSync } = require('child_process');
+    const rows = execSync(
+        'docker ps -a --filter label=devcontainer.local_folder="' + currentPath + '" --format "{{.ID}}\t{{.State}}\t{{.Status}}"',
+        { encoding: 'utf8' }
+    ).trim().split('\n').filter(Boolean);
+
+    if (!rows.length) {
+        console.log(`\n${colors.yellow('✖')} No devcontainer for this folder (${colors.cyan(currentPath)}).`);
+        console.log(colors.gray(`  Start it with: ng-afelio ai start\n`));
+        return;
+    }
+
+    for (const row of rows) {
+        const [id, state, status] = row.split('\t');
+        if (state === 'running') {
+            console.log(`\n${colors.green('✔')} Devcontainer ${colors.green('running')}`);
+        } else {
+            console.log(`\n${colors.red('✖')} Devcontainer ${colors.red(state)} (${status})`);
+        }
+        console.log(colors.gray(`  Folder: ${currentPath}\n  ID:     ${id}`));
+        console.log(state === 'running'
+            ? colors.gray(`  Enter it with:   ng-afelio ai shell\n  Stop it with:    ng-afelio ai stop\n`)
+            : colors.gray(`  Start it with:   ng-afelio ai start\n  Remove it with:  ng-afelio ai rm\n`));
+    }
+};
+
+const aiStop = async () => {
+    await checkDocker();
+    const { execSync } = require('child_process');
+    // The devcontainer CLI has no "stop" command (stopping is the job of the
+    // VS Code extension). But it labels the containers it creates with
+    // "devcontainer.local_folder" = workspace folder path, so we target the
+    // container through that label and stop it with docker.
+    const ids = execSync(
+        'docker ps -a --filter label=devcontainer.local_folder="' + currentPath + '" --format "{{.ID}}"',
+        { encoding: 'utf8' }
+    ).trim().split('\n').filter(Boolean);
+
+    if (!ids.length) {
+        throw new Error(
+            `No devcontainer found for ${currentPath}.\n` +
+            `If you just started it, run: ng-afelio ai start`);
+    }
+
+    for (const id of ids) {
+        console.log(colors.blue(`Stopping container ${id}...`));
+        await pexec('docker', ['stop', id]);
+    }
+    console.log(colors.green('Devcontainer stopped.'));
+};
+
+const aiRm = async (force) => {
+    await checkDocker();
+    const { execSync } = require('child_process');
+    const ids = execSync(
+        'docker ps -a --filter label=devcontainer.local_folder="' + currentPath + '" --format "{{.ID}}"',
+        { encoding: 'utf8' }
+    ).trim().split('\n').filter(Boolean);
+
+    if (!ids.length) {
+        throw new Error(`No devcontainer found for ${currentPath}. Nothing to remove.`);
+    }
+
+    for (const id of ids) {
+        if (!force) {
+            const state = execSync(`docker inspect ${id} --format '{{.State.Status}}'`, { encoding: 'utf8' }).trim();
+            if (state === 'running') {
+                throw new Error(
+                    `Container ${id} is still running.\n` +
+                    `Stop it first with: ng-afelio ai stop\n` +
+                    `Or force the removal with: ng-afelio ai rm --force`);
+            }
+        }
+        console.log(colors.blue(`Removing container ${id}...`));
+        await pexec('docker', ['rm', ...(force ? ['-f'] : []), id]);
+    }
+    console.log(colors.green('Devcontainer removed.'));
+};
 module.exports = {
     // getAngularVersion,
     createNewProject,
@@ -305,5 +504,11 @@ module.exports = {
     generateApi,
     regenerateApi,
     checkFiles,
-    generateI18n
+    generateI18n,
+    aiStart,
+    aiShell,
+    aiStop,
+    aiRm,
+    aiStatus,
+    aiExec
 };

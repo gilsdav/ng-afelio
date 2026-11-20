@@ -12,7 +12,7 @@ Variables example:
 * ***apiName***="pet-store-api"
 * ***apiVersion***=1.0.5
 * ***apiFile***="../contracts/pet-store.yaml"
-* ***registry***="http://gestafor-nexus.afeliodev.local/repository/npm-private"
+* ***registry***="http://<your-registry>/repository/npm-private"
 
 ### package
 
@@ -28,4 +28,4 @@ Publish to your npm repository.
 `npm publish --registry=${registry}``
 
 Variables example:
-* ***registry***="http://gestafor-nexus.afeliodev.local/repository/npm-private"
+* ***registry***="http://<your-registry>/repository/npm-private"
