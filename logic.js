@@ -293,7 +293,7 @@ const generateI18n = async (mainFile) => {
 };
 
 // ---------------------------------------------------------------------------
-// AI devcontainer commands (ng-afelio ai start / shell / stop)
+// AI devcontainer commands (ng-keyes ai start / shell / stop)
 // ---------------------------------------------------------------------------
 
 const isCommandAvailable = (command) => {
@@ -376,8 +376,8 @@ const aiStart = async () => {
     } else {
         console.log(colors.green(
             `Container started in the background.\n` +
-            `Enter the container with:   ng-afelio ai shell\n` +
-            `Stop it with:               ng-afelio ai stop`));
+            `Enter the container with:   ng-keyes ai shell\n` +
+            `Stop it with:               ng-keyes ai stop`));
     }
 };
 
@@ -395,7 +395,7 @@ const aiExec = async (cmdArgs) => {
     if (!isContainerRunning()) {
         throw new Error(
             `No devcontainer is currently running for ${currentPath}.\n` +
-            `Start it first with: ng-afelio ai start`);
+            `Start it first with: ng-keyes ai start`);
     }
     console.log(colors.blue(`Running in devcontainer: ${cmdArgs.join(' ')}\n`));
     await runDevcontainer(['exec', '--workspace-folder', currentPath, '--', ...cmdArgs]);
@@ -406,7 +406,7 @@ const aiShell = async () => {
     if (!isContainerRunning()) {
         throw new Error(
             `No devcontainer is currently running for ${currentPath}.\n` +
-            `Start it first with: ng-afelio ai start`);
+            `Start it first with: ng-keyes ai start`);
     }
     console.log(colors.blue('Entering the devcontainer shell...'));
     await runDevcontainer(['exec', '--workspace-folder', currentPath, '--', 'bash']);
@@ -422,7 +422,7 @@ const aiStatus = async () => {
 
     if (!rows.length) {
         console.log(`\n${colors.yellow('✖')} No devcontainer for this folder (${colors.cyan(currentPath)}).`);
-        console.log(colors.gray(`  Start it with: ng-afelio ai start\n`));
+        console.log(colors.gray(`  Start it with: ng-keyes ai start\n`));
         return;
     }
 
@@ -435,8 +435,8 @@ const aiStatus = async () => {
         }
         console.log(colors.gray(`  Folder: ${currentPath}\n  ID:     ${id}`));
         console.log(state === 'running'
-            ? colors.gray(`  Enter it with:   ng-afelio ai shell\n  Stop it with:    ng-afelio ai stop\n`)
-            : colors.gray(`  Start it with:   ng-afelio ai start\n  Remove it with:  ng-afelio ai rm\n`));
+            ? colors.gray(`  Enter it with:   ng-keyes ai shell\n  Stop it with:    ng-keyes ai stop\n`)
+            : colors.gray(`  Start it with:   ng-keyes ai start\n  Remove it with:  ng-keyes ai rm\n`));
     }
 };
 
@@ -455,7 +455,7 @@ const aiStop = async () => {
     if (!ids.length) {
         throw new Error(
             `No devcontainer found for ${currentPath}.\n` +
-            `If you just started it, run: ng-afelio ai start`);
+            `If you just started it, run: ng-keyes ai start`);
     }
 
     for (const id of ids) {
@@ -483,8 +483,8 @@ const aiRm = async (force) => {
             if (state === 'running') {
                 throw new Error(
                     `Container ${id} is still running.\n` +
-                    `Stop it first with: ng-afelio ai stop\n` +
-                    `Or force the removal with: ng-afelio ai rm --force`);
+                    `Stop it first with: ng-keyes ai stop\n` +
+                    `Or force the removal with: ng-keyes ai rm --force`);
             }
         }
         console.log(colors.blue(`Removing container ${id}...`));

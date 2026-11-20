@@ -284,7 +284,7 @@ aiCommand
 aiCommand
   .command('exec <cmd...>')
   .alias('x')
-  .description('Run a command inside the AI devcontainer (e.g. ng-afelio ai exec pi update --all)')
+  .description('Run a command inside the AI devcontainer (e.g. ng-keyes ai exec pi update --all)')
   .allowUnknownOption()
   .action(runAction(async (cmdArgs) => {
     await aiExec(cmdArgs);

@@ -40,7 +40,7 @@
       },
       "complete": {
         "type": "boolean",
-        "description": "Install all ng-afelio modules",
+        "description": "Install all ng-keyes modules",
         "default": false
       }
     }
