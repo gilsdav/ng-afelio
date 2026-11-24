@@ -26,7 +26,12 @@ const {
   aiStop,
   aiRm,
   aiStatus,
-  aiExec
+  aiExec,
+  aiNetworkAllow,
+  aiNetworkDeny,
+  aiNetworkHosts,
+  aiNetworkCaBundle,
+  aiNetworkWatch
 } = require('./logic');
 
 const { version: ngAfelioVersion } = require('./package.json');
@@ -61,6 +66,12 @@ const runAction = (action) => async (...args) => {
   } catch (error) {
     const message = error?.message || error;
     console.error(colors.red(`Error: ${message}`));
+    if (error?.stack && !String(message).includes('devcontainer.js')) {
+      // The first frames of ng-keyes are useless; show the rest of the stack
+      // so third-party failures (e.g. devcontainer CLI) are diagnosable.
+      const frames = error.stack.split('\n').slice(1).filter((l) => !l.includes('/ng-keyes/') && !l.includes('/workspace/logic') && !l.includes('/workspace/index'));
+      if (frames.length) console.error(colors.gray(frames.slice(0, 12).join('\n')));
+    }
     process.exitCode = 1;
   }
 };
@@ -297,6 +308,44 @@ aiCommand
   .option('-f, --force', 'Remove the container even if it is running')
   .action(runAction(async (options) => {
     await aiRm(options.force);
+  }));
+
+const aiNetworkCommand = aiCommand.command('network').description('Manage the network gate (whitelist proxy)');
+
+aiNetworkCommand
+  .command('allow <hosts...>')
+  .description('Add hosts to the whitelist (e.g. registry.npmjs.org, *.github.com)')
+  .action(runAction(async (hosts) => {
+    await aiNetworkAllow(hosts);
+  }));
+
+aiNetworkCommand
+  .command('deny [hosts...]')
+  .description('Permanently deny hosts (always refused, never prompted). Wildcard: *.example.com')
+  .option('-r, --remove', 'lift the permanent deny instead')
+  .action(runAction(async (hosts, opts) => {
+    await aiNetworkDeny(hosts, { remove: !!opts.remove });
+  }));
+
+aiNetworkCommand
+  .command('watch')
+  .description('Listen for non-whitelisted network requests and answer them (s=session p=permanent n=deny d=deny permanently)')
+  .action(runAction(async () => {
+    await aiNetworkWatch();
+  }));
+
+aiNetworkCommand
+  .command('hosts <pairs...>')
+  .description('Map local/VPN names to IPs (name=ip), used by container + gate (e.g. intranet.keyes.local=10.20.0.5)')
+  .action(runAction(async (pairs) => {
+    await aiNetworkHosts(pairs);
+  }));
+
+aiNetworkCommand
+  .command('ca <url>')
+  .description('Build the project CA bundle from a host TLS chain (e.g. https://ghe.keyes.eu)')
+  .action(runAction(async (url) => {
+    await aiNetworkCaBundle(url);
   }));
 
 program.on('command:*', () => {

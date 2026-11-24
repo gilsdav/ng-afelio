@@ -3,15 +3,24 @@
   "image": "",
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
   "workspaceFolder": "/workspace",
+  "runArgs": ["--network", "keyes-ai-net"],
+  "containerEnv": {
+    "KEYES_API_KEY": "${env:KEYES_API_KEY}",
+    "http_proxy": "http://keyes-ai-gate:3333",
+    "https_proxy": "http://keyes-ai-gate:3333",
+    "HTTP_PROXY": "http://keyes-ai-gate:3333",
+    "HTTPS_PROXY": "http://keyes-ai-gate:3333",
+    "all_proxy": "http://keyes-ai-gate:3333",
+    "ALL_PROXY": "http://keyes-ai-gate:3333",
+    "no_proxy": "localhost,127.0.0.1",
+    "NO_PROXY": "localhost,127.0.0.1"
+  },
   "customizations": {
     "vscode": {
       "extensions": [
         "pi0.pi-vscode"
       ]
     }
-  },
-  "containerEnv": {
-    "KEYES_API_KEY": "${env:KEYES_API_KEY}"
   },
   "keyesAI.generatedBy": "keyes-ai"
 }
